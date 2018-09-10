@@ -59,11 +59,14 @@ class EntryController {
         URLSession.shared.dataTask(with: request) { (data, _, error) in
             if let error = error {
                 NSLog("Error PUTting Entry to server: \(error)")
-                completion(error)
+                DispatchQueue.main.async {
+                    completion(error)
+                }
                 return
             }
-            
-            completion(nil)
+            DispatchQueue.main.async {
+                completion(nil)
+            }
         }.resume()
     }
     
@@ -82,11 +85,14 @@ class EntryController {
         URLSession.shared.dataTask(with: request) { (data, _, error) in
             if let error = error {
                 NSLog("Error deleting entry from server: \(error)")
-                completion(error)
+                DispatchQueue.main.async {
+                    completion(error)
+                }
                 return
             }
-            
-            completion(nil)
+            DispatchQueue.main.async {
+                completion(nil)
+            }
         }.resume()
     }
     
@@ -98,13 +104,17 @@ class EntryController {
             
             if let error = error {
                 NSLog("Error fetching entries from server: \(error)")
-                completion(error)
+                DispatchQueue.main.async {
+                    completion(error)
+                }
                 return
             }
             
             guard let data = data else {
                 NSLog("No data returned from data task")
-                completion(NSError())
+                DispatchQueue.main.async {
+                    completion(NSError())
+                }
                 return
             }
 
@@ -112,20 +122,28 @@ class EntryController {
             
             do {
                 let entryReps = try JSONDecoder().decode([String: EntryRepresentation].self, from: data).map({$0.value})
-                self.updateEntries(with: entryReps, in: moc)
+                DispatchQueue.main.async {
+                    self.updateEntries(with: entryReps, in: moc)
+                }
             } catch {
                 NSLog("Error decoding JSON data: \(error)")
-                completion(error)
+                DispatchQueue.main.async {
+                    completion(error)
+                }
                 return
             }
             
             moc.perform {
                 do {
                     try moc.save()
-                    completion(nil)
+                    DispatchQueue.main.async {
+                        completion(nil)
+                    }
                 } catch {
                     NSLog("Error saving context: \(error)")
-                    completion(error)
+                    DispatchQueue.main.async {
+                        completion(error)
+                    }
                 }
             }
         }.resume()
