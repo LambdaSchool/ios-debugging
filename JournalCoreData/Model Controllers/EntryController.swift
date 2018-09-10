@@ -39,8 +39,10 @@ class EntryController {
     }
     
     func delete(entry: Entry) {
-        
-        CoreDataStack.shared.mainContext.delete(entry)
+        let moc = CoreDataStack.shared.mainContext
+        moc.performAndWait {
+            moc.delete(entry)
+        }
         deleteEntryFromServer(entry: entry)
         saveToPersistentStore()
     }
@@ -114,7 +116,7 @@ class EntryController {
             }
 
             let backgroundContext = CoreDataStack.shared.container.newBackgroundContext()
-            //let moc = CoreDataStack.shared.mainContext
+            // let moc = CoreDataStack.shared.mainContext
             
             do {
                 let entryReps = try Array(JSONDecoder().decode([String: EntryRepresentation].self, from: data).values)
@@ -142,9 +144,10 @@ class EntryController {
         guard let identifier = identifier else { return nil }
         
         let fetchRequest: NSFetchRequest<Entry> = Entry.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "identfier == %@", identifier)
+        fetchRequest.predicate = NSPredicate(format: "identifier == %@", identifier)
         
         var result: Entry? = nil
+        
         do {
             result = try context.fetch(fetchRequest).first
         } catch {
