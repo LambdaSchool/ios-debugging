@@ -109,7 +109,6 @@
 		46AA32F4212132AD003AC495 /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				46AA32EA21213150003AC495 /* EntriesTableViewController.swift */,
 				46AA32EC2121315F003AC495 /* EntryDetailViewController.swift */,
 			);
 			path = "View Controllers";
@@ -119,6 +118,7 @@
 			isa = PBXGroup;
 			children = (
 				46AA32EE21213184003AC495 /* EntryTableViewCell.swift */,
+				46AA32EA21213150003AC495 /* EntriesTableViewController.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
