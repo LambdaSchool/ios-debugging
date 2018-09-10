@@ -132,7 +132,12 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
         
         frc.delegate = self
         
-        try! frc.performFetch()
+//        try! frc.performFetch()
+        do {
+            try frc.performFetch()
+        } catch {
+            NSLog("Error fetching: \(error)")
+        }
         
         return frc
     }()
