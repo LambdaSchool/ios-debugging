@@ -41,14 +41,15 @@ class EntryDetailViewController: UIViewController {
     }
     
     private func updateViews() {
+        guard isViewLoaded else { return }
         guard let entry = entry else {
                 title = "Create Entry"
                 return
         }
         
         title = entry.title
-        titleTextField.text = entry.title
-        bodyTextView.text = entry.bodyText
+        titleTextField?.text = entry.title
+        bodyTextView?.text = entry.bodyText
         
         var segmentIndex = 0
         
@@ -63,7 +64,7 @@ class EntryDetailViewController: UIViewController {
             break
         }
         
-        moodSegmentedControl.selectedSegmentIndex = segmentIndex
+        moodSegmentedControl?.selectedSegmentIndex = segmentIndex
     }
     
     var entry: Entry? {
