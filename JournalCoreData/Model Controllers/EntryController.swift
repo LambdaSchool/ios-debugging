@@ -136,7 +136,7 @@ class EntryController {
         guard let identifier = identifier else { return nil }
         
         let fetchRequest: NSFetchRequest<Entry> = Entry.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "identfier == %@", identifier)
+        fetchRequest.predicate = NSPredicate(format: "identifier == %@", identifier)
         
         var result: Entry? = nil
         do {
@@ -154,7 +154,7 @@ class EntryController {
                 
                 let entry = self.fetchSingleEntryFromPersistentStore(with: identifier, in: context)
                 if let entry = entry, entry != entryRep {
-                    self.update(entry: entry, with: entryRep)
+                    self.updateFromRepresentation(entry: entry, with: entryRep)
                 } else if entry == nil {
                     _ = Entry(entryRepresentation: entryRep, context: context)
                 }
@@ -162,7 +162,7 @@ class EntryController {
         }
     }
     
-    private func update(entry: Entry, with entryRep: EntryRepresentation) {
+    private func updateFromRepresentation(entry: Entry, with entryRep: EntryRepresentation) {
         entry.title = entryRep.title
         entry.bodyText = entryRep.bodyText
         entry.mood = entryRep.mood
