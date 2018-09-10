@@ -13,6 +13,10 @@ let baseURL = URL(string: "https://stefanojournal.firebaseio.com/")!
 
 class EntryController {
     
+    init() {
+        self.fetchEntriesFromServer()
+    }
+    
     func createEntry(with title: String, bodyText: String, mood: String) {
         
         let entry = Entry(title: title, bodyText: bodyText, mood: mood)
@@ -44,7 +48,7 @@ class EntryController {
     private func put(entry: Entry, completion: @escaping ((Error?) -> Void) = { _ in }) {
         
         let identifier = entry.identifier ?? UUID().uuidString
-        let requestURL = baseURL.appendingPathComponent(identifier).appendingPathComponent("json")
+        let requestURL = baseURL.appendingPathComponent(identifier).appendingPathExtension("json")
         var request = URLRequest(url: requestURL)
         request.httpMethod = "PUT"
         
@@ -93,8 +97,9 @@ class EntryController {
     func fetchEntriesFromServer(completion: @escaping ((Error?) -> Void) = { _ in }) {
         
         let requestURL = baseURL.appendingPathExtension("json")
+        let request = URLRequest(url: requestURL)
         
-        URLSession.shared.dataTask(with: requestURL) { (data, _, error) in
+        URLSession.shared.dataTask(with: request) { (data, _, error) in
             
             if let error = error {
                 NSLog("Error fetching entries from server: \(error)")
@@ -108,20 +113,21 @@ class EntryController {
                 return
             }
 
-            let moc = CoreDataStack.shared.mainContext
+            let backgroundContext = CoreDataStack.shared.container.newBackgroundContext()
+            //let moc = CoreDataStack.shared.mainContext
             
             do {
-                let entryReps = try JSONDecoder().decode([String: EntryRepresentation].self, from: data).map({$0.value})
-                self.updateEntries(with: entryReps, in: moc)
+                let entryReps = try Array(JSONDecoder().decode([String: EntryRepresentation].self, from: data).values)
+                self.updateEntries(with: entryReps, in: backgroundContext)
             } catch {
                 NSLog("Error decoding JSON data: \(error)")
                 completion(error)
                 return
             }
             
-            moc.perform {
+            backgroundContext.perform {
                 do {
-                    try moc.save()
+                    try backgroundContext.save()
                     completion(nil)
                 } catch {
                     NSLog("Error saving context: \(error)")
@@ -170,11 +176,14 @@ class EntryController {
         entry.identifier = entryRep.identifier
     }
     
-    func saveToPersistentStore() {        
-        do {
-            try CoreDataStack.shared.mainContext.save()
-        } catch {
-            NSLog("Error saving managed object context: \(error)")
+    func saveToPersistentStore() {
+        let moc = CoreDataStack.shared.mainContext
+        moc.performAndWait {
+            do {
+                try CoreDataStack.shared.mainContext.save()
+            } catch {
+                NSLog("Error saving managed object context: \(error)")
+            }
         }
     }
 }
