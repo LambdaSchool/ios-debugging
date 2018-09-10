@@ -19,7 +19,11 @@ class EntryController {
         
         put(entry: entry)
         
-        saveToPersistentStore()
+        do {
+            try CoreDataStack.shared.save()
+        } catch {
+            NSLog("Error saving to core data: \(error)")
+        }
     }
     
     func update(entry: Entry, title: String, bodyText: String, mood: String) {
@@ -31,14 +35,23 @@ class EntryController {
         
         put(entry: entry)
         
-        saveToPersistentStore()
+        do {
+            try CoreDataStack.shared.save()
+        } catch {
+            NSLog("Error saving to core data: \(error)")
+        }
     }
     
     func delete(entry: Entry) {
         
         CoreDataStack.shared.mainContext.delete(entry)
         deleteEntryFromServer(entry: entry)
-        saveToPersistentStore()
+        
+        do {
+            try CoreDataStack.shared.save()
+        } catch {
+            NSLog("Error saving to core data: \(error)")
+        }
     }
     
     private func put(entry: Entry, completion: @escaping ((Error?) -> Void) = { _ in }) {
@@ -154,7 +167,7 @@ class EntryController {
         guard let identifier = identifier else { return nil }
         
         let fetchRequest: NSFetchRequest<Entry> = Entry.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "identfier == %@", identifier)
+        fetchRequest.predicate = NSPredicate(format: "identifier == %@", identifier)
         
         var result: Entry? = nil
         do {
@@ -188,11 +201,11 @@ class EntryController {
         entry.identifier = entryRep.identifier
     }
     
-    func saveToPersistentStore() {        
-        do {
-            try CoreDataStack.shared.mainContext.save()
-        } catch {
-            NSLog("Error saving managed object context: \(error)")
-        }
-    }
+//    func saveToPersistentStore() {
+//        do {
+//            try CoreDataStack.shared.mainContext.save()
+//        } catch {
+//            NSLog("Error saving managed object context: \(error)")
+//        }
+//    }
 }
