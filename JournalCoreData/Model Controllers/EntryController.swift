@@ -9,42 +9,48 @@
 import Foundation
 import CoreData
 
-let baseURL = URL(string: "https://journal-syncing.firebaseio.com/")!
+let baseURL = URL(string: "https://day3-journal.firebaseio.com/")!
 
 class EntryController {
     
-    func createEntry(with title: String, bodyText: String, mood: String) {
+    init()
+    {
+        fetchEntriesFromServer()
+    }
+    
+    func createEntry(with title: String, bodyText: String, mood: String, context: NSManagedObjectContext) {
         
         let entry = Entry(title: title, bodyText: bodyText, mood: mood)
         
         put(entry: entry)
         
-        saveToPersistentStore()
+        saveToPersistentStore(context:context)
     }
     
-    func update(entry: Entry, title: String, bodyText: String, mood: String) {
-        
+    func updateEntry(entry: Entry, title: String, bodyText: String, mood: String, timestamp: Date = Date(), context: NSManagedObjectContext) {
+        let entry = entry
         entry.title = title
         entry.bodyText = bodyText
-        entry.timestamp = Date()
+        entry.timestamp = timestamp as Date
         entry.mood = mood
+        
         
         put(entry: entry)
         
-        saveToPersistentStore()
+        saveToPersistentStore(context:context)
     }
     
-    func delete(entry: Entry) {
+    func delete(entry: Entry, context: NSManagedObjectContext) {
         
         CoreDataStack.shared.mainContext.delete(entry)
         deleteEntryFromServer(entry: entry)
-        saveToPersistentStore()
+        saveToPersistentStore(context:context)
     }
     
     private func put(entry: Entry, completion: @escaping ((Error?) -> Void) = { _ in }) {
         
         let identifier = entry.identifier ?? UUID().uuidString
-        let requestURL = baseURL.appendingPathComponent(identifier).appendingPathComponent("json")
+        let requestURL = baseURL.appendingPathComponent(identifier).appendingPathExtension("json")
         var request = URLRequest(url: requestURL)
         request.httpMethod = "PUT"
         
@@ -56,7 +62,7 @@ class EntryController {
             return
         }
         
-        URLSession.shared.dataTask(with: request) { (data, _, error) in
+        URLSession.shared.dataTask(with: request) { (_, _, error) in
             if let error = error {
                 NSLog("Error PUTting Entry to server: \(error)")
                 completion(error)
@@ -136,7 +142,7 @@ class EntryController {
         guard let identifier = identifier else { return nil }
         
         let fetchRequest: NSFetchRequest<Entry> = Entry.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "identfier == %@", identifier)
+        fetchRequest.predicate = NSPredicate(format: "identifier == %@", identifier)
         
         var result: Entry? = nil
         do {
@@ -170,11 +176,15 @@ class EntryController {
         entry.identifier = entryRep.identifier
     }
     
-    func saveToPersistentStore() {        
-        do {
-            try CoreDataStack.shared.mainContext.save()
-        } catch {
-            NSLog("Error saving managed object context: \(error)")
+    func saveToPersistentStore(context: NSManagedObjectContext) {
+        context.performAndWait {
+            do {
+                try CoreDataStack.shared.mainContext.save()
+            } catch {
+                NSLog("Error saving managed object context: \(error)")
+            }
         }
+        
+        
     }
 }
