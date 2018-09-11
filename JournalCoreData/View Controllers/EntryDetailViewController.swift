@@ -18,8 +18,9 @@ class EntryDetailViewController: UIViewController {
         
         guard let title = titleTextField.text,
             let bodyText = bodyTextView.text else { return }
-        
+        let backgroundMoc = CoreDataStack.shared.container.newBackgroundContext()
         var mood: String!
+        let updateDate = Date()
         
         switch moodSegmentedControl.selectedSegmentIndex {
         case 0:
@@ -33,14 +34,17 @@ class EntryDetailViewController: UIViewController {
         }
         
         if let entry = entry {
-            entryController?.update(entry: entry, title: title, bodyText: bodyText, mood: mood)
+            entryController?.updateEntry(entry: entry, title: title, bodyText: bodyText, mood: mood, timestamp: updateDate as Date, context: backgroundMoc)
         } else {
-            entryController?.createEntry(with: title, bodyText: bodyText, mood: mood)
+            entryController?.createEntry(with: title, bodyText: bodyText, mood: mood, context: backgroundMoc)
         }
         self.navigationController?.popViewController(animated: true)
     }
     
     private func updateViews() {
+        
+        guard isViewLoaded else {return}
+        
         guard let entry = entry else {
                 title = "Create Entry"
                 return
