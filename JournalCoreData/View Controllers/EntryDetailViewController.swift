@@ -41,7 +41,7 @@ class EntryDetailViewController: UIViewController {
     }
     
     private func updateViews() {
-        guard let entry = entry else {
+        guard let entry = entry, isViewLoaded else {
                 title = "Create Entry"
                 return
         }
@@ -50,7 +50,7 @@ class EntryDetailViewController: UIViewController {
         titleTextField.text = entry.title
         bodyTextView.text = entry.bodyText
         
-        var segmentIndex = 0
+        var segmentIndex = 1
         
         switch entry.mood {
         case Mood.bad.rawValue:
