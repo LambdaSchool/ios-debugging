@@ -68,7 +68,9 @@ class EntryDetailViewController: UIViewController {
     
     var entry: Entry? {
         didSet {
-            updateViews()
+            DispatchQueue.main.async {
+                self.updateViews()
+            }
         }
     }
     
