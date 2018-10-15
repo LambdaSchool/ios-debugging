@@ -112,7 +112,7 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
                 let indexPath = tableView.indexPathForSelectedRow else { return }
             
             destinationVC.entry = fetchedResultsController.object(at: indexPath)
-            
+            destinationVC.entryController = entryController
         default:
             break
         }
@@ -124,7 +124,9 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
     
     lazy var fetchedResultsController: NSFetchedResultsController<Entry> = {
         let fetchRequest: NSFetchRequest<Entry> = Entry.fetchRequest()
-        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "timestamp", ascending: false)]
+        let moodSortDescriptor = NSSortDescriptor(key: "mood", ascending: true)
+        let timestampSortDescriptor = NSSortDescriptor(key: "timestamp", ascending: false)
+        fetchRequest.sortDescriptors = [moodSortDescriptor, timestampSortDescriptor]
         
         let moc = CoreDataStack.shared.mainContext
         let frc = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: moc, sectionNameKeyPath: "mood", cacheName: nil)
