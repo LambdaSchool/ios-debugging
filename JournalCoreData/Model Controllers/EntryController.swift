@@ -170,10 +170,11 @@ class EntryController {
         entry.identifier = entryRep.identifier
     }
     
-    func saveToPersistentStore() {        
+    func saveToPersistentStore() {
         do {
             try CoreDataStack.shared.mainContext.save()
         } catch {
+            CoreDataStack.shared.mainContext.reset()
             NSLog("Error saving managed object context: \(error)")
         }
     }
