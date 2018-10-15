@@ -9,9 +9,13 @@
 import Foundation
 import CoreData
 
-let baseURL = URL(string: "https://journal-syncing.firebaseio.com/")!
+let baseURL = URL(string: "https://farhanf-journal.firebaseio.com/")!
 
 class EntryController {
+    
+//    init() {
+//        fetchEntriesFromServer()
+//    }
     
     func createEntry(with title: String, bodyText: String, mood: String) {
         
@@ -44,7 +48,7 @@ class EntryController {
     private func put(entry: Entry, completion: @escaping ((Error?) -> Void) = { _ in }) {
         
         let identifier = entry.identifier ?? UUID().uuidString
-        let requestURL = baseURL.appendingPathComponent(identifier).appendingPathComponent("json")
+        let requestURL = baseURL.appendingPathComponent(identifier).appendingPathExtension("json")
         var request = URLRequest(url: requestURL)
         request.httpMethod = "PUT"
         
@@ -119,7 +123,7 @@ class EntryController {
                 return
             }
             
-            moc.perform {
+            moc.performAndWait {
                 do {
                     try moc.save()
                     completion(nil)
