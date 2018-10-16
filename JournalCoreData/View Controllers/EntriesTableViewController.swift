@@ -102,15 +102,14 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
         switch segue.identifier {
-        case "CreateEntry":
+        case createSegue:
             guard let destinationVC = segue.destination as? EntryDetailViewController else { return }
-            
             destinationVC.entryController = entryController
             
-        case "ViewEntry":
+        case viewSegue:
             guard let destinationVC = segue.destination as? EntryDetailViewController,
                 let indexPath = tableView.indexPathForSelectedRow else { return }
-            
+            destinationVC.entryController = entryController
             destinationVC.entry = fetchedResultsController.object(at: indexPath)
             
         default:
@@ -120,6 +119,8 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
     
     // MARK: - Properties
     
+    let viewSegue = "ViewEntry"
+    let createSegue = "CreateEntry"
     let entryController = EntryController()
     
     lazy var fetchedResultsController: NSFetchedResultsController<Entry> = {
