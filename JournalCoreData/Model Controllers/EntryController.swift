@@ -9,7 +9,7 @@
 import Foundation
 import CoreData
 
-let baseURL = URL(string: "https://journal-debugger.firebaseio.com/")!
+let baseURL = URL(string: "https://journal-debugger.firebaseio.com/DBTest/")!
 
 class EntryController {
     
@@ -18,24 +18,18 @@ class EntryController {
         let entry = Entry(title: title, bodyText: bodyText, mood: mood)
         
         put(entry: entry)
-        
         saveToPersistentStore()
     }
     
     func update(entry: Entry, title: String, bodyText: String, mood: String) {
-        
-        put(entry: entry)
-        
-        saveToPersistentStore()
-        
+                
         entry.title = title
         entry.bodyText = bodyText
         entry.timestamp = Date()
         entry.mood = mood
         
-//        put(entry: entry)
-//
-//        saveToPersistentStore()
+        put(entry: entry)
+        saveToPersistentStore()
     }
     
     func delete(entry: Entry) {
@@ -45,6 +39,7 @@ class EntryController {
         saveToPersistentStore()
     }
     
+
     func put(entry: Entry, completion: @escaping ((Error?) -> Void) = { _ in }) {
         
         let identifier = entry.identifier ?? UUID().uuidString
