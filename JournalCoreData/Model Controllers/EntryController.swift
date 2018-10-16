@@ -112,20 +112,21 @@ class EntryController {
                 return
             }
 
-            let moc = CoreDataStack.shared.mainContext
+//            let moc = CoreDataStack.shared.mainContext
+            let backgroundContext = CoreDataStack.shared.container.newBackgroundContext()
             
             do {
                 let entryReps = try JSONDecoder().decode([String: EntryRepresentation].self, from: data).map({$0.value})
-                self.updateEntries(with: entryReps, in: moc)
+                self.updateEntries(with: entryReps, in: backgroundContext)
             } catch {
                 NSLog("Error decoding JSON data: \(error)")
                 completion(error)
                 return
             }
             
-            moc.perform {
+            backgroundContext.performAndWait {
                 do {
-                    try moc.save()
+                    try backgroundContext.save()
                     completion(nil)
                 } catch {
                     NSLog("Error saving context: \(error)")
