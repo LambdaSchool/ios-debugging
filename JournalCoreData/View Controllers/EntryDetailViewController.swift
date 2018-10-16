@@ -14,34 +14,53 @@ class EntryDetailViewController: UIViewController {
         updateViews()
     }
     
+    var entry: Entry? {
+        didSet {
+            updateViews()
+        }
+    }
+    
     @IBAction func saveEntry(_ sender: Any) {
         
         guard let title = titleTextField.text,
+            
             let bodyText = bodyTextView.text else { return }
         
-        var mood: String!
+        let moodIndex = moodSegmentedControl.selectedSegmentIndex
+        var mood = Mood.allMoods[moodIndex]
         
-        switch moodSegmentedControl.selectedSegmentIndex {
-        case 0:
-            mood = Mood.bad.rawValue
-        case 1:
-            mood = Mood.neutral.rawValue
-        case 2:
-            mood = Mood.good.rawValue
-        default:
-            break
-        }
+//        switch moodSegmentedControl.selectedSegmentIndex {
+//        case 0:
+//            mood = Mood.bad.rawValue
+//        case 1:
+//            mood = Mood.neutral.rawValue
+//        case 2:
+//            mood = Mood.good.rawValue
+//        default:
+//            break
+//        }
         
         if let entry = entry {
-            entryController?.update(entry: entry, title: title, bodyText: bodyText, mood: mood)
+            
+            entry.title = title
+            entry.bodyText = bodyText
+            entry.mood = mood.rawValue
+            
+            entryController?.put(entry: entry)
+            entryController?.saveToPersistentStore()
+            // Why? Maybe because the functions are representations and therefore
+            // won't act the same as calling the function nested in a function.
         } else {
-            entryController?.createEntry(with: title, bodyText: bodyText, mood: mood)
+            let entry = Entry(title: title, bodyText: bodyText, mood: mood.rawValue)
+            entryController?.put(entry: entry)
+            entryController?.saveToPersistentStore()
         }
-        self.navigationController?.popViewController(animated: true)
+        navigationController?.popViewController(animated: true)
     }
     
     private func updateViews() {
-        guard let entry = entry else {
+        guard let entry = entry,
+            isViewLoaded else {
                 title = "Create Entry"
                 return
         }
@@ -64,12 +83,6 @@ class EntryDetailViewController: UIViewController {
         }
         
         moodSegmentedControl.selectedSegmentIndex = segmentIndex
-    }
-    
-    var entry: Entry? {
-        didSet {
-            updateViews()
-        }
     }
     
     var entryController: EntryController?

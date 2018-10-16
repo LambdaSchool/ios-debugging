@@ -9,7 +9,7 @@
 import Foundation
 import CoreData
 
-let baseURL = URL(string: "https://journal-syncing.firebaseio.com/")!
+let baseURL = URL(string: "https://journal-debugger.firebaseio.com/")!
 
 class EntryController {
     
@@ -24,14 +24,18 @@ class EntryController {
     
     func update(entry: Entry, title: String, bodyText: String, mood: String) {
         
+        put(entry: entry)
+        
+        saveToPersistentStore()
+        
         entry.title = title
         entry.bodyText = bodyText
         entry.timestamp = Date()
         entry.mood = mood
         
-        put(entry: entry)
-        
-        saveToPersistentStore()
+//        put(entry: entry)
+//
+//        saveToPersistentStore()
     }
     
     func delete(entry: Entry) {
@@ -41,10 +45,10 @@ class EntryController {
         saveToPersistentStore()
     }
     
-    private func put(entry: Entry, completion: @escaping ((Error?) -> Void) = { _ in }) {
+    func put(entry: Entry, completion: @escaping ((Error?) -> Void) = { _ in }) {
         
         let identifier = entry.identifier ?? UUID().uuidString
-        let requestURL = baseURL.appendingPathComponent(identifier).appendingPathComponent("json")
+        let requestURL = baseURL.appendingPathComponent(identifier).appendingPathExtension("json")
         var request = URLRequest(url: requestURL)
         request.httpMethod = "PUT"
         
@@ -136,7 +140,7 @@ class EntryController {
         guard let identifier = identifier else { return nil }
         
         let fetchRequest: NSFetchRequest<Entry> = Entry.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "identfier == %@", identifier)
+        fetchRequest.predicate = NSPredicate(format: "identifier == %@", identifier)
         
         var result: Entry? = nil
         do {
