@@ -10,20 +10,20 @@ import Foundation
 import CoreData
 
 class CoreDataStack {
-    
     static let shared = CoreDataStack()
     
-    let container: NSPersistentContainer = {
-        
-        let container = NSPersistentContainer(name: "JournalCoreData" as String)
-        container.loadPersistentStores() { (storeDescription, error) in
-            if let error = error as NSError? {
-                fatalError("Unresolved error \(error), \(error.userInfo)")
+    lazy var container: NSPersistentContainer = {
+        let container = NSPersistentContainer(name: "JournalCoreData")
+        container.loadPersistentStores { (_, error) in
+            if let error = error {
+                fatalError("Failed to load persistent stores: \(error)")
             }
         }
         container.viewContext.automaticallyMergesChangesFromParent = true
         return container
     }()
     
-    var mainContext: NSManagedObjectContext { return container.viewContext }
+    var mainContext: NSManagedObjectContext  {
+        return container.viewContext
+    }
 }
