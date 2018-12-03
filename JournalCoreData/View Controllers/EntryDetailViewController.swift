@@ -66,7 +66,7 @@ class EntryDetailViewController: UIViewController {
         moodSegmentedControl.selectedSegmentIndex = segmentIndex
     }
     
-    var entry: Entry? {
+    var entry: Entry! {
         didSet {
             updateViews()
         }
