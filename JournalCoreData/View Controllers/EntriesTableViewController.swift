@@ -10,11 +10,20 @@ import UIKit
 import CoreData
 
 class EntriesTableViewController: UITableViewController, NSFetchedResultsControllerDelegate {
+    
+    // MARK: View lifecycle functions
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        entryController.fetchEntriesFromServer { (error) in
+            DispatchQueue.main.async { self.tableView.reloadData() }
+        }
+    }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        tableView.reloadData()
+       tableView.reloadData()
     }
     
     // MARK: - Table view data source
@@ -49,8 +58,7 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
         }
     }
     
-    // MARK: - NSFetchedResultsControllerDelegate
-    
+    // MARK:- NSFetchedResultsControllerDelegate
     func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         tableView.beginUpdates()
     }
@@ -96,9 +104,7 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
         }
     }
     
-    // MARK: - Navigation
-    
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
+    // MARK:- Navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
         switch segue.identifier {
@@ -112,6 +118,7 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
                 let indexPath = tableView.indexPathForSelectedRow else { return }
             
             destinationVC.entry = fetchedResultsController.object(at: indexPath)
+            destinationVC.entryController = entryController
             
         default:
             break
