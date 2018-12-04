@@ -10,6 +10,8 @@ import UIKit
 import CoreData
 
 class EntriesTableViewController: UITableViewController, NSFetchedResultsControllerDelegate {
+    
+    
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -17,17 +19,17 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
         tableView.reloadData()
     }
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        entryController.fetchEntriesFromServer() { error in
-            
-            DispatchQueue.main.async {
-                self.tableView.reloadData()
-            }
-            
-        }
-    }
+//    override func viewDidLoad() {
+//        super.viewDidLoad()
+//
+//        entryController.fetchEntriesFromServer() { error in
+//
+//            DispatchQueue.main.async {
+//                self.tableView.reloadData()
+//            }
+//
+//        }
+//    }
     
     
     

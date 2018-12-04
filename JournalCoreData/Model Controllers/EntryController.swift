@@ -13,6 +13,10 @@ let baseURL = URL(string: "https://journaldebugging.firebaseio.com/")!
 
 class EntryController {
     
+    init() {
+        self.fetchEntriesFromServer()
+    }
+    
     func createEntry(with title: String, bodyText: String, mood: String) {
         
         let entry = Entry(title: title, bodyText: bodyText, mood: mood)

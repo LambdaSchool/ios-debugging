@@ -47,8 +47,8 @@ class EntryDetailViewController: UIViewController {
         }
         
         title = entry.title
-        titleTextField.text = entry.title
-        bodyTextView.text = entry.bodyText
+        titleTextField?.text = entry.title
+        bodyTextView?.text = entry.bodyText
         
         var segmentIndex = 0
         
