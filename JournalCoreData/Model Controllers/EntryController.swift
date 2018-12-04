@@ -9,7 +9,7 @@
 import Foundation
 import CoreData
 
-let baseURL = URL(string: "https://journal-syncing.firebaseio.com/")!
+let baseURL = URL(string: "https://journal-af2c7.firebaseio.com/")!
 
 class EntryController {
     
@@ -21,6 +21,7 @@ class EntryController {
         
         saveToPersistentStore()
     }
+    
     
     func update(entry: Entry, title: String, bodyText: String, mood: String) {
         
@@ -44,7 +45,7 @@ class EntryController {
     private func put(entry: Entry, completion: @escaping ((Error?) -> Void) = { _ in }) {
         
         let identifier = entry.identifier ?? UUID().uuidString
-        let requestURL = baseURL.appendingPathComponent(identifier).appendingPathComponent("json")
+        let requestURL = baseURL.appendingPathComponent(identifier).appendingPathExtension("json")
         var request = URLRequest(url: requestURL)
         request.httpMethod = "PUT"
         
@@ -87,9 +88,9 @@ class EntryController {
             }
             
             completion(nil)
-        }.resume()
+            }.resume()
     }
-    
+
     func fetchEntriesFromServer(completion: @escaping ((Error?) -> Void) = { _ in }) {
         
         let requestURL = baseURL.appendingPathExtension("json")
@@ -107,7 +108,7 @@ class EntryController {
                 completion(NSError())
                 return
             }
-
+            
             let moc = CoreDataStack.shared.mainContext
             
             do {
@@ -119,7 +120,7 @@ class EntryController {
                 return
             }
             
-            moc.perform {
+            moc.performAndWait {
                 do {
                     try moc.save()
                     completion(nil)
@@ -128,7 +129,7 @@ class EntryController {
                     completion(error)
                 }
             }
-        }.resume()
+            }.resume()
     }
     
     private func fetchSingleEntryFromPersistentStore(with identifier: String?, in context: NSManagedObjectContext) -> Entry? {
@@ -136,7 +137,9 @@ class EntryController {
         guard let identifier = identifier else { return nil }
         
         let fetchRequest: NSFetchRequest<Entry> = Entry.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "identfier == %@", identifier)
+        fetchRequest.predicate = NSPredicate(format: "identifier == %@", identifier)
+        
+        //identifier! fixed line above ^^^^^^^^
         
         var result: Entry? = nil
         do {
