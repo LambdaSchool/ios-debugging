@@ -19,13 +19,12 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-    
+        
     }
     
     // MARK: - Table view data source
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        
         return fetchedResultsController.sections?[section].name
     }
     
@@ -40,6 +39,7 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "EntryCell", for: indexPath) as? EntryTableViewCell else { return UITableViewCell() }
+        
         
         let entry = fetchedResultsController.object(at: indexPath)
         cell.entry = entry
@@ -131,7 +131,7 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
     
     lazy var fetchedResultsController: NSFetchedResultsController<Entry> = {
         let fetchRequest: NSFetchRequest<Entry> = Entry.fetchRequest()
-        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "timestamp", ascending: false)]
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "mood", ascending: false), NSSortDescriptor(key: "timestamp", ascending: false)]
         
         let moc = CoreDataStack.shared.mainContext
         let frc = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: moc, sectionNameKeyPath: "mood", cacheName: nil)
