@@ -32,8 +32,6 @@ class EntryDetailViewController: UIViewController {
             break
         }
         
-        updateViews() // To update Mood when changed. 
-        
         if let entry = entry {
             entryController?.update(entry: entry, title: title, bodyText: bodyText, mood: mood)
         } else {
