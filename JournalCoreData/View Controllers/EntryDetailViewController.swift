@@ -47,8 +47,8 @@ class EntryDetailViewController: UIViewController {
         }
         
         guard let title = entry.title, let body = entry.bodyText, !title.isEmpty else {return}
-        titleTextField.text? = title
-        bodyTextView.text? = body
+        titleTextField.text = title
+        bodyTextView.text = body
         
         var segmentIndex = 0
         

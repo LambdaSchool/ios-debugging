@@ -13,6 +13,10 @@ let baseURL = URL(string: "https://journal-b933b.firebaseio.com/")!
 
 class EntryController {
     
+    init() {
+        fetchEntriesFromServer()
+    }
+    
     func createEntry(with title: String, bodyText: String, mood: String) {
         
         let entry = Entry(title: title, bodyText: bodyText, mood: mood)
@@ -136,10 +140,11 @@ class EntryController {
         guard let identifier = identifier else { return nil }
         
         let fetchRequest: NSFetchRequest<Entry> = Entry.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "identfier == %@", identifier)
+        fetchRequest.predicate = NSPredicate(format: "identifier == %@", identifier)
         
-        var result: Entry? = nil
+        var result: Entry?
         do {
+            
             result = try context.fetch(fetchRequest).first
         } catch {
             NSLog("Error fetching single entry: \(error)")
