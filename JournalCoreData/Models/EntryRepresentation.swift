@@ -1,6 +1,7 @@
 //
 //  EntryRepresentation.swift
 //  JournalCoreData
+//  Time to find bugs
 //
 //  Created by Spencer Curtis on 8/14/18.
 //  Copyright © 2018 Lambda School. All rights reserved.
