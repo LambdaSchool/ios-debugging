@@ -15,6 +15,8 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
         super.viewWillAppear(animated)
         
         tableView.reloadData()
+        
+        entryController.fetchEntriesFromServer()
     }
     
     // MARK: - Table view data source
