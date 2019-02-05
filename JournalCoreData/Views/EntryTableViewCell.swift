@@ -10,14 +10,6 @@ import UIKit
 
 class EntryTableViewCell: UITableViewCell {
 
-    private func updateViews() {
-        guard let entry = entry else { return }
-        
-        titleLabel.text = entry.title
-        bodyTextLabel.text = entry.bodyText
-        timestampLabel.text = TimestampFormatter.formatTimestamp(for: entry)
-    }
-    
     var entry: Entry? {
         didSet {
             updateViews()
@@ -27,4 +19,12 @@ class EntryTableViewCell: UITableViewCell {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var timestampLabel: UILabel!
     @IBOutlet weak var bodyTextLabel: UILabel!
+   
+    private func updateViews() {
+        guard let entry = entry else { return }
+        
+        titleLabel.text = entry.title
+        bodyTextLabel.text = entry.bodyText
+        timestampLabel.text = TimestampFormatter.formatTimestamp(for: entry)
+    }
 }

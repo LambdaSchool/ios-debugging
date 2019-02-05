@@ -13,12 +13,10 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
         tableView.reloadData()
     }
     
     // MARK: - Table view data source
-    
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         return fetchedResultsController.sections?[section].name
     }
@@ -31,26 +29,21 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
         return fetchedResultsController.sections?[section].numberOfObjects ?? 0
     }
     
-    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "EntryCell", for: indexPath) as? EntryTableViewCell else { return UITableViewCell() }
-        
         let entry = fetchedResultsController.object(at: indexPath)
         cell.entry = entry
-        
         return cell
     }
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            
             let entry = fetchedResultsController.object(at: indexPath)
             entryController.delete(entry: entry)
         }
     }
     
     // MARK: - NSFetchedResultsControllerDelegate
-    
     func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         tableView.beginUpdates()
     }
@@ -97,42 +90,31 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
     }
     
     // MARK: - Navigation
-    
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        
         switch segue.identifier {
         case "CreateEntry":
             guard let destinationVC = segue.destination as? EntryDetailViewController else { return }
-            
             destinationVC.entryController = entryController
-            
         case "ViewEntry":
             guard let destinationVC = segue.destination as? EntryDetailViewController,
                 let indexPath = tableView.indexPathForSelectedRow else { return }
-            
             destinationVC.entry = fetchedResultsController.object(at: indexPath)
-            
         default:
             break
         }
     }
     
     // MARK: - Properties
-    
     let entryController = EntryController()
     
     lazy var fetchedResultsController: NSFetchedResultsController<Entry> = {
         let fetchRequest: NSFetchRequest<Entry> = Entry.fetchRequest()
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "timestamp", ascending: false)]
-        
         let moc = CoreDataStack.shared.mainContext
         let frc = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: moc, sectionNameKeyPath: "mood", cacheName: nil)
-        
         frc.delegate = self
-        
         try! frc.performFetch()
-        
         return frc
     }()
 }
