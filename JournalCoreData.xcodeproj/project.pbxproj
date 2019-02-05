@@ -23,6 +23,7 @@
 		46AA32ED2121315F003AC495 /* EntryDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46AA32EC2121315F003AC495 /* EntryDetailViewController.swift */; };
 		46AA32EF21213184003AC495 /* EntryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46AA32EE21213184003AC495 /* EntryTableViewCell.swift */; };
 		46AA32F121213236003AC495 /* TimestampFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46AA32F021213236003AC495 /* TimestampFormatter.swift */; };
+		4C0BA25022090A5E0029A858 /* DebuggingNotes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C0BA24F22090A5E0029A858 /* DebuggingNotes.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -45,6 +46,7 @@
 		46AA32EE21213184003AC495 /* EntryTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryTableViewCell.swift; sourceTree = "<group>"; };
 		46AA32F021213236003AC495 /* TimestampFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimestampFormatter.swift; sourceTree = "<group>"; };
 		46F9C2242122456400E7FF73 /* JournalCoreData 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "JournalCoreData 2.xcdatamodel"; sourceTree = "<group>"; };
+		4C0BA24F22090A5E0029A858 /* DebuggingNotes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebuggingNotes.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -83,6 +85,7 @@
 				46AA32F4212132AD003AC495 /* View Controllers */,
 				46AA32F821213317003AC495 /* Storyboards */,
 				46AA32F72121330D003AC495 /* Resources */,
+				4C0BA24F22090A5E0029A858 /* DebuggingNotes.swift */,
 			);
 			path = JournalCoreData;
 			sourceTree = "<group>";
@@ -237,6 +240,7 @@
 				46AA32D021212A28003AC495 /* AppDelegate.swift in Sources */,
 				4697668A2123E0FA00E7FF73 /* EntryRepresentation.swift in Sources */,
 				46AA32ED2121315F003AC495 /* EntryDetailViewController.swift in Sources */,
+				4C0BA25022090A5E0029A858 /* DebuggingNotes.swift in Sources */,
 				46AA32E721212C78003AC495 /* CoreDataStack.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
