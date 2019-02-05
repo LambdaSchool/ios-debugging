@@ -49,6 +49,7 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
         }
     }
     
+    
     // MARK: - NSFetchedResultsControllerDelegate
     
     func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
@@ -112,6 +113,8 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
                 let indexPath = tableView.indexPathForSelectedRow else { return }
             
             destinationVC.entry = fetchedResultsController.object(at: indexPath)
+            
+            destinationVC.entryController = entryController
             
         default:
             break

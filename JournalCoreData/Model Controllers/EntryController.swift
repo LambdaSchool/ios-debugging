@@ -29,9 +29,9 @@ class EntryController {
         entry.timestamp = Date()
         entry.mood = mood
         
-        put(entry: entry)
-        
         saveToPersistentStore()
+        
+        put(entry: entry)
     }
     
     func delete(entry: Entry) {
