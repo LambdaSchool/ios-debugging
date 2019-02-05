@@ -9,16 +9,18 @@
 import Foundation
 import CoreData
 
-let baseURL = URL(string: "https://journal-syncing.firebaseio.com/")!
+let baseURL = URL(string: "https://journal-aa585.firebaseio.com/")!
 
 class EntryController {
+    
+    init() {
+        fetchEntriesFromServer()
+    }
     
     func createEntry(with title: String, bodyText: String, mood: String) {
         
         let entry = Entry(title: title, bodyText: bodyText, mood: mood)
-        
         put(entry: entry)
-        
         saveToPersistentStore()
     }
     
@@ -30,7 +32,6 @@ class EntryController {
         entry.mood = mood
         
         put(entry: entry)
-        
         saveToPersistentStore()
     }
     
@@ -44,7 +45,8 @@ class EntryController {
     private func put(entry: Entry, completion: @escaping ((Error?) -> Void) = { _ in }) {
         
         let identifier = entry.identifier ?? UUID().uuidString
-        let requestURL = baseURL.appendingPathComponent(identifier).appendingPathComponent("json")
+        // MARK: 3. Should be appending path extension and not component
+        let requestURL = baseURL.appendingPathComponent(identifier).appendingPathExtension("json")
         var request = URLRequest(url: requestURL)
         request.httpMethod = "PUT"
         
@@ -57,12 +59,13 @@ class EntryController {
         }
         
         URLSession.shared.dataTask(with: request) { (data, _, error) in
+            
             if let error = error {
                 NSLog("Error PUTting Entry to server: \(error)")
                 completion(error)
                 return
             }
-            
+    
             completion(nil)
         }.resume()
     }
@@ -136,7 +139,9 @@ class EntryController {
         guard let identifier = identifier else { return nil }
         
         let fetchRequest: NSFetchRequest<Entry> = Entry.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "identfier == %@", identifier)
+        
+        // MARK: 2. identifier was misspelled in the predicate.
+        fetchRequest.predicate = NSPredicate(format: "identifier == %@", identifier)
         
         var result: Entry? = nil
         do {

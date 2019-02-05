@@ -47,8 +47,11 @@ class EntryDetailViewController: UIViewController {
         }
         
         title = entry.title
-        titleTextField.text = entry.title
-        bodyTextView.text = entry.bodyText
+        
+        // MARK: 1. The outlets below are optional but were not being unwrapped. Added a question mark behind them to do so.
+        
+        titleTextField?.text = entry.title
+        bodyTextView?.text = entry.bodyText
         
         var segmentIndex = 0
         
@@ -63,7 +66,7 @@ class EntryDetailViewController: UIViewController {
             break
         }
         
-        moodSegmentedControl.selectedSegmentIndex = segmentIndex
+        moodSegmentedControl?.selectedSegmentIndex = segmentIndex
     }
     
     var entry: Entry? {
