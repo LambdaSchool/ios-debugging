@@ -15,6 +15,7 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
         super.viewWillAppear(animated)
         
         tableView.reloadData()
+        entryController.fetchEntriesFromServer()
     }
     
     // MARK: - Table view data source
@@ -112,6 +113,7 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
                 let indexPath = tableView.indexPathForSelectedRow else { return }
             
             destinationVC.entry = fetchedResultsController.object(at: indexPath)
+            //Added line below.
             destinationVC.entryController = entryController
             
         default:
