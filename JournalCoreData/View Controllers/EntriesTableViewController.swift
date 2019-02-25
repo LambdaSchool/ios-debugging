@@ -111,8 +111,8 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
             guard let destinationVC = segue.destination as? EntryDetailViewController,
                 let indexPath = tableView.indexPathForSelectedRow else { return }
             
-            destinationVC.entry = fetchedResultsController.object(at: indexPath)
             
+            destinationVC.entry = fetchedResultsController.object(at: indexPath)
         default:
             break
         }

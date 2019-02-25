@@ -41,6 +41,9 @@ class EntryDetailViewController: UIViewController {
     }
     
     private func updateViews() {
+        // was unable to update views without view being loaded. checking if view is loaded.
+        
+        if isViewLoaded {
         guard let entry = entry else {
                 title = "Create Entry"
                 return
@@ -64,6 +67,7 @@ class EntryDetailViewController: UIViewController {
         }
         
         moodSegmentedControl.selectedSegmentIndex = segmentIndex
+        }
     }
     
     var entry: Entry? {
