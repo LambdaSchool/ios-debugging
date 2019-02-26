@@ -111,7 +111,6 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
             guard let destinationVC = segue.destination as? EntryDetailViewController,
                 let indexPath = tableView.indexPathForSelectedRow else { return }
             
-            
             // update was never being called from entry controller in the detail view
             destinationVC.entryController = entryController
             destinationVC.entry = fetchedResultsController.object(at: indexPath)
