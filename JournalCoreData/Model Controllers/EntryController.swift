@@ -13,6 +13,7 @@ let baseURL = URL(string: "https://journal-core-data-sync.firebaseio.com/")!
 
 class EntryController {
     
+    // fetch from server was not being called.
     init() {
         fetchEntriesFromServer()
     }
