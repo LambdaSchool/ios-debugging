@@ -20,7 +20,8 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
     // MARK: - Table view data source
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return fetchedResultsController.sections?[section].name
+        guard let sectionInfo = fetchedResultsController.sections?[section] else { return nil }
+        return sectionInfo.name
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
