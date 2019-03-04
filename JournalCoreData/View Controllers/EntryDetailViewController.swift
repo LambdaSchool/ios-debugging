@@ -66,11 +66,13 @@ class EntryDetailViewController: UIViewController {
         moodSegmentedControl.selectedSegmentIndex = segmentIndex
     }
     
-    var entry: Entry? {
-        didSet {
-            updateViews()
-        }
-    }
+    var entry: Entry?
+//  Did Set on this property causes an error because it tries to update the view before the controller has even loaded due to the segue passing in an entry when the cell is clicked on the tableView
+    //{
+//        didSet {
+//            updateViews()
+//        }
+//    }
     
     var entryController: EntryController?
     
