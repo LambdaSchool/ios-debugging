@@ -65,7 +65,7 @@ class EntryDetailViewController: UIViewController {
             break
         }
         
-        moodSegmentedControl.selectedSegmentIndex = segmentIndex
+        moodSegmentedControl?.selectedSegmentIndex = segmentIndex
     }
     
     var entry: Entry? {
