@@ -47,6 +47,7 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
             
             let entry = fetchedResultsController.object(at: indexPath)
             entryController.delete(entry: entry)
+            tableView.reloadData()
         }
     }
     
