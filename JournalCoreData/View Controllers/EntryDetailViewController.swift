@@ -74,7 +74,7 @@ class EntryDetailViewController: UIViewController {
         }
     }
     
-    var entryController: EntryController?
+    var entryController: EntryController? 
     
     @IBOutlet weak var moodSegmentedControl: UISegmentedControl!
     @IBOutlet weak var titleTextField: UITextField!
