@@ -13,13 +13,15 @@ let baseURL = URL(string: "https://journal-syncing.firebaseio.com/")!
 
 class EntryController {
     
+    init() {
+        fetchEntriesFromServer()
+    }
+    
     func createEntry(with title: String, bodyText: String, mood: String) {
         
         let entry = Entry(title: title, bodyText: bodyText, mood: mood)
         
         put(entry: entry)
-        
-        saveToPersistentStore()
     }
     
     func update(entry: Entry, title: String, bodyText: String, mood: String) {
@@ -30,8 +32,6 @@ class EntryController {
         entry.mood = mood
         
         put(entry: entry)
-        
-        saveToPersistentStore()
     }
     
     func delete(entry: Entry) {
@@ -155,9 +155,11 @@ class EntryController {
                 let entry = self.fetchSingleEntryFromPersistentStore(with: identifier, in: context)
                 if let entry = entry, entry != entryRep {
                     self.update(entry: entry, with: entryRep)
+                    self.put(entry: entry)
                 } else if entry == nil {
                     _ = Entry(entryRepresentation: entryRep, context: context)
                 }
+                saveToPersistentStore()
             }
         }
     }
@@ -170,11 +172,15 @@ class EntryController {
         entry.identifier = entryRep.identifier
     }
     
-    func saveToPersistentStore() {        
-        do {
-            try CoreDataStack.shared.mainContext.save()
-        } catch {
-            NSLog("Error saving managed object context: \(error)")
+    func saveToPersistentStore() {
+        let moc = CoreDataStack.shared.mainContext
+        moc.perform {
+            do {
+                try moc.save()
+            } catch {
+                moc.reset()
+                NSLog("Error saving managed object context: \(error)")
+            }
         }
     }
 }
