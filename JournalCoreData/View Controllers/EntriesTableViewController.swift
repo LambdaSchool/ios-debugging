@@ -114,7 +114,7 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
                 let indexPath = tableView.indexPathForSelectedRow, let cell = sender as? EntryTableViewCell else { return }
             
             destinationVC.entryController = entryController
-            destinationVC.entry = fetchedResultsController.object(at: indexPath)
+            destinationVC.entry = cell.entry //fetchedResultsController.object(at: indexPath)
             
             
         default:
