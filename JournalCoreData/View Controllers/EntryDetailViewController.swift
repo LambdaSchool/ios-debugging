@@ -14,6 +14,45 @@ class EntryDetailViewController: UIViewController {
         updateViews()
     }
     
+   
+   
+    var entry: Entry? {
+        didSet {
+            updateViews()
+        }
+    }
+    
+    var entryController: EntryController?
+    
+    
+    private func updateViews() {
+        guard isViewLoaded else { return }
+        guard let entry = entry else {
+            title = "Create Entry"
+            return
+        }
+        
+        title = entry.title
+        titleTextField.text = entry.title
+        bodyTextView.text = entry.bodyText
+        
+        var segmentIndex = 0
+        
+        switch entry.mood {
+        case Mood.bad.rawValue:
+            segmentIndex = 0
+        case Mood.neutral.rawValue:
+            segmentIndex = 1
+        case Mood.good.rawValue:
+            segmentIndex = 2
+        default:
+            break
+        }
+        
+        moodSegmentedControl.selectedSegmentIndex = segmentIndex
+    }
+    
+    
     @IBAction func saveEntry(_ sender: Any) {
         
         guard let title = titleTextField.text,
@@ -40,39 +79,6 @@ class EntryDetailViewController: UIViewController {
         self.navigationController?.popViewController(animated: true)
     }
     
-    private func updateViews() {
-        guard let entry = entry else {
-                title = "Create Entry"
-                return
-        }
-        
-        title = entry.title
-        titleTextField.text = entry.title
-        bodyTextView.text = entry.bodyText
-        
-        var segmentIndex = 0
-        
-        switch entry.mood {
-        case Mood.bad.rawValue:
-            segmentIndex = 0
-        case Mood.neutral.rawValue:
-            segmentIndex = 1
-        case Mood.good.rawValue:
-            segmentIndex = 2
-        default:
-            break
-        }
-        
-        moodSegmentedControl.selectedSegmentIndex = segmentIndex
-    }
-    
-    var entry: Entry? {
-        didSet {
-            updateViews()
-        }
-    }
-    
-    var entryController: EntryController?
     
     @IBOutlet weak var moodSegmentedControl: UISegmentedControl!
     @IBOutlet weak var titleTextField: UITextField!

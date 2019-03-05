@@ -20,7 +20,8 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
     // MARK: - Table view data source
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return fetchedResultsController.sections?[section].name
+        guard let sectionInfo = fetchedResultsController.sections?[section] else { return nil }
+        return sectionInfo.name
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -46,6 +47,7 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
             
             let entry = fetchedResultsController.object(at: indexPath)
             entryController.delete(entry: entry)
+            tableView.reloadData()
         }
     }
     
@@ -109,9 +111,11 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
             
         case "ViewEntry":
             guard let destinationVC = segue.destination as? EntryDetailViewController,
-                let indexPath = tableView.indexPathForSelectedRow else { return }
+                let indexPath = tableView.indexPathForSelectedRow, let cell = sender as? EntryTableViewCell else { return }
             
-            destinationVC.entry = fetchedResultsController.object(at: indexPath)
+            destinationVC.entryController = entryController
+            destinationVC.entry = cell.entry //fetchedResultsController.object(at: indexPath)
+            
             
         default:
             break

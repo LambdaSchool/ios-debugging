@@ -9,9 +9,13 @@
 import Foundation
 import CoreData
 
-let baseURL = URL(string: "https://journal-syncing.firebaseio.com/")!
+let baseURL = URL(string: "https://debug-core-journal.firebaseio.com/")!
 
 class EntryController {
+    
+    init () {
+        fetchEntriesFromServer()
+    }
     
     func createEntry(with title: String, bodyText: String, mood: String) {
         
@@ -44,7 +48,7 @@ class EntryController {
     private func put(entry: Entry, completion: @escaping ((Error?) -> Void) = { _ in }) {
         
         let identifier = entry.identifier ?? UUID().uuidString
-        let requestURL = baseURL.appendingPathComponent(identifier).appendingPathComponent("json")
+        let requestURL = baseURL.appendingPathComponent(identifier).appendingPathExtension("json")
         var request = URLRequest(url: requestURL)
         request.httpMethod = "PUT"
         
@@ -90,42 +94,45 @@ class EntryController {
         }.resume()
     }
     
-    func fetchEntriesFromServer(completion: @escaping ((Error?) -> Void) = { _ in }) {
+    func fetchEntriesFromServer(completion: @escaping (([EntryRepresentation]?, Error?) -> Void) = { _,_  in }) {
         
-        let requestURL = baseURL.appendingPathExtension("json")
+        let url = baseURL.appendingPathExtension("json")
         
-        URLSession.shared.dataTask(with: requestURL) { (data, _, error) in
+        let urlRequest = URLRequest(url: url)
+        
+        URLSession.shared.dataTask(with: urlRequest) { (data, _, error) in
             
             if let error = error {
                 NSLog("Error fetching entries from server: \(error)")
-                completion(error)
+                completion(nil, error)
                 return
             }
             
             guard let data = data else {
                 NSLog("No data returned from data task")
-                completion(NSError())
+                completion(nil, NSError())
                 return
             }
 
             let moc = CoreDataStack.shared.mainContext
+            let backgroundMoc = CoreDataStack.shared.container.newBackgroundContext()
             
             do {
                 let entryReps = try JSONDecoder().decode([String: EntryRepresentation].self, from: data).map({$0.value})
-                self.updateEntries(with: entryReps, in: moc)
+                self.updateEntries(with: entryReps, in: backgroundMoc)
             } catch {
                 NSLog("Error decoding JSON data: \(error)")
-                completion(error)
+                completion(nil, error)
                 return
             }
             
             moc.perform {
                 do {
                     try moc.save()
-                    completion(nil)
+                    completion(nil, nil)
                 } catch {
                     NSLog("Error saving context: \(error)")
-                    completion(error)
+                    completion(nil, error)
                 }
             }
         }.resume()
