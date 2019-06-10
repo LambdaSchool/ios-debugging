@@ -137,8 +137,8 @@
 			children = (
 				4697668D2123E41800E7FF73 /* EntryConforming.swift */,
 				462A2D582122C6DF00E7FF73 /* Mood.swift */,
-				46AA32CF21212A28003AC495 /* AppDelegate.swift */,
 				46AA32F021213236003AC495 /* TimestampFormatter.swift */,
+				46AA32CF21212A28003AC495 /* AppDelegate.swift */,
 				46AA32D621212A2A003AC495 /* Assets.xcassets */,
 				46AA32DB21212A2A003AC495 /* Info.plist */,
 			);

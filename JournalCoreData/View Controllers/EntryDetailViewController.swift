@@ -45,6 +45,7 @@ class EntryDetailViewController: UIViewController {
                 title = "Create Entry"
                 return
         }
+		loadViewIfNeeded()
         
         title = entry.title
         titleTextField.text = entry.title
