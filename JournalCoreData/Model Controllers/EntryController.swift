@@ -12,35 +12,47 @@ import CoreData
 let baseURL = URL(string: "https://journal-syncing.firebaseio.com/")!
 
 class EntryController {
-    
-    func createEntry(with title: String, bodyText: String, mood: String) {
-        
-        let entry = Entry(title: title, bodyText: bodyText, mood: mood)
-        
-        put(entry: entry)
-        
-        saveToPersistentStore()
-    }
-    
-    func update(entry: Entry, title: String, bodyText: String, mood: String) {
-        
-        entry.title = title
-        entry.bodyText = bodyText
-        entry.timestamp = Date()
-        entry.mood = mood
-        
-        put(entry: entry)
-        
-        saveToPersistentStore()
-    }
-    
-    func delete(entry: Entry) {
-        
-        CoreDataStack.shared.mainContext.delete(entry)
-        deleteEntryFromServer(entry: entry)
-        saveToPersistentStore()
-    }
-    
+
+	// MARK: - CoreData
+
+	func createEntry(with title: String, bodyText: String, mood: String) {
+
+		let entry = Entry(title: title, bodyText: bodyText, mood: mood)
+
+		put(entry: entry)
+
+		saveToPersistentStore()
+	}
+
+	func update(entry: Entry, title: String, bodyText: String, mood: String) {
+
+		entry.title = title
+		entry.bodyText = bodyText
+		entry.timestamp = Date()
+		entry.mood = mood
+
+		put(entry: entry)
+
+		saveToPersistentStore()
+	}
+
+	func delete(entry: Entry) {
+
+		CoreDataStack.shared.mainContext.delete(entry)
+		deleteEntryFromServer(entry: entry)
+		saveToPersistentStore()
+	}
+
+	func saveToPersistentStore() {
+		do {
+			try CoreDataStack.shared.mainContext.save()
+		} catch {
+			NSLog("Error saving managed object context: \(error)")
+		}
+	}
+
+	// MARK: - Netcode
+
     private func put(entry: Entry, completion: @escaping ((Error?) -> Void) = { _ in }) {
         
         let identifier = entry.identifier ?? UUID().uuidString
@@ -130,7 +142,9 @@ class EntryController {
             }
         }.resume()
     }
-    
+
+	// MARK: - net+CoreData
+
     private func fetchSingleEntryFromPersistentStore(with identifier: String?, in context: NSManagedObjectContext) -> Entry? {
         
         guard let identifier = identifier else { return nil }
@@ -170,11 +184,5 @@ class EntryController {
         entry.identifier = entryRep.identifier
     }
     
-    func saveToPersistentStore() {        
-        do {
-            try CoreDataStack.shared.mainContext.save()
-        } catch {
-            NSLog("Error saving managed object context: \(error)")
-        }
-    }
+
 }
