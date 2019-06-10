@@ -13,6 +13,10 @@ let baseURL = URL(string: "https://journal-syncing.firebaseio.com/")!
 
 class EntryController {
 
+	init() {
+		fetchEntriesFromServer()
+	}
+
 	// MARK: - CoreData
 
 	func createEntry(with title: String, bodyText: String, mood: String) {
