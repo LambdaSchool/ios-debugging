@@ -14,8 +14,19 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        tableView.reloadData()
+		tableView.refreshControl = UIRefreshControl()
+		tableView.refreshControl?.addTarget(self, action: #selector(updateEntries), for: .valueChanged)
     }
+
+	@objc func updateEntries() {
+		tableView.refreshControl?.beginRefreshing()
+		entryController.fetchEntriesFromServer { [weak self] error in
+			if let error = error {
+				print("Error refreshing: \(error)")
+			}
+			self?.tableView.refreshControl?.endRefreshing()
+		}
+	}
 
     // MARK: - Navigation
     
