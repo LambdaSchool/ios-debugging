@@ -37,4 +37,21 @@ extension Entry {
         
         self.init(title: title, bodyText: bodyText, timestamp: timestamp, mood: mood, identifier: identifier, context: context)
     }
+    
+    var entryRepresentation: EntryRepresentation? {
+        guard let title = title,
+            let bodyText = bodyText,
+            let timestamp = timestamp,
+            let moodString = mood,
+            let mood = Mood(rawValue: moodString) else { return nil }
+        
+        if identifier == nil {
+            identifier = UUID().uuidString
+        }
+        
+        return EntryRepresentation(title: title, bodyText: bodyText, mood: mood.rawValue, timestamp: timestamp, identifier: identifier)
+        
+        
+        
+    }
 }

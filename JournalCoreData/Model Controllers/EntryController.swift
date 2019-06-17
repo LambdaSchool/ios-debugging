@@ -9,9 +9,15 @@
 import Foundation
 import CoreData
 
-let baseURL = URL(string: "https://journal-syncing.firebaseio.com/")!
+let baseURL = URL(string: "https://journaldebugging-kmac.firebaseio.com/")!
 
 class EntryController {
+    
+    
+//    init() {
+//        fetchEntriesFromServer()
+//    }
+    
     
     func createEntry(with title: String, bodyText: String, mood: String) {
         
@@ -45,11 +51,15 @@ class EntryController {
         
         let identifier = entry.identifier ?? UUID().uuidString
         let requestURL = baseURL.appendingPathComponent(identifier).appendingPathComponent("json")
+
         var request = URLRequest(url: requestURL)
         request.httpMethod = "PUT"
         
         do {
-            request.httpBody = try JSONEncoder().encode(entry)
+            
+            guard let entryRep = entry.entryRepresentation else { throw NSError() }
+            request.httpBody = try JSONEncoder().encode(entryRep)
+
         } catch {
             NSLog("Error encoding Entry: \(error)")
             completion(error)
@@ -111,7 +121,7 @@ class EntryController {
             let moc = CoreDataStack.shared.mainContext
             
             do {
-                let entryReps = try JSONDecoder().decode([String: EntryRepresentation].self, from: data).map({$0.value})
+                let entryReps = Array(try JSONDecoder().decode([String: EntryRepresentation].self, from: data).values)
                 self.updateEntries(with: entryReps, in: moc)
             } catch {
                 NSLog("Error decoding JSON data: \(error)")

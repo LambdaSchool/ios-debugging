@@ -9,6 +9,7 @@
 import UIKit
 
 class EntryDetailViewController: UIViewController {
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         updateViews()
@@ -40,7 +41,8 @@ class EntryDetailViewController: UIViewController {
         self.navigationController?.popViewController(animated: true)
     }
     
-    private func updateViews() {
+    func updateViews() {
+        guard isViewLoaded else { return }
         guard let entry = entry else {
                 title = "Create Entry"
                 return
