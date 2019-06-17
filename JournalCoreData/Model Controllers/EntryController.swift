@@ -9,17 +9,20 @@
 import Foundation
 import CoreData
 
-let baseURL = URL(string: "https://journal-syncing.firebaseio.com/")!
+let baseURL = URL(string: "https://journal-48ed0.firebaseio.com/")!
+
 
 class EntryController {
+    
+    init() {
+        fetchEntriesFromServer()
+    }
     
     func createEntry(with title: String, bodyText: String, mood: String) {
         
         let entry = Entry(title: title, bodyText: bodyText, mood: mood)
         
         put(entry: entry)
-        
-        saveToPersistentStore()
     }
     
     func update(entry: Entry, title: String, bodyText: String, mood: String) {
@@ -30,8 +33,6 @@ class EntryController {
         entry.mood = mood
         
         put(entry: entry)
-        
-        saveToPersistentStore()
     }
     
     func delete(entry: Entry) {
@@ -44,7 +45,7 @@ class EntryController {
     private func put(entry: Entry, completion: @escaping ((Error?) -> Void) = { _ in }) {
         
         let identifier = entry.identifier ?? UUID().uuidString
-        let requestURL = baseURL.appendingPathComponent(identifier).appendingPathComponent("json")
+        let requestURL = baseURL.appendingPathComponent(identifier).appendingPathExtension("json")
         var request = URLRequest(url: requestURL)
         request.httpMethod = "PUT"
         
@@ -64,7 +65,7 @@ class EntryController {
             }
             
             completion(nil)
-        }.resume()
+            }.resume()
     }
     
     func deleteEntryFromServer(entry: Entry, completion: @escaping ((Error?) -> Void) = { _ in }) {
@@ -87,7 +88,7 @@ class EntryController {
             }
             
             completion(nil)
-        }.resume()
+            }.resume()
     }
     
     func fetchEntriesFromServer(completion: @escaping ((Error?) -> Void) = { _ in }) {
@@ -107,7 +108,7 @@ class EntryController {
                 completion(NSError())
                 return
             }
-
+            
             let moc = CoreDataStack.shared.mainContext
             
             do {
@@ -128,7 +129,7 @@ class EntryController {
                     completion(error)
                 }
             }
-        }.resume()
+            }.resume()
     }
     
     private func fetchSingleEntryFromPersistentStore(with identifier: String?, in context: NSManagedObjectContext) -> Entry? {
@@ -136,7 +137,7 @@ class EntryController {
         guard let identifier = identifier else { return nil }
         
         let fetchRequest: NSFetchRequest<Entry> = Entry.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "identfier == %@", identifier)
+        fetchRequest.predicate = NSPredicate(format: "identifier == %@", identifier)
         
         var result: Entry? = nil
         do {
@@ -155,9 +156,11 @@ class EntryController {
                 let entry = self.fetchSingleEntryFromPersistentStore(with: identifier, in: context)
                 if let entry = entry, entry != entryRep {
                     self.update(entry: entry, with: entryRep)
+                    self.put(entry: entry)
                 } else if entry == nil {
                     _ = Entry(entryRepresentation: entryRep, context: context)
                 }
+                saveToPersistentStore()
             }
         }
     }
@@ -170,11 +173,15 @@ class EntryController {
         entry.identifier = entryRep.identifier
     }
     
-    func saveToPersistentStore() {        
-        do {
-            try CoreDataStack.shared.mainContext.save()
-        } catch {
-            NSLog("Error saving managed object context: \(error)")
+    func saveToPersistentStore() {
+        let moc = CoreDataStack.shared.mainContext
+        moc.perform {
+            do {
+                try moc.save()
+            } catch {
+                moc.reset()
+                NSLog("Error saving managed object context: \(error)")
+            }
         }
     }
 }
