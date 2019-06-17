@@ -9,9 +9,15 @@
 import Foundation
 import CoreData
 
-let baseURL = URL(string: "https://journal-syncing.firebaseio.com/")!
+let baseURL = URL(string: "https://journaldebugging-kmac.firebaseio.com/")!
 
 class EntryController {
+    
+    
+    init() {
+        fetchEntriesFromServer()
+    }
+    
     
     func createEntry(with title: String, bodyText: String, mood: String) {
         
@@ -44,23 +50,30 @@ class EntryController {
     private func put(entry: Entry, completion: @escaping ((Error?) -> Void) = { _ in }) {
         
         let identifier = entry.identifier ?? UUID().uuidString
-        let requestURL = baseURL.appendingPathComponent(identifier).appendingPathComponent("json")
+        let requestURL = baseURL.appendingPathComponent(identifier).appendingPathExtension("json")
+
         var request = URLRequest(url: requestURL)
         request.httpMethod = "PUT"
         
         do {
-            request.httpBody = try JSONEncoder().encode(entry)
+            
+            guard let entryRep = entry.entryRepresentation else { throw NSError() }
+            request.httpBody = try JSONEncoder().encode(entryRep)
+
         } catch {
             NSLog("Error encoding Entry: \(error)")
             completion(error)
             return
         }
         
-        URLSession.shared.dataTask(with: request) { (data, _, error) in
+        URLSession.shared.dataTask(with: request) { (data, response, error) in
             if let error = error {
                 NSLog("Error PUTting Entry to server: \(error)")
                 completion(error)
                 return
+            }
+            if let response = response {
+                print(response)
             }
             
             completion(nil)
@@ -111,7 +124,7 @@ class EntryController {
             let moc = CoreDataStack.shared.mainContext
             
             do {
-                let entryReps = try JSONDecoder().decode([String: EntryRepresentation].self, from: data).map({$0.value})
+                let entryReps = Array(try JSONDecoder().decode([String: EntryRepresentation].self, from: data).values)
                 self.updateEntries(with: entryReps, in: moc)
             } catch {
                 NSLog("Error decoding JSON data: \(error)")
@@ -136,7 +149,7 @@ class EntryController {
         guard let identifier = identifier else { return nil }
         
         let fetchRequest: NSFetchRequest<Entry> = Entry.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "identfier == %@", identifier)
+        fetchRequest.predicate = NSPredicate(format: "identifier == %@", identifier)
         
         var result: Entry? = nil
         do {
