@@ -9,9 +9,15 @@
 import Foundation
 import CoreData
 
+
+
 let baseURL = URL(string: "https://journal-syncing.firebaseio.com/")!
 
 class EntryController {
+
+    init() {
+        fetchEntriesFromServer()
+    }
     
     func createEntry(with title: String, bodyText: String, mood: String) {
         
@@ -44,7 +50,7 @@ class EntryController {
     private func put(entry: Entry, completion: @escaping ((Error?) -> Void) = { _ in }) {
         
         let identifier = entry.identifier ?? UUID().uuidString
-        let requestURL = baseURL.appendingPathComponent(identifier).appendingPathComponent("json")
+        let requestURL = baseURL.appendingPathComponent(identifier).appendingPathExtension("json")
         var request = URLRequest(url: requestURL)
         request.httpMethod = "PUT"
         
@@ -130,22 +136,24 @@ class EntryController {
             }
         }.resume()
     }
-    
+
     private func fetchSingleEntryFromPersistentStore(with identifier: String?, in context: NSManagedObjectContext) -> Entry? {
-        
-        guard let identifier = identifier else { return nil }
-        
+        guard let identifier = identifier else { return nil}
+
         let fetchRequest: NSFetchRequest<Entry> = Entry.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "identfier == %@", identifier)
-        
+        fetchRequest.predicate = NSPredicate(format: "identifier == %@", identifier)
+
         var result: Entry? = nil
-        do {
-            result = try context.fetch(fetchRequest).first
-        } catch {
-            NSLog("Error fetching single entry: \(error)")
+        context.performAndWait {
+            do {
+                result = try context.fetch(fetchRequest).first
+            } catch {
+                NSLog("Error fetching entry with uuid \(identifier): \(error)")
+            }
         }
         return result
     }
+    
     
     private func updateEntries(with representations: [EntryRepresentation], in context: NSManagedObjectContext) {
         context.performAndWait {
@@ -173,6 +181,7 @@ class EntryController {
     func saveToPersistentStore() {        
         do {
             try CoreDataStack.shared.mainContext.save()
+
         } catch {
             NSLog("Error saving managed object context: \(error)")
         }
