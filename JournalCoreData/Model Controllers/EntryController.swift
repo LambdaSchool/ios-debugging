@@ -14,9 +14,9 @@ let baseURL = URL(string: "https://journaldebugging-kmac.firebaseio.com/")!
 class EntryController {
     
     
-//    init() {
-//        fetchEntriesFromServer()
-//    }
+    init() {
+        fetchEntriesFromServer()
+    }
     
     
     func createEntry(with title: String, bodyText: String, mood: String) {
@@ -50,7 +50,7 @@ class EntryController {
     private func put(entry: Entry, completion: @escaping ((Error?) -> Void) = { _ in }) {
         
         let identifier = entry.identifier ?? UUID().uuidString
-        let requestURL = baseURL.appendingPathComponent(identifier).appendingPathComponent("json")
+        let requestURL = baseURL.appendingPathComponent(identifier).appendingPathExtension("json")
 
         var request = URLRequest(url: requestURL)
         request.httpMethod = "PUT"
@@ -149,7 +149,7 @@ class EntryController {
         guard let identifier = identifier else { return nil }
         
         let fetchRequest: NSFetchRequest<Entry> = Entry.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "identfier == %@", identifier)
+        fetchRequest.predicate = NSPredicate(format: "identifier == %@", identifier)
         
         var result: Entry? = nil
         do {
