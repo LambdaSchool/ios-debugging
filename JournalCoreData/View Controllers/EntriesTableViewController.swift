@@ -13,8 +13,7 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-        tableView.reloadData()
+                self.tableView.reloadData()
     }
     
     // MARK: - Table view data source
@@ -124,7 +123,7 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
     
     lazy var fetchedResultsController: NSFetchedResultsController<Entry> = {
         let fetchRequest: NSFetchRequest<Entry> = Entry.fetchRequest()
-        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "identifier", ascending: false)]
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "timestamp", ascending: false)]
         
         let moc = CoreDataStack.shared.mainContext
         let frc = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: moc, sectionNameKeyPath: "mood", cacheName: nil)

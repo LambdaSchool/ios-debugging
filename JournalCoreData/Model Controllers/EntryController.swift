@@ -13,6 +13,10 @@ let baseURL = URL(string: "https://journal-72b8d.firebaseio.com/")!
 
 class EntryController {
     
+    init() {
+        fetchEntriesFromServer()
+    }
+    
     func createEntry(with title: String, bodyText: String, mood: String) {
         
         let entry = Entry(title: title, bodyText: bodyText, mood: mood)
@@ -93,6 +97,8 @@ class EntryController {
     func fetchEntriesFromServer(completion: @escaping ((Error?) -> Void) = { _ in }) {
         
         let requestURL = baseURL.appendingPathExtension("json")
+        var request = URLRequest(url: requestURL)
+        request.httpMethod = "GET"
         
         URLSession.shared.dataTask(with: requestURL) { (data, _, error) in
             
@@ -136,7 +142,7 @@ class EntryController {
         guard let identifier = identifier else { return nil }
         
         let fetchRequest: NSFetchRequest<Entry> = Entry.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "identfier == %@", identifier)
+        fetchRequest.predicate = NSPredicate(format: "identifier == %@", identifier)
         
         var result: Entry? = nil
         do {
