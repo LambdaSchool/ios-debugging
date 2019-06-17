@@ -115,8 +115,9 @@ class EntryController {
             let moc = CoreDataStack.shared.mainContext
             
             do {
-                let entryReps = try Array(JSONDecoder().decode([String: EntryRepresentation].self, from: data).map({$0.value}))
+                let entryReps = try JSONDecoder().decode([String: EntryRepresentation].self, from: data).map({$0.value})
                 self.updateEntries(with: entryReps, in: moc)
+                completion(nil)
             } catch {
                 NSLog("Error decoding JSON data: \(error)")
                 completion(error)
@@ -143,10 +144,12 @@ class EntryController {
         fetchRequest.predicate = NSPredicate(format: "identifier == %@", identifier)
         
         var result: Entry? = nil
+        context.performAndWait {
         do {
             result = try context.fetch(fetchRequest).first
         } catch {
             NSLog("Error fetching single entry: \(error)")
+            }
         }
         return result
     }
