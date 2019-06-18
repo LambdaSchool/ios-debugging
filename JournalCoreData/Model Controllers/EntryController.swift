@@ -95,9 +95,10 @@ class EntryController {
         }.resume()
     }
     
-    func fetchEntriesFromServer(completion: @escaping ((Error?) -> Void) = { _ in }) {
+    func fetchEntriesFromServer(completion: @escaping (Error?) -> Void = { _ in }) {
         
         let requestURL = baseURL.appendingPathExtension("json")
+        print(requestURL)
         
         URLSession.shared.dataTask(with: requestURL) { (data, _, error) in
             
@@ -119,7 +120,7 @@ class EntryController {
                 let entryReps = try JSONDecoder().decode([String: EntryRepresentation].self, from: data).map({$0.value})
                 self.updateEntries(with: entryReps, in: moc)
             } catch {
-                NSLog("Error decoding JSON data: \(error)")
+                NSLog("We have an error decoding JSON data \(EntryRepresentation.self): \(error)")
                 completion(error)
                 return
             }
