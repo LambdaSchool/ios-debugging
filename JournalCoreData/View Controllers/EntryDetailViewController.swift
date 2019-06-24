@@ -45,10 +45,10 @@ class EntryDetailViewController: UIViewController {
                 title = "Create Entry"
                 return
         }
-        
+      
         title = entry.title
-        titleTextField.text = entry.title
-        bodyTextView.text = entry.bodyText
+        titleTextField?.text = entry.title
+        bodyTextView?.text = entry.bodyText
         
         var segmentIndex = 0
         
@@ -63,7 +63,7 @@ class EntryDetailViewController: UIViewController {
             break
         }
         
-        moodSegmentedControl.selectedSegmentIndex = segmentIndex
+        moodSegmentedControl?.selectedSegmentIndex = segmentIndex
     }
     
     var entry: Entry? {
@@ -72,7 +72,11 @@ class EntryDetailViewController: UIViewController {
         }
     }
     
-    var entryController: EntryController?
+    var entryController: EntryController? {
+        didSet{
+            print("htere an eenen")
+        }
+    }
     
     @IBOutlet weak var moodSegmentedControl: UISegmentedControl!
     @IBOutlet weak var titleTextField: UITextField!

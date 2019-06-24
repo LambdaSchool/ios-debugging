@@ -37,4 +37,10 @@ extension Entry {
         
         self.init(title: title, bodyText: bodyText, timestamp: timestamp, mood: mood, identifier: identifier, context: context)
     }
+    
+    var entryRepresentation: EntryRepresentation {
+        
+        let entryRep = EntryRepresentation(title: title, bodyText: bodyText, mood: mood, timestamp: timestamp, identifier: identifier)
+        return entryRep
+    }
 }
