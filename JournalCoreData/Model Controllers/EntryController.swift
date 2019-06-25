@@ -45,10 +45,11 @@ class EntryController {
     private func put(entry: Entry, completion: @escaping ((Error?) -> Void) = { _ in }) {
         
         let identifier = entry.identifier ?? UUID().uuidString
+        //corrected it to PathExtension
         let requestURL = baseURL.appendingPathComponent(identifier).appendingPathExtension("json")
         var request = URLRequest(url: requestURL)
         request.httpMethod = "PUT"
-//        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        
         //i need an entryRepresentation
         let entryRep = entry.entryRepresentation
         do {
@@ -143,6 +144,8 @@ class EntryController {
         guard let identifier = identifier else { return nil }
         
         let fetchRequest: NSFetchRequest<Entry> = Entry.fetchRequest()
+        
+        //format: was misspelled.
         fetchRequest.predicate = NSPredicate(format: "identifier == %@", identifier)
         
         var result: Entry? = nil

@@ -11,6 +11,7 @@ import CoreData
 
 class EntriesTableViewController: UITableViewController, NSFetchedResultsControllerDelegate {
 
+    //needed to call fetch here and dispatch the reload
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         entryController.fetchEntriesFromServer { (error) in
@@ -118,6 +119,7 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
                 let indexPath = tableView.indexPathForSelectedRow else { return }
             
             destinationVC.entry = fetchedResultsController.object(at: indexPath)
+            //need to pass this
               destinationVC.entryController = entryController
         default:
             break
