@@ -33,6 +33,7 @@ class EntryDetailViewController: UIViewController {
         }
         
         if let entry = entry {
+            //if you cannot step into a function then that means the EC is nil. This wasn't being hit
             entryController?.update(entry: entry, title: title, bodyText: bodyText, mood: mood)
         } else {
             entryController?.createEntry(with: title, bodyText: bodyText, mood: mood)
@@ -45,10 +46,10 @@ class EntryDetailViewController: UIViewController {
                 title = "Create Entry"
                 return
         }
-        
+      
         title = entry.title
-        titleTextField.text = entry.title
-        bodyTextView.text = entry.bodyText
+        titleTextField?.text = entry.title
+        bodyTextView?.text = entry.bodyText
         
         var segmentIndex = 0
         
@@ -63,7 +64,7 @@ class EntryDetailViewController: UIViewController {
             break
         }
         
-        moodSegmentedControl.selectedSegmentIndex = segmentIndex
+        moodSegmentedControl?.selectedSegmentIndex = segmentIndex
     }
     
     var entry: Entry? {
@@ -71,7 +72,7 @@ class EntryDetailViewController: UIViewController {
             updateViews()
         }
     }
-    
+    //this wasn't being passed in.
     var entryController: EntryController?
     
     @IBOutlet weak var moodSegmentedControl: UISegmentedControl!

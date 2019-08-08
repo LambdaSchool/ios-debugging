@@ -11,10 +11,17 @@ import CoreData
 
 class EntriesTableViewController: UITableViewController, NSFetchedResultsControllerDelegate {
 
+    //needed to call fetch here and dispatch the reload
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-        tableView.reloadData()
+        entryController.fetchEntriesFromServer { (error) in
+            if let err = error {
+                print("This is the error: ->>>>>>>>\(err)")
+            }
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+        }
     }
     
     // MARK: - Table view data source
@@ -112,7 +119,8 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
                 let indexPath = tableView.indexPathForSelectedRow else { return }
             
             destinationVC.entry = fetchedResultsController.object(at: indexPath)
-            
+            //need to pass this
+              destinationVC.entryController = entryController
         default:
             break
         }
