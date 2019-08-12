@@ -9,9 +9,13 @@
 import Foundation
 import CoreData
 
-let baseURL = URL(string: "https://journal-syncing.firebaseio.com/")!
+let baseURL = URL(string: "https://debuggedjournal.firebaseio.com/")!
 
 class EntryController {
+    
+    init() {
+        self.fetchEntriesFromServer()
+    }
     
     func createEntry(with title: String, bodyText: String, mood: String) {
         
@@ -44,12 +48,14 @@ class EntryController {
     private func put(entry: Entry, completion: @escaping ((Error?) -> Void) = { _ in }) {
         
         let identifier = entry.identifier ?? UUID().uuidString
+        
         let requestURL = baseURL.appendingPathComponent(identifier).appendingPathExtension("json")
         var request = URLRequest(url: requestURL)
         request.httpMethod = "PUT"
         
+        let entryRep = entry.entryRepresentation
         do {
-            request.httpBody = try JSONEncoder().encode(entry)
+            request.httpBody = try JSONEncoder().encode(entryRep)
         } catch {
             NSLog("Error encoding Entry: \(error)")
             completion(error)
