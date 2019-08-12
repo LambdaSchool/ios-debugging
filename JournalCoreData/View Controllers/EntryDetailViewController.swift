@@ -41,26 +41,33 @@ class EntryDetailViewController: UIViewController {
     }
     
     private func updateViews() {
-        guard let entry = entry else {
+        
+        // MARK: - Bug 3 - add isViewLoaded
+        guard let entry = entry,
+            isViewLoaded,
+            let entryTitle = entry.title,
+            !entryTitle.isEmpty,
+            let bodyText = entry.bodyText else {
                 title = "Create Entry"
                 return
         }
         
-        title = entry.title
-        titleTextField.text = entry.title
-        bodyTextView.text = entry.bodyText
+        
+        title = entryTitle
+        titleTextField.text = entryTitle
+        bodyTextView.text = bodyText
         
         var segmentIndex = 0
         
         switch entry.mood {
-        case Mood.bad.rawValue:
-            segmentIndex = 0
-        case Mood.neutral.rawValue:
-            segmentIndex = 1
-        case Mood.good.rawValue:
-            segmentIndex = 2
-        default:
-            break
+            case Mood.bad.rawValue:
+                segmentIndex = 0
+            case Mood.neutral.rawValue:
+                segmentIndex = 1
+            case Mood.good.rawValue:
+                segmentIndex = 2
+            default:
+                break
         }
         
         moodSegmentedControl.selectedSegmentIndex = segmentIndex
