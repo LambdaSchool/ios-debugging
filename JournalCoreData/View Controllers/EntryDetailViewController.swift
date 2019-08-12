@@ -17,7 +17,8 @@ class EntryDetailViewController: UIViewController {
     @IBAction func saveEntry(_ sender: Any) {
         
         guard let title = titleTextField.text,
-            let bodyText = bodyTextView.text else { return }
+            let bodyText = bodyTextView.text,
+            let entryController = entryController else { return }
         
         var mood: String!
         
@@ -33,9 +34,9 @@ class EntryDetailViewController: UIViewController {
         }
         
         if let entry = entry {
-            entryController?.update(entry: entry, title: title, bodyText: bodyText, mood: mood)
+            entryController.update(entry: entry, title: title, bodyText: bodyText, mood: mood)
         } else {
-            entryController?.createEntry(with: title, bodyText: bodyText, mood: mood)
+            entryController.createEntry(with: title, bodyText: bodyText, mood: mood)
         }
         self.navigationController?.popViewController(animated: true)
     }
@@ -68,7 +69,9 @@ class EntryDetailViewController: UIViewController {
     
     var entry: Entry? {
         didSet {
-            updateViews()
+            if isViewLoaded {
+               updateViews()
+            }
         }
     }
     
