@@ -64,6 +64,9 @@ class EntryDetailViewController: UIViewController {
             break
         }
         
+        let attributes = [NSAttributedString.Key.foregroundColor : UIColor.white]
+        moodSegmentedControl.setTitleTextAttributes(attributes, for: .selected)
+        
         moodSegmentedControl.selectedSegmentIndex = segmentIndex
     }
     
