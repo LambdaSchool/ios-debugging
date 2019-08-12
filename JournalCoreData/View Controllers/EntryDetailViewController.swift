@@ -42,6 +42,9 @@ class EntryDetailViewController: UIViewController {
     }
     
     private func updateViews() {
+        let attributes = [NSAttributedString.Key.foregroundColor : UIColor.white]
+        moodSegmentedControl.setTitleTextAttributes(attributes, for: .selected)
+        
         guard let entry = entry else {
                 title = "Create Entry"
                 return
@@ -63,9 +66,6 @@ class EntryDetailViewController: UIViewController {
         default:
             break
         }
-        
-        let attributes = [NSAttributedString.Key.foregroundColor : UIColor.white]
-        moodSegmentedControl.setTitleTextAttributes(attributes, for: .selected)
         
         moodSegmentedControl.selectedSegmentIndex = segmentIndex
     }
