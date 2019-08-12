@@ -11,6 +11,14 @@ import CoreData
 
 class EntriesTableViewController: UITableViewController, NSFetchedResultsControllerDelegate {
 
+    override func viewDidLoad() {
+        entryController.fetchEntriesFromServer { (error) in
+            if let error = error {
+                NSLog("Error fetching entries from server with error: \(error)")
+            }
+        }
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
