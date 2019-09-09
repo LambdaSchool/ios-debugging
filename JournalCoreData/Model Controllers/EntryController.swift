@@ -13,32 +13,47 @@ let baseURL = URL(string: "https://journal-syncing.firebaseio.com/")!
 
 class EntryController {
     
-    func createEntry(with title: String, bodyText: String, mood: String) {
+    func createEntry(with title: String, bodyText: String, mood: String, context: NSManagedObjectContext = CoreDataStack.shared.mainContext) {
         
         let entry = Entry(title: title, bodyText: bodyText, mood: mood)
         
-        put(entry: entry)
-        
-        saveToPersistentStore()
+        context.performAndWait {
+            do {
+                try context.save()
+                put(entry: entry)
+            } catch {
+                NSLog("Error saving managed object context: \(error)")
+            }
+        }
     }
     
-    func update(entry: Entry, title: String, bodyText: String, mood: String) {
+    func update(entry: Entry, title: String, bodyText: String, mood: String, context: NSManagedObjectContext = CoreDataStack.shared.mainContext) {
         
         entry.title = title
         entry.bodyText = bodyText
         entry.timestamp = Date()
         entry.mood = mood
         
-        put(entry: entry)
-        
-        saveToPersistentStore()
+        context.performAndWait {
+            do {
+                try context.save()
+                put(entry: entry)
+            } catch {
+                NSLog("Error saving managed object context: \(error)")
+            }
+        }
     }
     
-    func delete(entry: Entry) {
-        
-        CoreDataStack.shared.mainContext.delete(entry)
-        deleteEntryFromServer(entry: entry)
-        saveToPersistentStore()
+    func delete(entry: Entry, context: NSManagedObjectContext = CoreDataStack.shared.mainContext) {
+        context.performAndWait {
+            deleteEntryFromServer(entry: entry)
+            context.delete(entry)
+            do {
+                try context.save()
+            } catch {
+                NSLog("Error saving managed object context: \(error)")
+            }
+        }
     }
     
     private func put(entry: Entry, completion: @escaping ((Error?) -> Void) = { _ in }) {
