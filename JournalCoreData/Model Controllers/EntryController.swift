@@ -12,6 +12,10 @@ import CoreData
 let baseURL = URL(string: "https://journal-syncing.firebaseio.com/")!
 
 class EntryController {
+
+	init() {
+		fetchEntriesFromServer()
+	}
     
 	func createEntry(with title: String, bodyText: String, mood: String, context: NSManagedObjectContext = CoreDataStack.shared.mainContext) {
         
@@ -151,7 +155,7 @@ class EntryController {
         guard let identifier = identifier else { return nil }
         
         let fetchRequest: NSFetchRequest<Entry> = Entry.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "identfier == %@", identifier)
+        fetchRequest.predicate = NSPredicate(format: "identifier == %@", identifier)
         
         var result: Entry? = nil
         do {
