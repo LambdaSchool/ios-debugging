@@ -25,7 +25,12 @@ struct EntryRepresentation: Decodable {
     
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: EntryCodingKeys.self)
-        identifier = try? container.decode(String.self, forKey: .identifier)
+        let tempIdentifier = try? container.decode(String.self, forKey: .identifier)
+        if let identifier = tempIdentifier {
+            self.identifier = identifier
+        } else {
+            self.identifier = UUID().uuidString
+        }
         title = try container.decode(String.self, forKey: .title)
         bodyText = try container.decode(String.self, forKey: .bodyText)
         mood = try container.decode(String.self, forKey: .mood)
