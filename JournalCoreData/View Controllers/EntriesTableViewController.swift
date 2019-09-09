@@ -18,7 +18,7 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
             if let error = error {
                 print("Error fetching entry: \(error)")
             }
-            
+
             self.tableView.reloadData()
         }
         
