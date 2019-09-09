@@ -111,7 +111,10 @@ class EntryController {
             let moc = CoreDataStack.shared.mainContext
             
             do {
-                let entryReps = try JSONDecoder().decode([String: EntryRepresentation].self, from: data).map({$0.value})
+				let decoder = JSONDecoder()
+				decoder.dateDecodingStrategy = .secondsSince1970
+				
+                let entryReps = try decoder.decode([String: EntryRepresentation].self, from: data).map({$0.value})
                 self.updateEntries(with: entryReps, in: moc)
             } catch {
                 NSLog("Error decoding JSON data: \(error)")
