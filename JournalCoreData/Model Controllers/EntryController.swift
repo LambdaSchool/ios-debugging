@@ -13,6 +13,12 @@ let baseURL = URL(string: "https://journal-790a5.firebaseio.com/")!
 
 class EntryController {
     
+    
+    init() {
+        fetchEntriesFromServer()
+    }
+    
+    
     func createEntry(with title: String, bodyText: String, mood: String) {
         let entry = Entry(title: title, bodyText: bodyText, mood: mood)
         saveToPersistentStore()
@@ -101,7 +107,6 @@ class EntryController {
             }
 
             let moc = CoreDataStack.shared.mainContext
-            
             do {
                 let entryReps = try JSONDecoder().decode([String: EntryRepresentation].self, from: data).map({$0.value})
                 self.updateEntries(with: entryReps, in: moc)
