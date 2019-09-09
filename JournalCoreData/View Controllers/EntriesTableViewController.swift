@@ -41,7 +41,7 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
         return cell
     }
     
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             
             let entry = fetchedResultsController.object(at: indexPath)
@@ -93,7 +93,9 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
         case .delete:
             guard let indexPath = indexPath else { return }
             tableView.deleteRows(at: [indexPath], with: .automatic)
-        }
+		@unknown default:
+			fatalError()
+		}
     }
     
     // MARK: - Navigation
@@ -125,7 +127,9 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
     
     lazy var fetchedResultsController: NSFetchedResultsController<Entry> = {
         let fetchRequest: NSFetchRequest<Entry> = Entry.fetchRequest()
-        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "timestamp", ascending: false)]
+		let timeDescriptor = NSSortDescriptor(key: "timestamp", ascending: false)
+		let moodDescriptor = NSSortDescriptor(key: "mood", ascending: false)
+        fetchRequest.sortDescriptors = [moodDescriptor, timeDescriptor]
         
         let moc = CoreDataStack.shared.mainContext
         let frc = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: moc, sectionNameKeyPath: "mood", cacheName: nil)
