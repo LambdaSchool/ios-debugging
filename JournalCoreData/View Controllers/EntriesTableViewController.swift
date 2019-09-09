@@ -104,15 +104,16 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
         switch segue.identifier {
         case "CreateEntry":
             guard let destinationVC = segue.destination as? EntryDetailViewController else { return }
-            
+
             destinationVC.entryController = entryController
+        
             
         case "ViewEntry":
             guard let destinationVC = segue.destination as? EntryDetailViewController,
                 let indexPath = tableView.indexPathForSelectedRow else { return }
-            
-            destinationVC.entry = fetchedResultsController.object(at: indexPath)
-            
+            let entry = fetchedResultsController.object(at: indexPath)
+            destinationVC.entry = entry
+            destinationVC.entryController = entryController
         default:
             break
         }

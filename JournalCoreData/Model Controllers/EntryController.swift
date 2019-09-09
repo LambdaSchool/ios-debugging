@@ -9,42 +9,40 @@
 import Foundation
 import CoreData
 
-let baseURL = URL(string: "https://journal-syncing.firebaseio.com/")!
+let baseURL = URL(string: "https://journal-790a5.firebaseio.com/")!
 
 class EntryController {
     
+    
+    init() {
+        fetchEntriesFromServer()
+    }
+    
+    
     func createEntry(with title: String, bodyText: String, mood: String) {
-        
         let entry = Entry(title: title, bodyText: bodyText, mood: mood)
-        
-        put(entry: entry)
-        
         saveToPersistentStore()
+        put(entry: entry)
     }
     
     func update(entry: Entry, title: String, bodyText: String, mood: String) {
-        
         entry.title = title
         entry.bodyText = bodyText
         entry.timestamp = Date()
         entry.mood = mood
-        
-        put(entry: entry)
-        
         saveToPersistentStore()
+        put(entry: entry)
     }
     
     func delete(entry: Entry) {
-        
         CoreDataStack.shared.mainContext.delete(entry)
         deleteEntryFromServer(entry: entry)
         saveToPersistentStore()
     }
     
-    private func put(entry: Entry, completion: @escaping ((Error?) -> Void) = { _ in }) {
-        
+    private func put(entry: Entry, completion: @escaping () -> Void = {  }) {
         let identifier = entry.identifier ?? UUID().uuidString
-        let requestURL = baseURL.appendingPathComponent(identifier).appendingPathComponent("json")
+        let requestURL = baseURL.appendingPathComponent(identifier).appendingPathExtension("json")
         var request = URLRequest(url: requestURL)
         request.httpMethod = "PUT"
         
@@ -52,18 +50,18 @@ class EntryController {
             request.httpBody = try JSONEncoder().encode(entry)
         } catch {
             NSLog("Error encoding Entry: \(error)")
-            completion(error)
+            completion()
             return
         }
         
         URLSession.shared.dataTask(with: request) { (data, _, error) in
             if let error = error {
                 NSLog("Error PUTting Entry to server: \(error)")
-                completion(error)
+                completion()
                 return
             }
             
-            completion(nil)
+            completion()
         }.resume()
     }
     
@@ -109,7 +107,6 @@ class EntryController {
             }
 
             let moc = CoreDataStack.shared.mainContext
-            
             do {
                 let entryReps = try JSONDecoder().decode([String: EntryRepresentation].self, from: data).map({$0.value})
                 self.updateEntries(with: entryReps, in: moc)
