@@ -14,7 +14,15 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        tableView.reloadData()
+        entryController.fetchEntriesFromServer { (error) in
+            if let error = error {
+                print("Error fetching entry: \(error)")
+            }
+            
+            self.tableView.reloadData()
+        }
+        
+        
     }
     
     // MARK: - Table view data source
