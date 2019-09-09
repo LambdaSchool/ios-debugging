@@ -13,16 +13,21 @@ let baseURL = URL(string: "https://journal-syncing.firebaseio.com/")!
 
 class EntryController {
     
-    func createEntry(with title: String, bodyText: String, mood: String) {
+	func createEntry(with title: String, bodyText: String, mood: String, context: NSManagedObjectContext = CoreDataStack.shared.mainContext) {
         
         let entry = Entry(title: title, bodyText: bodyText, mood: mood)
+
+		do {
+			try CoreDataStack.shared.save(context: context)
+		} catch {
+			NSLog("Error saving context when creating an entry: \(error)")
+		}
         
         put(entry: entry)
-        
-        saveToPersistentStore()
+
     }
     
-    func update(entry: Entry, title: String, bodyText: String, mood: String) {
+    func update(entry: Entry, title: String, bodyText: String, mood: String, context: NSManagedObjectContext = CoreDataStack.shared.mainContext) {
         
         entry.title = title
         entry.bodyText = bodyText
@@ -31,14 +36,24 @@ class EntryController {
         
         put(entry: entry)
         
-        saveToPersistentStore()
+		do {
+			try CoreDataStack.shared.save(context: context)
+		} catch {
+			NSLog("Error saving context when updating entry: \(error)")
+		}
     }
     
-    func delete(entry: Entry) {
+    func delete(entry: Entry, context: NSManagedObjectContext = CoreDataStack.shared.mainContext) {
         
         CoreDataStack.shared.mainContext.delete(entry)
         deleteEntryFromServer(entry: entry)
-        saveToPersistentStore()
+
+		do {
+			try CoreDataStack.shared.save(context: context)
+		} catch {
+			NSLog("Error saving context when deleting entry: \(error)")
+		}
+
     }
     
     private func put(entry: Entry, completion: @escaping ((Error?) -> Void) = { _ in }) {
@@ -170,11 +185,11 @@ class EntryController {
         entry.identifier = entryRep.identifier
     }
     
-    func saveToPersistentStore() {        
-        do {
-            try CoreDataStack.shared.mainContext.save()
-        } catch {
-            NSLog("Error saving managed object context: \(error)")
-        }
-    }
+//    func saveToPersistentStore() {
+//        do {
+//            try CoreDataStack.shared.mainContext.save()
+//        } catch {
+//            NSLog("Error saving managed object context: \(error)")
+//        }
+//    }
 }
