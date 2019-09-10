@@ -115,7 +115,8 @@ class EntryController {
 				decoder.dateDecodingStrategy = .secondsSince1970
 				
                 let entryReps = try decoder.decode([String: EntryRepresentation].self, from: data).map({$0.value})
-                self.updateEntries(with: entryReps, in: moc)
+				let bgContext = CoreDataStack.shared.container.newBackgroundContext()
+                self.updateEntries(with: entryReps, in: bgContext)
             } catch {
                 NSLog("Error decoding JSON data: \(error)")
                 completion(error)
@@ -139,7 +140,7 @@ class EntryController {
         guard let identifier = identifier else { return nil }
         
         let fetchRequest: NSFetchRequest<Entry> = Entry.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "identfier == %@", identifier)
+        fetchRequest.predicate = NSPredicate(format: "identifier == %@", identifier)
         
         var result: Entry? = nil
         do {
