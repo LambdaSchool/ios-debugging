@@ -44,7 +44,7 @@ class EntryController {
     private func put(entry: Entry, completion: @escaping ((Error?) -> Void) = { _ in }) {
         
         let identifier = entry.identifier ?? UUID().uuidString
-        let requestURL = baseURL.appendingPathComponent(identifier).appendingPathComponent("json")
+        let requestURL = baseURL.appendingPathComponent(identifier).appendingPathExtension("json")
         var request = URLRequest(url: requestURL)
         request.httpMethod = "PUT"
         
@@ -108,14 +108,13 @@ class EntryController {
                 return
             }
 
-            let moc = CoreDataStack.shared.mainContext
+            let bgContext = CoreDataStack.shared.container.newBackgroundContext()
             
             do {
 				let decoder = JSONDecoder()
 				decoder.dateDecodingStrategy = .deferredToDate
 				
                 let entryReps = try decoder.decode([String: EntryRepresentation].self, from: data).map({$0.value})
-				let bgContext = CoreDataStack.shared.container.newBackgroundContext()
                 self.updateEntries(with: entryReps, in: bgContext)
             } catch {
                 NSLog("Error decoding JSON data: \(error)")
@@ -123,9 +122,9 @@ class EntryController {
                 return
             }
             
-            moc.perform {
+            bgContext.perform {
                 do {
-                    try moc.save()
+                    try bgContext.save()
                     completion(nil)
                 } catch {
                     NSLog("Error saving context: \(error)")
