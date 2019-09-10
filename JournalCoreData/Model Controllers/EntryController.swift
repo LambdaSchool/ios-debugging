@@ -112,7 +112,7 @@ class EntryController {
             
             do {
 				let decoder = JSONDecoder()
-				decoder.dateDecodingStrategy = .secondsSince1970
+				decoder.dateDecodingStrategy = .deferredToDate
 				
                 let entryReps = try decoder.decode([String: EntryRepresentation].self, from: data).map({$0.value})
 				let bgContext = CoreDataStack.shared.container.newBackgroundContext()
