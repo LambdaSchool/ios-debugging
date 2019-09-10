@@ -68,7 +68,9 @@ class EntryController {
         request.httpMethod = "PUT"
         
         do {
-            request.httpBody = try JSONEncoder().encode(entry)
+			let jsonEncoder = JSONEncoder()
+			jsonEncoder.dateEncodingStrategy = .deferredToDate
+            request.httpBody = try jsonEncoder.encode(entry)
         } catch {
             NSLog("Error encoding Entry: \(error)")
             completion(error)
@@ -130,8 +132,11 @@ class EntryController {
             let moc = CoreDataStack.shared.mainContext
             
             do {
-                let entryReps = try JSONDecoder().decode([String: EntryRepresentation].self, from: data).map({$0.value})
-                self.updateEntries(with: entryReps, in: moc)
+				let jsonDecoder = JSONDecoder()
+				jsonDecoder.dateDecodingStrategy = .deferredToDate
+                let entryReps = try jsonDecoder.decode([String: EntryRepresentation].self, from: data).map({$0.value})
+				let backgroundContext = CoreDataStack.shared.container.newBackgroundContext()
+                self.updateEntries(with: entryReps, in: backgroundContext)
             } catch {
                 NSLog("Error decoding JSON data: \(error)")
                 completion(error)

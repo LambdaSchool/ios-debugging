@@ -14,7 +14,35 @@ struct EntryRepresentation: Decodable {
     var mood: String?
     var timestamp: Date?
     var identifier: String?
+
+	enum EntryKeys: String, CodingKey {
+		case title
+		case bodyText
+		case mood
+		case timestamp
+		case identifier
+	}
+
+	init(from decoder: Decoder) throws {
+		let container = try decoder.container(keyedBy: EntryKeys.self)
+
+		title = try? container.decode(String.self, forKey: .title)
+		bodyText = try? container.decode(String.self, forKey: .bodyText)
+		mood = try? container.decode(String.self, forKey: .mood)
+		timestamp = try? container.decode(Date.self, forKey: .timestamp)
+		identifier = try? container.decode(String.self, forKey: .identifier)
+
+//		let tempIdentifier = try? container.decode(Int.self, forKey: .identifier)
+//
+//		if identifier == tempIdentifier {
+//			identifier = "\(tempIdentifier)"
+//		} else {
+//			identifier = try container.decode(String.self, forKey: .identifier)
+//		}
+	}
 }
+
+
 
 func ==(lhs: EntryRepresentation, rhs: Entry) -> Bool {
     return rhs.title == lhs.title &&
