@@ -16,10 +16,10 @@ class EntryDetailViewController: UIViewController {
     
     @IBAction func saveEntry(_ sender: Any) {
         
-        guard let title = titleTextField.text,
+        guard let entryTitle = titleTextField.text,
             let bodyText = bodyTextView.text else { return }
         
-        var mood: String!
+        var mood: String?
         
         switch moodSegmentedControl.selectedSegmentIndex {
         case 0:
@@ -33,22 +33,24 @@ class EntryDetailViewController: UIViewController {
         }
         
         if let entry = entry {
-            entryController?.update(entry: entry, title: title, bodyText: bodyText, mood: mood)
+            entryController?.update(entry: entry, title: entryTitle, bodyText: bodyText, mood: mood ?? "")
         } else {
-            entryController?.createEntry(with: title, bodyText: bodyText, mood: mood)
+            entryController?.createEntry(with: entryTitle, bodyText: bodyText, mood: mood ?? "")
         }
         self.navigationController?.popViewController(animated: true)
     }
     
     private func updateViews() {
-        guard let entry = entry else {
-                title = "Create Entry"
+        guard let entry = entry,
+            let bodyText = entry.bodyText,
+            let title = entry.title
+        else {
                 return
         }
         
-        title = entry.title
-        titleTextField.text = entry.title
-        bodyTextView.text = entry.bodyText
+        
+        titleTextField.text = title
+        bodyTextView.text = bodyText
         
         var segmentIndex = 0
         
