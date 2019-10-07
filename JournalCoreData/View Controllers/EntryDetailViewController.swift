@@ -47,6 +47,7 @@ class EntryDetailViewController: UIViewController {
         }
         
         if let entry = entry {
+            
             entryController?.update(entry: entry, title: title, bodyText: bodyText, mood: mood)
         } else {
             entryController?.createEntry(with: title, bodyText: bodyText, mood: mood)
