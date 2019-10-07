@@ -16,16 +16,17 @@ extension Entry: Encodable {
         try container.encode(title, forKey: .title)
         try container.encode(bodyText, forKey: .bodyText)
         try container.encode(mood, forKey: .mood)
-        try container.encode(timestamp, forKey: .timestamp)
-        try container.encode(timestamp, forKey: .identifier)
+        try container.encode(timeStamp, forKey: .timeStamp)
+        try container.encode(identifier, forKey: .identifier)
     }
     
     enum CodingKeys: String, CodingKey {
         case title
         case bodyText
         case mood
-        case timestamp
+        case timeStamp
         case identifier
     }
     
 }
+
