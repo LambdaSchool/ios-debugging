@@ -12,7 +12,7 @@ struct EntryRepresentation: Decodable {
     var title: String?
     var bodyText: String?
     var mood: String?
-    var timestamp: Date?
+    var timeStamp: Date?
     var identifier: String?
 }
 
