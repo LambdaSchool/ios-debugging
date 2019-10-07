@@ -11,7 +11,7 @@ import Foundation
 class TimestampFormatter {
     
     static func formatTimestamp(for entry: Entry) -> String {
-        return dateFormatter.string(from: entry.timestamp!)
+        return dateFormatter.string(from: entry.timeStamp!)
     }
     
     static let dateFormatter: DateFormatter = {

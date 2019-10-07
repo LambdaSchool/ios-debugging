@@ -13,6 +13,7 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        entryController.fetchEntriesFromServer()
         
         tableView.reloadData()
     }
@@ -52,48 +53,43 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
     // MARK: - NSFetchedResultsControllerDelegate
     
     func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        tableView.beginUpdates()
-    }
-    
-    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        tableView.endUpdates()
-    }
-    
-    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>,
-                    didChange sectionInfo: NSFetchedResultsSectionInfo,
-                    atSectionIndex sectionIndex: Int,
-                    for type: NSFetchedResultsChangeType) {
-        switch type {
-        case .insert:
-            tableView.insertSections(IndexSet(integer: sectionIndex), with: .automatic)
-        case .delete:
-            tableView.deleteSections(IndexSet(integer: sectionIndex), with: .automatic)
-        default:
-            break
-        }
-    }
-    
-    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>,
-                    didChange anObject: Any,
-                    at indexPath: IndexPath?,
-                    for type: NSFetchedResultsChangeType,
-                    newIndexPath: IndexPath?) {
-        switch type {
-        case .insert:
-            guard let newIndexPath = newIndexPath else { return }
-            tableView.insertRows(at: [newIndexPath], with: .automatic)
-        case .update:
-            guard let indexPath = indexPath else { return }
-            tableView.reloadRows(at: [indexPath], with: .automatic)
-        case .move:
-            guard let oldIndexPath = indexPath,
-                let newIndexPath = newIndexPath else { return }
-            tableView.deleteRows(at: [oldIndexPath], with: .automatic)
-            tableView.insertRows(at: [newIndexPath], with: .automatic)
-        case .delete:
-            guard let indexPath = indexPath else { return }
-            tableView.deleteRows(at: [indexPath], with: .automatic)
-        }
+         tableView.beginUpdates()
+     }
+     
+     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+         tableView.endUpdates()
+     }
+     
+     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
+         switch type {
+         case .insert:
+             guard let newIndexPath = newIndexPath else { return }
+             tableView.insertRows(at: [newIndexPath], with: .automatic)
+         case .delete:
+             guard let indexPath = indexPath else { return }
+             tableView.deleteRows(at: [indexPath], with: .automatic)
+         case .move:
+             guard let indexPath = indexPath,
+                 let newIndexPath = newIndexPath else { return }
+             tableView.moveRow(at: indexPath, to: newIndexPath)
+         case .update:
+             guard let indexPath = indexPath else { return }
+             tableView.reloadRows(at: [indexPath], with: .automatic)
+         @unknown default:
+             fatalError()
+         }
+     }
+     
+     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange sectionInfo: NSFetchedResultsSectionInfo, atSectionIndex sectionIndex: Int, for type: NSFetchedResultsChangeType) {
+         let sectionIndexSet = IndexSet(integer: sectionIndex)
+         switch type {
+         case .insert:
+             tableView.insertSections(sectionIndexSet, with: .automatic)
+         case .delete:
+             tableView.deleteSections(sectionIndexSet, with: .automatic)
+         default:
+             break
+         }
     }
     
     // MARK: - Navigation
@@ -112,6 +108,7 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
                 let indexPath = tableView.indexPathForSelectedRow else { return }
             
             destinationVC.entry = fetchedResultsController.object(at: indexPath)
+            destinationVC.entryController = entryController
             
         default:
             break
@@ -124,7 +121,7 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
     
     lazy var fetchedResultsController: NSFetchedResultsController<Entry> = {
         let fetchRequest: NSFetchRequest<Entry> = Entry.fetchRequest()
-        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "timestamp", ascending: false)]
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "timeStamp", ascending: false)]
         
         let moc = CoreDataStack.shared.mainContext
         let frc = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: moc, sectionNameKeyPath: "mood", cacheName: nil)
