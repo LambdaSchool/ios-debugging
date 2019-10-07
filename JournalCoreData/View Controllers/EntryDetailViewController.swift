@@ -41,7 +41,7 @@ class EntryDetailViewController: UIViewController {
     }
     
     private func updateViews() {
-        guard let entry = entry else {
+        guard isViewLoaded,let entry = entry else {
                 title = "Create Entry"
                 return
         }
