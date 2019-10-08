@@ -45,7 +45,7 @@ class EntryController {
     private func put(entry: Entry, completion: @escaping ((Error?) -> Void) = { _ in }) {
         
         let identifier = entry.identifier ?? UUID().uuidString
-        let requestURL = baseURL.appendingPathComponent(identifier).appendingPathComponent("json")
+        let requestURL = baseURL.appendingPathComponent(identifier).appendingPathExtension("json")
         var request = URLRequest(url: requestURL)
         request.httpMethod = "PUT"
         
@@ -109,20 +109,23 @@ class EntryController {
                 return
             }
 
-            let moc = CoreDataStack.shared.mainContext
+            let bgContext = CoreDataStack.shared.container.newBackgroundContext()
             
             do {
-                let entryReps = try JSONDecoder().decode([String: EntryRepresentation].self, from: data).map({$0.value})
-                self.updateEntries(with: entryReps, in: moc)
+				let decoder = JSONDecoder()
+				decoder.dateDecodingStrategy = .deferredToDate
+				
+                let entryReps = try decoder.decode([String: EntryRepresentation].self, from: data).map({$0.value})
+                self.updateEntries(with: entryReps, in: bgContext)
             } catch {
                 NSLog("Error decoding JSON data: \(error)")
                 completion(error)
                 return
             }
             
-            moc.perform {
+            bgContext.perform {
                 do {
-                    try moc.save()
+                    try bgContext.save()
                     completion(nil)
                 } catch {
                     NSLog("Error saving context: \(error)")
@@ -137,7 +140,7 @@ class EntryController {
         guard let identifier = identifier else { return nil }
         
         let fetchRequest: NSFetchRequest<Entry> = Entry.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "identfier == %@", identifier)
+        fetchRequest.predicate = NSPredicate(format: "identifier == %@", identifier)
         
         var result: Entry? = nil
         do {
