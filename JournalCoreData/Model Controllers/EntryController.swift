@@ -14,38 +14,53 @@ let baseURL = URL(string: "https://journal-syncing.firebaseio.com/")!
 
 class EntryController {
     
-    func createEntry(with title: String, bodyText: String, mood: String) {
+    func createEntry(with title: String, bodyText: String, mood: String, context: NSManagedObjectContext = CoreDataStack.shared.mainContext) {
         
         let entry = Entry(title: title, bodyText: bodyText, mood: mood)
         
-        put(entry: entry)
-        
-        saveToPersistentStore()
+        context.performAndWait {
+            do {
+                try context.save()
+                put(entry: entry)
+            } catch {
+                NSLog("Error saving managed object context: \(error)")
+            }
+        }
     }
     
-    func update(entry: Entry, title: String, bodyText: String, mood: String) {
+    func update(entry: Entry, title: String, bodyText: String, mood: String, context: NSManagedObjectContext = CoreDataStack.shared.mainContext) {
         
-        entry.title = title
-        entry.bodyText = bodyText
-        entry.timestamp = Date()
-        entry.mood = mood
-        
-        put(entry: entry)
-        
-        saveToPersistentStore()
+        context.performAndWait {
+            entry.title = title
+            entry.bodyText = bodyText
+            entry.timestamp = Date()
+            entry.mood = mood
+            
+            do {
+                try context.save()
+                put(entry: entry)
+            } catch {
+                NSLog("Error saving managed object context: \(error)")
+            }
+        }
     }
     
-    func delete(entry: Entry) {
-        
-        CoreDataStack.shared.mainContext.delete(entry)
-        deleteEntryFromServer(entry: entry)
-        saveToPersistentStore()
+    func delete(entry: Entry, context: NSManagedObjectContext = CoreDataStack.shared.mainContext) {
+        context.performAndWait {
+            deleteEntryFromServer(entry: entry)
+            context.delete(entry)
+            do {
+                try context.save()
+            } catch {
+                NSLog("Error saving managed object context: \(error)")
+            }
+        }
     }
     
     private func put(entry: Entry, completion: @escaping ((Error?) -> Void) = { _ in }) {
         
         let identifier = entry.identifier ?? UUID().uuidString
-        let requestURL = baseURL.appendingPathComponent(identifier).appendingPathComponent("json")
+        let requestURL = baseURL.appendingPathComponent(identifier).appendingPathExtension("json")
         var request = URLRequest(url: requestURL)
         request.httpMethod = "PUT"
         
@@ -109,20 +124,20 @@ class EntryController {
                 return
             }
 
-            let moc = CoreDataStack.shared.mainContext
+            let context = CoreDataStack.shared.container.newBackgroundContext()
             
             do {
                 let entryReps = try JSONDecoder().decode([String: EntryRepresentation].self, from: data).map({$0.value})
-                self.updateEntries(with: entryReps, in: moc)
+                self.updateEntries(with: entryReps, in: context)
             } catch {
                 NSLog("Error decoding JSON data: \(error)")
                 completion(error)
                 return
             }
             
-            moc.perform {
+            context.perform {
                 do {
-                    try moc.save()
+                    try context.save()
                     completion(nil)
                 } catch {
                     NSLog("Error saving context: \(error)")
@@ -137,7 +152,7 @@ class EntryController {
         guard let identifier = identifier else { return nil }
         
         let fetchRequest: NSFetchRequest<Entry> = Entry.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "identfier == %@", identifier)
+        fetchRequest.predicate = NSPredicate(format: "identifier == %@", identifier)
         
         var result: Entry? = nil
         do {

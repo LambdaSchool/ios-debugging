@@ -14,6 +14,28 @@ struct EntryRepresentation: Decodable {
     var mood: String?
     var timestamp: Date?
     var identifier: String?
+    
+    enum EntryCodingKeys: String, CodingKey {
+        case title
+        case bodyText
+        case mood
+        case timestamp
+        case identifier
+    }
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: EntryCodingKeys.self)
+        let tempIdentifier = try? container.decode(String.self, forKey: .identifier)
+        if let identifier = tempIdentifier {
+            self.identifier = identifier
+        } else {
+            self.identifier = UUID().uuidString
+        }
+        title = try container.decode(String.self, forKey: .title)
+        bodyText = try container.decode(String.self, forKey: .bodyText)
+        mood = try container.decode(String.self, forKey: .mood)
+        timestamp = try container.decode(Date.self, forKey: .timestamp)
+    }
 }
 
 func ==(lhs: EntryRepresentation, rhs: Entry) -> Bool {
