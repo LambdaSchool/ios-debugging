@@ -13,6 +13,10 @@ let baseURL = URL(string: "https://journal-debugging-week10day1.firebaseio.com/"
 
 class EntryController {
     
+    init() {
+        fetchEntriesFromServer()
+    }
+    
     func createEntry(with title: String, bodyText: String, mood: String) {
         
         let entry = Entry(title: title, bodyText: bodyText, mood: mood)
@@ -109,7 +113,7 @@ class EntryController {
                 return
             }
 
-            let moc = CoreDataStack.shared.mainContext
+            let moc = CoreDataStack.shared.backgroundContext
             
             do {
                 let entryReps = try JSONDecoder().decode([String: EntryRepresentation].self, from: data).map({$0.value})
