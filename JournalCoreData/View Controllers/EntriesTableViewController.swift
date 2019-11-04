@@ -14,6 +14,7 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+		entryController.fetchEntriesFromServer()
 		self.tableView.reloadData()
     }
     
