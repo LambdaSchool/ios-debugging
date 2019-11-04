@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14269.12" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="x0h-iU-7PZ">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="x0h-iU-7PZ">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14252.5"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -111,6 +111,9 @@
                                         <nil key="textColor"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits"/>
+                                        <connections>
+                                            <action selector="titleFieldChanged:" destination="XBt-TJ-9cj" eventType="editingChanged" id="hYJ-C5-8Ec"/>
+                                        </connections>
                                     </textField>
                                     <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" verticalHuggingPriority="249" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="wGY-Ei-PXq">
                                         <rect key="frame" x="0.0" y="90" width="343" height="177"/>
@@ -133,13 +136,14 @@
                     <navigationItem key="navigationItem" title="Title" id="SxW-qO-jKV">
                         <barButtonItem key="rightBarButtonItem" title="Save" id="sha-nx-1Zw">
                             <connections>
-                                <action selector="saveEntry:" destination="XBt-TJ-9cj" id="1Ja-7m-Gaq"/>
+                                <action selector="saveEntry:" destination="XBt-TJ-9cj" id="7Zs-VE-iT1"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
                     <connections>
                         <outlet property="bodyTextView" destination="wGY-Ei-PXq" id="b90-kA-msx"/>
                         <outlet property="moodSegmentedControl" destination="it3-fV-cmG" id="DTw-p3-3LI"/>
+                        <outlet property="saveButton" destination="sha-nx-1Zw" id="Cuw-Sp-Ib2"/>
                         <outlet property="titleTextField" destination="uTL-SW-4O2" id="6ob-D4-24K"/>
                     </connections>
                 </viewController>

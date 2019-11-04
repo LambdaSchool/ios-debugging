@@ -12,12 +12,26 @@ class EntryDetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         updateViews()
+		saveButtonEnable(enabled: false)
+		bodyTextView.delegate = self
     }
-    
+
+	@IBAction func titleFieldChanged(_ sender: UITextField) {
+		saveButtonEnable(enabled: true)
+	}
+
+
     @IBAction func saveEntry(_ sender: Any) {
         
         guard let title = titleTextField.text,
-            let bodyText = bodyTextView.text else { return }
+			!title.isEmpty,
+            let bodyText = bodyTextView.text else {
+				let alert = UIAlertController(title: "An Entry must at least have a title", message: nil, preferredStyle: .alert)
+				let alertAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+				alert.addAction(alertAction)
+				present(alert, animated: true, completion: nil)
+				return
+		}
         
         var mood: String!
         
@@ -39,16 +53,17 @@ class EntryDetailViewController: UIViewController {
         }
         self.navigationController?.popViewController(animated: true)
     }
-    
+
     private func updateViews() {
-        guard let entry = entry else {
+        guard let entry = entry,
+		isViewLoaded else {
                 title = "Create Entry"
                 return
         }
         
         title = entry.title
-        titleTextField.text = entry.title
-        bodyTextView.text = entry.bodyText
+		titleTextField.text = entry.title
+		bodyTextView.text = entry.bodyText
         
         var segmentIndex = 0
         
@@ -65,6 +80,10 @@ class EntryDetailViewController: UIViewController {
         
         moodSegmentedControl.selectedSegmentIndex = segmentIndex
     }
+
+	private func saveButtonEnable(enabled: Bool) {
+		saveButton.isEnabled = enabled
+	}
     
     var entry: Entry? {
         didSet {
@@ -77,5 +96,12 @@ class EntryDetailViewController: UIViewController {
     @IBOutlet weak var moodSegmentedControl: UISegmentedControl!
     @IBOutlet weak var titleTextField: UITextField!
     @IBOutlet weak var bodyTextView: UITextView!
+	@IBOutlet weak var saveButton: UIBarButtonItem!
+	
+}
 
+extension EntryDetailViewController: UITextViewDelegate {
+	func textViewDidChange(_ textView: UITextView) {
+		saveButtonEnable(enabled: true)
+	}
 }
