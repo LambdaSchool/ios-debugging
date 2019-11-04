@@ -9,6 +9,7 @@
 import UIKit
 
 class EntryDetailViewController: UIViewController {
+	
     override func viewDidLoad() {
         super.viewDidLoad()
         updateViews()
@@ -47,7 +48,7 @@ class EntryDetailViewController: UIViewController {
         }
         
         title = entry.title
-        titleTextField.text = entry.title
+		titleTextField.text = entry.title
         bodyTextView.text = entry.bodyText
         
         var segmentIndex = 0
