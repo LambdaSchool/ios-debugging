@@ -41,14 +41,17 @@ class EntryDetailViewController: UIViewController {
     }
     
     private func updateViews() {
-        guard let entry = entry else {
+        guard let entry = entry,
+            let newTitle = entry.title,
+            let newBodyText = entry.bodyText,
+            isViewLoaded else {
                 title = "Create Entry"
                 return
         }
         
         title = entry.title
-        titleTextField.text = entry.title
-        bodyTextView.text = entry.bodyText
+        titleTextField.text = newTitle
+        bodyTextView.text = newBodyText
         
         var segmentIndex = 0
         
