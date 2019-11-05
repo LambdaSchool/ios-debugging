@@ -14,6 +14,8 @@ class EntryDetailViewController: UIViewController {
         updateViews()
     }
     
+    
+    
     @IBAction func saveEntry(_ sender: Any) {
         
         guard let title = titleTextField.text,

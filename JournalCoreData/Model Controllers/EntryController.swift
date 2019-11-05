@@ -9,7 +9,7 @@
 import Foundation
 import CoreData
 
-let baseURL = URL(string: "https://debugging-journal-project.firebaseio.com/")!
+let baseURL = URL(string: "https://debugging-journal-ii-wilma.firebaseio.com/")!
 
 class EntryController {
     
@@ -168,6 +168,8 @@ class EntryController {
         entry.mood = entryRep.mood
         entry.timestamp = entryRep.timestamp
         entry.identifier = entryRep.identifier
+        
+//        updateEntries(with: [entryRep], in: CoreDataStack.shared.mainContext)
     }
     
     func saveToPersistentStore() {        
