@@ -84,7 +84,7 @@ class EntryController {
         
         let requestURL = baseURL
             .appendingPathComponent(identifier)
-            .appendingPathComponent("json")
+            .appendingPathExtension("json")
         
         var request = URLRequest(url: requestURL)
         request.httpMethod = "DELETE"
