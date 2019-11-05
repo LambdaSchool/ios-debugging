@@ -22,7 +22,9 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
     }
     
     override func viewDidLoad() {
+        super.viewDidLoad()
 //         tableView.reloadData()
+        entryController.fetchEntriesFromServer()
     }
     
     
