@@ -31,12 +31,6 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
         
         return frc
     }()
-
-//    override func viewWillAppear(_ animated: Bool) {
-//        super.viewWillAppear(animated)
-//        
-//        tableView.reloadData()
-//    }
     
     @IBAction func shouldRefresh(_ sender: Any) {
         entryController.fetchEntriesFromServer { (_) in
