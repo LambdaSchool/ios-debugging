@@ -10,6 +10,11 @@ import UIKit
 
 class EntryDetailViewController: UIViewController {
     var entry: Entry?
+    {
+        didSet {
+            updateViews()
+        }
+    }
     
     var entryController: EntryController?
     
@@ -49,6 +54,8 @@ class EntryDetailViewController: UIViewController {
     }
     
     private func updateViews() {
+        guard self.isViewLoaded else { return }
+        
         guard let entry = entry else {
                 title = "Create Entry"
                 return
@@ -58,8 +65,8 @@ class EntryDetailViewController: UIViewController {
               let bodyText = entry.bodyText else {
             return
         }
-        self.titleTextField.text = title
-        self.bodyTextView.text = bodyText
+        self.titleTextField?.text = title
+        self.bodyTextView?.text = bodyText
         
         var segmentIndex = 0
         
@@ -74,6 +81,6 @@ class EntryDetailViewController: UIViewController {
             break
         }
         
-        moodSegmentedControl.selectedSegmentIndex = segmentIndex
+        self.moodSegmentedControl?.selectedSegmentIndex = segmentIndex
     }
 }
