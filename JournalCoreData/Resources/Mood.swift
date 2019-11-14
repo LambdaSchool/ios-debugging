@@ -9,7 +9,7 @@
 import Foundation
 
 enum Mood: String {
-    case bad = "☹️"
-    case neutral = "😐"
-    case good = "🙂"
+    case sad = "☹️"
+    case okay = "😐"
+    case happy = "🙂"
 }

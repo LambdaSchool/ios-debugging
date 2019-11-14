@@ -36,11 +36,11 @@ class EntryDetailViewController: UIViewController {
         
         switch moodSegmentedControl.selectedSegmentIndex {
         case 0:
-            mood = Mood.bad.rawValue
+            mood = Mood.sad.rawValue
         case 1:
-            mood = Mood.neutral.rawValue
+            mood = Mood.okay.rawValue
         case 2:
-            mood = Mood.good.rawValue
+            mood = Mood.happy.rawValue
         default:
             break
         }
@@ -71,11 +71,11 @@ class EntryDetailViewController: UIViewController {
         var segmentIndex = 0
         
         switch entry.mood {
-        case Mood.bad.rawValue:
+        case Mood.sad.rawValue:
             segmentIndex = 0
-        case Mood.neutral.rawValue:
+        case Mood.okay.rawValue:
             segmentIndex = 1
-        case Mood.good.rawValue:
+        case Mood.happy.rawValue:
             segmentIndex = 2
         default:
             break
