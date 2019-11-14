@@ -56,14 +56,14 @@ class EntryController {
             return
         }
         
-        URLSession.shared.dataTask(with: request) { (data, _, error) in
+        URLSession.shared.dataTask(with: request) { (_, _, error) in
             if let error = error {
                 NSLog("Error PUTting Entry to server: \(error)")
                 completion(error)
                 return
             }
             
-            completion(nil)
+        completion(nil)
         }.resume()
     }
     
