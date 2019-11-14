@@ -9,6 +9,19 @@
 import UIKit
 
 class EntryDetailViewController: UIViewController {
+    var entry: Entry?
+    {
+        didSet {
+            updateViews()
+        }
+    }
+    
+    var entryController: EntryController?
+    
+    @IBOutlet weak var moodSegmentedControl: UISegmentedControl!
+    @IBOutlet weak var titleTextField: UITextField!
+    @IBOutlet weak var bodyTextView: UITextView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         updateViews()
@@ -23,11 +36,11 @@ class EntryDetailViewController: UIViewController {
         
         switch moodSegmentedControl.selectedSegmentIndex {
         case 0:
-            mood = Mood.bad.rawValue
+            mood = Mood.sad.rawValue
         case 1:
-            mood = Mood.neutral.rawValue
+            mood = Mood.okay.rawValue
         case 2:
-            mood = Mood.good.rawValue
+            mood = Mood.happy.rawValue
         default:
             break
         }
@@ -41,41 +54,33 @@ class EntryDetailViewController: UIViewController {
     }
     
     private func updateViews() {
+        guard self.isViewLoaded else { return }
+        
         guard let entry = entry else {
                 title = "Create Entry"
                 return
         }
         
-        title = entry.title
-        titleTextField.text = entry.title
-        bodyTextView.text = entry.bodyText
+        guard let title = entry.title,
+              let bodyText = entry.bodyText else {
+            return
+        }
+        self.titleTextField?.text = title
+        self.bodyTextView?.text = bodyText
         
         var segmentIndex = 0
         
         switch entry.mood {
-        case Mood.bad.rawValue:
+        case Mood.sad.rawValue:
             segmentIndex = 0
-        case Mood.neutral.rawValue:
+        case Mood.okay.rawValue:
             segmentIndex = 1
-        case Mood.good.rawValue:
+        case Mood.happy.rawValue:
             segmentIndex = 2
         default:
             break
         }
         
-        moodSegmentedControl.selectedSegmentIndex = segmentIndex
+        self.moodSegmentedControl?.selectedSegmentIndex = segmentIndex
     }
-    
-    var entry: Entry? {
-        didSet {
-            updateViews()
-        }
-    }
-    
-    var entryController: EntryController?
-    
-    @IBOutlet weak var moodSegmentedControl: UISegmentedControl!
-    @IBOutlet weak var titleTextField: UITextField!
-    @IBOutlet weak var bodyTextView: UITextView!
-
 }
