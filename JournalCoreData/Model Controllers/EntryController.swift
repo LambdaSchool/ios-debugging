@@ -9,9 +9,11 @@
 import Foundation
 import CoreData
 
-let baseURL = URL(string: "https://journal-5acd6.firebaseio.com/")!
+
 
 class EntryController {
+    
+    let baseUrl = URL(string: "https://journal-5acd6.firebaseio.com/")!
     
     func createEntry(with title: String, bodyText: String, mood: String) {
         
@@ -44,12 +46,19 @@ class EntryController {
     private func put(entry: Entry, completion: @escaping ((Error?) -> Void) = { _ in }) {
         
         let identifier = entry.identifier ?? UUID().uuidString
-        let requestURL = baseURL.appendingPathComponent(identifier).appendingPathComponent("json")
+        let requestURL = baseUrl.appendingPathComponent(identifier).appendingPathComponent("json")
         var request = URLRequest(url: requestURL)
         request.httpMethod = "PUT"
         
         do {
-            request.httpBody = try JSONEncoder().encode(entry)
+            guard var representation = entry.entryRepresentation else {
+                completion(nil)
+                return
+            }
+            representation.identifier = identifier
+            entry.identifier = identifier
+            
+            request.httpBody = try JSONEncoder().encode(representation)
         } catch {
             NSLog("Error encoding Entry: \(error)")
             completion(error)
@@ -75,7 +84,7 @@ class EntryController {
             return
         }
         
-        let requestURL = baseURL.appendingPathComponent(identifier).appendingPathExtension("json")
+        let requestURL = baseUrl.appendingPathComponent(identifier).appendingPathExtension("json")
         var request = URLRequest(url: requestURL)
         request.httpMethod = "DELETE"
         
@@ -92,7 +101,7 @@ class EntryController {
     
     func fetchEntriesFromServer(completion: @escaping ((Error?) -> Void) = { _ in }) {
         
-        let requestURL = baseURL.appendingPathExtension("json")
+        let requestURL = baseUrl.appendingPathExtension("json")
         
         URLSession.shared.dataTask(with: requestURL) { (data, _, error) in
             
