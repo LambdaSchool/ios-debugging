@@ -9,10 +9,12 @@
 import Foundation
 import CoreData
 
-#error("Change this value to your own firebase database! (and then delete this line)")
-let baseURL = URL(string: "https://journal-syncing.firebaseio.com/")!
+//#error("Change this value to your own firebase database! (and then delete this line)")
+let baseURL = URL(string: "https://journal-4de34.firebaseio.com/")!
 
 class EntryController {
+    
+    // MARK: - CRUD
     
     func createEntry(with title: String, bodyText: String, mood: String) {
         
@@ -42,10 +44,12 @@ class EntryController {
         saveToPersistentStore()
     }
     
+    // MARK: - Networking Methods
+    
     private func put(entry: Entry, completion: @escaping ((Error?) -> Void) = { _ in }) {
         
         let identifier = entry.identifier ?? UUID().uuidString
-        let requestURL = baseURL.appendingPathComponent(identifier).appendingPathComponent("json")
+        let requestURL = baseURL.appendingPathComponent(identifier).appendingPathExtension("json")
         var request = URLRequest(url: requestURL)
         request.httpMethod = "PUT"
         
@@ -63,6 +67,8 @@ class EntryController {
                 completion(error)
                 return
             }
+            
+            
             
             completion(nil)
         }.resume()
@@ -131,6 +137,8 @@ class EntryController {
             }
         }.resume()
     }
+    
+    // MARK: - Local Storage Methods
     
     private func fetchSingleEntryFromPersistentStore(with identifier: String?, in context: NSManagedObjectContext) -> Entry? {
         
