@@ -9,12 +9,33 @@
 import UIKit
 
 class EntryDetailViewController: UIViewController {
+    
+    // MARK: - Outlets
+    
+    @IBOutlet weak var moodSegmentedControl: UISegmentedControl!
+    @IBOutlet weak var titleTextField: UITextField!
+    @IBOutlet weak var bodyTextView: UITextView!
+    
+    // MARK: - Properties
+    
+    var entryController: EntryController?
+    var entry: Entry? {
+        didSet {
+//            updateViews()
+        }
+    }
+    
+    // MARK: - Lifecycle Methods
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         updateViews()
     }
     
+    // MARK: - Actions
+    
     @IBAction func saveEntry(_ sender: Any) {
+    
         
         guard let title = titleTextField.text,
             let bodyText = bodyTextView.text else { return }
@@ -40,12 +61,14 @@ class EntryDetailViewController: UIViewController {
         self.navigationController?.popViewController(animated: true)
     }
     
+    // MARK: - Private Methods
+    
     private func updateViews() {
         guard let entry = entry else {
                 title = "Create Entry"
                 return
         }
-        
+
         title = entry.title
         titleTextField.text = entry.title
         bodyTextView.text = entry.bodyText
@@ -66,16 +89,5 @@ class EntryDetailViewController: UIViewController {
         moodSegmentedControl.selectedSegmentIndex = segmentIndex
     }
     
-    var entry: Entry? {
-        didSet {
-            updateViews()
-        }
-    }
-    
-    var entryController: EntryController?
-    
-    @IBOutlet weak var moodSegmentedControl: UISegmentedControl!
-    @IBOutlet weak var titleTextField: UITextField!
-    @IBOutlet weak var bodyTextView: UITextView!
 
 }

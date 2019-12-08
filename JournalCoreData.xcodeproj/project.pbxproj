@@ -77,10 +77,10 @@
 		46AA32CE21212A28003AC495 /* JournalCoreData */ = {
 			isa = PBXGroup;
 			children = (
-				46AA32F3212132A5003AC495 /* Models */,
-				46AA32F22121329B003AC495 /* Model Controllers */,
-				46AA32F5212132E8003AC495 /* Views */,
 				46AA32F4212132AD003AC495 /* View Controllers */,
+				46AA32F5212132E8003AC495 /* Views */,
+				46AA32F22121329B003AC495 /* Model Controllers */,
+				46AA32F3212132A5003AC495 /* Models */,
 				46AA32F821213317003AC495 /* Storyboards */,
 				46AA32F72121330D003AC495 /* Resources */,
 			);
