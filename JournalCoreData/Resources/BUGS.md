@@ -14,5 +14,6 @@
     - identifier somehow given timestamp value
     - Entry+Codable.swift mistakenly set identifier to timestamp
     - Entry representations weren't being used for decoding; needed to conform EntryReps to Codable and make a new initializer
-- [ ] Crash related to entryController.fetchSingleEntryFromPersistentStore
+- [x] Crash related to entryController.fetchSingleEntryFromPersistentStore
+    - 'i' left out of 'identifier' in fetchRequest predicate 
 - [x] Updating from entryReps weren't saving to CoreData ('save' not called)

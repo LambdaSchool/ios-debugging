@@ -138,11 +138,12 @@ class EntryController {
         guard let identifier = identifier else { return nil }
         
         let fetchRequest: NSFetchRequest<Entry> = Entry.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "identfier == %@", identifier)
+        fetchRequest.predicate = NSPredicate(format: "identifier == %@", identifier)
         
         var result: Entry? = nil
         do {
-            result = try context.fetch(fetchRequest).first
+            let results = try context.fetch(fetchRequest)
+            result = results.first
         } catch {
             NSLog("Error fetching single entry: \(error)")
         }
