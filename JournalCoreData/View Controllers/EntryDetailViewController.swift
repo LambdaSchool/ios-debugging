@@ -46,6 +46,10 @@ class EntryDetailViewController: UIViewController {
                 return
         }
         
+        guard let titleTextField = titleTextField,
+        let bodyTextView = bodyTextView,
+        let moodSegmentedControl = moodSegmentedControl else { return }
+        
         title = entry.title
         titleTextField.text = entry.title
         bodyTextView.text = entry.bodyText
