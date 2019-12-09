@@ -9,4 +9,10 @@
     - entryController was not passed in segue from tableVC to detailVC
 - [x] Not sending to firebase
     - was appending "json" to url rather than ".json"
-- [ ] error decoding JSON upon being fetched from server 
+- [x] error decoding JSON upon being fetched from server 
+    -  Error fetching entries: typeMismatch(Swift.String, Swift.DecodingError.Context(codingPath: [_JSONKey(stringValue: "E6933CFB-E6D7-44CA-85CC-DC748E711594", intValue: nil), CodingKeys(stringValue: "identifier", intValue: nil)], debugDescription: "Expected to decode String but found a number instead.", underlyingError: nil))
+    - identifier somehow given timestamp value
+    - Entry+Codable.swift mistakenly set identifier to timestamp
+    - Entry representations weren't being used for decoding; needed to conform EntryReps to Codable and make a new initializer
+- [ ] Crash related to entryController.fetchSingleEntryFromPersistentStore
+- [x] Updating from entryReps weren't saving to CoreData ('save' not called)

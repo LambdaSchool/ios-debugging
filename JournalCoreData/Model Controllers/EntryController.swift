@@ -44,12 +44,14 @@ class EntryController {
     private func put(entry: Entry, completion: @escaping ((Error?) -> Void) = { _ in }) {
         
         let identifier = entry.identifier ?? UUID().uuidString
-        let requestURL = baseURL.appendingPathComponent(identifier).appendingPathExtension("json")
+        let requestURL = baseURL
+            .appendingPathComponent(identifier)
+            .appendingPathExtension("json")
         var request = URLRequest(url: requestURL)
         request.httpMethod = "PUT"
         
         do {
-            request.httpBody = try JSONEncoder().encode(entry)
+            request.httpBody = try JSONEncoder().encode(entry.representation)
         } catch {
             NSLog("Error encoding Entry: \(error)")
             completion(error)
@@ -168,6 +170,8 @@ class EntryController {
         entry.mood = entryRep.mood
         entry.timestamp = entryRep.timestamp
         entry.identifier = entryRep.identifier
+        
+        saveToPersistentStore()
     }
     
     func saveToPersistentStore() {        
