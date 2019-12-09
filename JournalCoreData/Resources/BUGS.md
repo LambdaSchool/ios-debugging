@@ -1,6 +1,7 @@
 #  Bugs
 
-- [ ] initial view controller title says 'Journal - Day 4'; unsure of correct value
+- [x] initial view controller title says 'Journal - Day 4'; unsure of correct value
+    - value was hard-coded; not sure if on purpose? I changed it to something that seemed more fitting
 - [x] not fetching entries from server
     - fetch method was never called; now called in tableVC.viewWillAppear
 - [x] app crashes when existing entry cell is tapped
