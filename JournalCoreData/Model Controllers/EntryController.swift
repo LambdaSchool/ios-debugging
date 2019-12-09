@@ -9,10 +9,14 @@
 import Foundation
 import CoreData
 
-#error("Change this value to your own firebase database! (and then delete this line)")
-let baseURL = URL(string: "https://journal-syncing.firebaseio.com/")!
+//#error("Change this value to your own firebase database! (and then delete this line)")
+let baseURL = URL(string: "https://journal-coredata-ss.firebaseio.com/")!
 
 class EntryController {
+    
+    init() {
+        fetchEntriesFromServer()
+    }
     
     func createEntry(with title: String, bodyText: String, mood: String) {
         
@@ -45,7 +49,7 @@ class EntryController {
     private func put(entry: Entry, completion: @escaping ((Error?) -> Void) = { _ in }) {
         
         let identifier = entry.identifier ?? UUID().uuidString
-        let requestURL = baseURL.appendingPathComponent(identifier).appendingPathComponent("json")
+        let requestURL = baseURL.appendingPathComponent(identifier).appendingPathExtension("json")
         var request = URLRequest(url: requestURL)
         request.httpMethod = "PUT"
         
@@ -94,8 +98,10 @@ class EntryController {
     func fetchEntriesFromServer(completion: @escaping ((Error?) -> Void) = { _ in }) {
         
         let requestURL = baseURL.appendingPathExtension("json")
+        var request = URLRequest(url: requestURL)
+        request.httpMethod = "GET"
         
-        URLSession.shared.dataTask(with: requestURL) { (data, _, error) in
+        URLSession.shared.dataTask(with: request) { (data, _, error) in
             
             if let error = error {
                 NSLog("Error fetching entries from server: \(error)")
@@ -137,7 +143,7 @@ class EntryController {
         guard let identifier = identifier else { return nil }
         
         let fetchRequest: NSFetchRequest<Entry> = Entry.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "identfier == %@", identifier)
+        fetchRequest.predicate = NSPredicate(format: "identifier == %@", identifier)
         
         var result: Entry? = nil
         do {

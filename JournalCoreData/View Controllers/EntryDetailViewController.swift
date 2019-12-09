@@ -37,6 +37,7 @@ class EntryDetailViewController: UIViewController {
         } else {
             entryController?.createEntry(with: title, bodyText: bodyText, mood: mood)
         }
+
         self.navigationController?.popViewController(animated: true)
     }
     
@@ -45,10 +46,6 @@ class EntryDetailViewController: UIViewController {
                 title = "Create Entry"
                 return
         }
-        
-        title = entry.title
-        titleTextField.text = entry.title
-        bodyTextView.text = entry.bodyText
         
         var segmentIndex = 0
         
@@ -63,7 +60,13 @@ class EntryDetailViewController: UIViewController {
             break
         }
         
-        moodSegmentedControl.selectedSegmentIndex = segmentIndex
+        if isViewLoaded {
+            title = entry.title
+            titleTextField.text = entry.title
+            bodyTextView.text = entry.bodyText
+            moodSegmentedControl.selectedSegmentIndex = segmentIndex
+        }
+        
     }
     
     var entry: Entry? {
