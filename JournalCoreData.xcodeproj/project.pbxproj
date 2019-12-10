@@ -45,6 +45,7 @@
 		46AA32EE21213184003AC495 /* EntryTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryTableViewCell.swift; sourceTree = "<group>"; };
 		46AA32F021213236003AC495 /* TimestampFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimestampFormatter.swift; sourceTree = "<group>"; };
 		46F9C2242122456400E7FF73 /* JournalCoreData 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "JournalCoreData 2.xcdatamodel"; sourceTree = "<group>"; };
+		99BA93BE239EE4CB00B4C531 /* BUGS.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = BUGS.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -136,6 +137,7 @@
 			isa = PBXGroup;
 			children = (
 				4697668D2123E41800E7FF73 /* EntryConforming.swift */,
+				99BA93BE239EE4CB00B4C531 /* BUGS.md */,
 				462A2D582122C6DF00E7FF73 /* Mood.swift */,
 				46AA32CF21212A28003AC495 /* AppDelegate.swift */,
 				46AA32F021213236003AC495 /* TimestampFormatter.swift */,

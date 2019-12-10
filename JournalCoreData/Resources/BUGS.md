@@ -1,0 +1,23 @@
+#  Bugs
+
+- [x] initial view controller title says 'Journal - Day 4'; unsure of correct value
+    - value was hard-coded; not sure if on purpose? I changed it to something that seemed more fitting
+- [x] not fetching entries from server
+    - fetch method was never called; now called in tableVC.viewWillAppear
+- [x] app crashes when existing entry cell is tapped
+    - attempted to update views before view was loaded
+- [x] edited journal data is not saved when 'save' tapped
+    - entryController was not passed in segue from tableVC to detailVC
+- [x] Not sending to firebase
+    - was appending "json" to url rather than ".json"
+    - or was appendingPathComponent rather than appendingPathExtension
+- [x] error decoding JSON upon being fetched from server 
+    -  Error fetching entries: typeMismatch(Swift.String, Swift.DecodingError.Context(codingPath: [_JSONKey(stringValue: "E6933CFB-E6D7-44CA-85CC-DC748E711594", intValue: nil), CodingKeys(stringValue: "identifier", intValue: nil)], debugDescription: "Expected to decode String but found a number instead.", underlyingError: nil))
+    - identifier somehow given timestamp value
+    - Entry+Codable.swift mistakenly set identifier to timestamp
+    - Entry representations weren't being used for decoding; needed to conform EntryReps to Codable and make a new initializer
+- [x] Crash related to entryController.fetchSingleEntryFromPersistentStore
+    - 'i' left out of 'identifier' in fetchRequest predicate 
+- [x] Updating from entryReps weren't saving to CoreData ('save' not called)
+- [x] mood sections not sorting correctly
+    - moods were not conforming to CaseIterable (may not be necessary) and were not selected as a SortDescriptor in the initialization of the FetchedResultsController

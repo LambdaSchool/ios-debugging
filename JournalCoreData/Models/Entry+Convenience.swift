@@ -37,4 +37,13 @@ extension Entry {
         
         self.init(title: title, bodyText: bodyText, timestamp: timestamp, mood: mood, identifier: identifier, context: context)
     }
+    
+    var representation: EntryRepresentation {
+        return EntryRepresentation(
+            title: self.title,
+            bodyText: self.bodyText,
+            mood: self.mood,
+            timestamp: self.timestamp,
+            identifier: self.identifier)
+    }
 }
