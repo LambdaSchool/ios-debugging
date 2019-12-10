@@ -13,9 +13,14 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
+        entryController.fetchEntriesFromServer()
         tableView.reloadData()
     }
+    
+    override func viewDidLoad() {
+            super.viewDidLoad()
+            entryController.fetchEntriesFromServer()
+        }
     
     // MARK: - Table view data source
     
@@ -110,7 +115,7 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
         case "ViewEntry":
             guard let destinationVC = segue.destination as? EntryDetailViewController,
                 let indexPath = tableView.indexPathForSelectedRow else { return }
-            
+            destinationVC.entryController = entryController
             destinationVC.entry = fetchedResultsController.object(at: indexPath)
             
         default:
