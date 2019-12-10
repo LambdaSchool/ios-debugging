@@ -9,10 +9,13 @@
 import Foundation
 import CoreData
 
-#error("Change this value to your own firebase database! (and then delete this line)")
-let baseURL = URL(string: "https://journal-syncing.firebaseio.com/")!
+let baseURL = URL(string: "https://journal-debugging-e0973.firebaseio.com/")!
 
 class EntryController {
+
+	init() {
+		fetchEntriesFromServer()
+	}
     
     func createEntry(with title: String, bodyText: String, mood: String) {
         
@@ -94,6 +97,8 @@ class EntryController {
     func fetchEntriesFromServer(completion: @escaping ((Error?) -> Void) = { _ in }) {
         
         let requestURL = baseURL.appendingPathExtension("json")
+		var request = URLRequest(url: requestURL)
+		request.httpMethod = "GET"
         
         URLSession.shared.dataTask(with: requestURL) { (data, _, error) in
             
