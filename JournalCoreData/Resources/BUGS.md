@@ -19,3 +19,5 @@
 - [x] Crash related to entryController.fetchSingleEntryFromPersistentStore
     - 'i' left out of 'identifier' in fetchRequest predicate 
 - [x] Updating from entryReps weren't saving to CoreData ('save' not called)
+- [x] mood sections not sorting correctly
+    - moods were not conforming to CaseIterable (may not be necessary) and were not selected as a SortDescriptor in the initialization of the FetchedResultsController
