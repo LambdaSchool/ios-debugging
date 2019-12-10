@@ -9,8 +9,7 @@
 import Foundation
 import CoreData
 
-#error("Change this value to your own firebase database! (and then delete this line)")
-let baseURL = URL(string: "https://journal-syncing.firebaseio.com/")!
+let baseURL = URL(string: "https://journal-fa29d.firebaseio.com/")!
 
 class EntryController {
     
@@ -21,6 +20,10 @@ class EntryController {
         put(entry: entry)
         
         saveToPersistentStore()
+    }
+    
+    init() {
+        fetchEntriesFromServer()
     }
     
     func update(entry: Entry, title: String, bodyText: String, mood: String) {
@@ -42,15 +45,18 @@ class EntryController {
         saveToPersistentStore()
     }
     
-    private func put(entry: Entry, completion: @escaping ((Error?) -> Void) = { _ in }) {
+    func put(entry: Entry, completion: @escaping ((Error?) -> Void) = { _ in }) {
         
         let identifier = entry.identifier ?? UUID().uuidString
-        let requestURL = baseURL.appendingPathComponent(identifier).appendingPathComponent("json")
+        let requestURL = baseURL.appendingPathComponent(identifier).appendingPathExtension("json")
         var request = URLRequest(url: requestURL)
         request.httpMethod = "PUT"
         
         do {
-            request.httpBody = try JSONEncoder().encode(entry)
+            guard let rep = entry.entryRepresentation else {
+                completion(nil)
+                return }
+            request.httpBody = try JSONEncoder().encode(rep)
         } catch {
             NSLog("Error encoding Entry: \(error)")
             completion(error)
@@ -137,7 +143,7 @@ class EntryController {
         guard let identifier = identifier else { return nil }
         
         let fetchRequest: NSFetchRequest<Entry> = Entry.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "identfier == %@", identifier)
+        fetchRequest.predicate = NSPredicate(format: "identifier == %@", identifier)
         
         var result: Entry? = nil
         do {
