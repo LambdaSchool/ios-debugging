@@ -9,10 +9,12 @@
 import Foundation
 import CoreData
 
-#error("Change this value to your own firebase database! (and then delete this line)")
-let baseURL = URL(string: "https://journal-syncing.firebaseio.com/")!
+//#error("Change this value to your own firebase database! (and then delete this line)")
+let baseURL = URL(string: "https://journal-4de34.firebaseio.com/")!
 
 class EntryController {
+    
+    // MARK: - CRUD
     
     func createEntry(with title: String, bodyText: String, mood: String) {
         
@@ -42,10 +44,12 @@ class EntryController {
         saveToPersistentStore()
     }
     
+    // MARK: - Networking Methods
+    
     private func put(entry: Entry, completion: @escaping ((Error?) -> Void) = { _ in }) {
         
         let identifier = entry.identifier ?? UUID().uuidString
-        let requestURL = baseURL.appendingPathComponent(identifier).appendingPathComponent("json")
+        let requestURL = baseURL.appendingPathComponent(identifier).appendingPathExtension("json")
         var request = URLRequest(url: requestURL)
         request.httpMethod = "PUT"
         
@@ -63,6 +67,8 @@ class EntryController {
                 completion(error)
                 return
             }
+            
+            
             
             completion(nil)
         }.resume()
@@ -113,7 +119,7 @@ class EntryController {
             
             do {
                 let entryReps = try JSONDecoder().decode([String: EntryRepresentation].self, from: data).map({$0.value})
-                self.updateEntries(with: entryReps, in: moc)
+                self.updateEntries(with: entryReps/*, in: moc*/)
             } catch {
                 NSLog("Error decoding JSON data: \(error)")
                 completion(error)
@@ -132,18 +138,75 @@ class EntryController {
         }.resume()
     }
     
-    private func fetchSingleEntryFromPersistentStore(with identifier: String?, in context: NSManagedObjectContext) -> Entry? {
+    // MARK: - Local Storage Methods
+    
+    func updateEntries(with representations: [EntryRepresentation]) {
         
-        guard let identifier = identifier else { return nil }
+        // Which representations do we already have in Core Data?
+        
+        let identifiersToFetch = representations.map { $0.identifier }
+        
+        let representationsByID = Dictionary(uniqueKeysWithValues: zip(identifiersToFetch, representations))
+        
+        // Make a mutable copy of the dictionary above
+        
+        var entriesToCreate = representationsByID
         
         let fetchRequest: NSFetchRequest<Entry> = Entry.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "identfier == %@", identifier)
+        // Only fetch tasks with these identifiers
+        fetchRequest.predicate = NSPredicate(format: "identifier IN %@", identifiersToFetch) // or potentially "identifier NOT IN %@"
+        
+        let context = CoreDataStack.shared.container.newBackgroundContext()
+        
+        context.performAndWait {
+            
+            
+            
+            do {
+                let existingEntries = try context.fetch(fetchRequest)
+                
+                // Update the ones we do have
+                
+                for entry in existingEntries {
+                    
+                    // Grab the TaskRepresentation that corresponds to this task
+                    guard let identifier = entry.identifier,
+                        let representation = representationsByID[identifier] else { continue }
+                    // This can be abstracted out to another function
+                    entry.title = representation.title
+                    entry.bodyText = representation.bodyText
+                    entry.mood = representation.mood
+                    
+                    
+                    entriesToCreate.removeValue(forKey: identifier)
+                }
+                
+                // Figure out which ones we don't have
+                
+                for representation in entriesToCreate.values {
+                    Entry(entryRepresentation: representation, context: context)
+                }
+                try context.save()
+            } catch {
+                print("Error fetching tasks from persistent store: \(error)")
+            }
+        }
+    }
+    
+    private func fetchSingleEntryFromPersistentStore(with identifier: String?, in context: NSManagedObjectContext) -> Entry? {
+        
+        guard let identifierToFetch = identifier else { return nil }
+        
+        let fetchRequest: NSFetchRequest<Entry> = Entry.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "identfier IN %@"/*"identfier == %@"*/, identifierToFetch)
         
         var result: Entry? = nil
         do {
             result = try context.fetch(fetchRequest).first
+            print(result?.identifier ?? "It's nil")
         } catch {
             NSLog("Error fetching single entry: \(error)")
+            return nil
         }
         return result
     }

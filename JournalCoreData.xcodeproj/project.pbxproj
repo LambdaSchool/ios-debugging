@@ -77,10 +77,10 @@
 		46AA32CE21212A28003AC495 /* JournalCoreData */ = {
 			isa = PBXGroup;
 			children = (
-				46AA32F3212132A5003AC495 /* Models */,
-				46AA32F22121329B003AC495 /* Model Controllers */,
-				46AA32F5212132E8003AC495 /* Views */,
 				46AA32F4212132AD003AC495 /* View Controllers */,
+				46AA32F5212132E8003AC495 /* Views */,
+				46AA32F22121329B003AC495 /* Model Controllers */,
+				46AA32F3212132A5003AC495 /* Models */,
 				46AA32F821213317003AC495 /* Storyboards */,
 				46AA32F72121330D003AC495 /* Resources */,
 			);
@@ -382,13 +382,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = VXUQXR6S56;
+				DEVELOPMENT_TEAM = 8M5GPJQ6L5;
 				INFOPLIST_FILE = "$(SRCROOT)/JournalCoreData/Resources/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.LambdaSchool.JournalCoreData;
+				PRODUCT_BUNDLE_IDENTIFIER = com.djm.JournalCoreData;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -400,13 +400,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = VXUQXR6S56;
+				DEVELOPMENT_TEAM = 8M5GPJQ6L5;
 				INFOPLIST_FILE = "$(SRCROOT)/JournalCoreData/Resources/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.LambdaSchool.JournalCoreData;
+				PRODUCT_BUNDLE_IDENTIFIER = com.djm.JournalCoreData;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
