@@ -33,13 +33,7 @@ class EntriesTableViewController: UITableViewController {
     // MARK: - View Controller Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        entryController.fetchEntriesFromServer { error in
-            if let _ = error {
-                return
-            }
-            
-            self.tableView.reloadData()
-        }
+        entryController.fetchEntriesFromServer()
     }
 
     override func viewWillAppear(_ animated: Bool) {
