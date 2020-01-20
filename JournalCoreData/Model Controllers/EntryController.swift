@@ -9,8 +9,7 @@
 import Foundation
 import CoreData
 
-#error("Change this value to your own firebase database! (and then delete this line)")
-let baseURL = URL(string: "https://journal-syncing.firebaseio.com/")!
+let baseURL = URL(string: "https://journal-f8c88.firebaseio.com/")!
 
 class EntryController {
     
@@ -45,7 +44,7 @@ class EntryController {
     private func put(entry: Entry, completion: @escaping ((Error?) -> Void) = { _ in }) {
         
         let identifier = entry.identifier ?? UUID().uuidString
-        let requestURL = baseURL.appendingPathComponent(identifier).appendingPathComponent("json")
+        let requestURL = baseURL.appendingPathComponent(identifier).appendingPathExtension("json")
         var request = URLRequest(url: requestURL)
         request.httpMethod = "PUT"
         
@@ -109,11 +108,11 @@ class EntryController {
                 return
             }
 
-            let moc = CoreDataStack.shared.mainContext
+            let moc = CoreDataStack.shared.container.newBackgroundContext()
             
             do {
-                let entryReps = try JSONDecoder().decode([String: EntryRepresentation].self, from: data).map({$0.value})
-                self.updateEntries(with: entryReps, in: moc)
+                let entryReps = Array(try JSONDecoder().decode([String: EntryRepresentation].self, from: data).map({$0.value}))
+                try self.updateEntries(with: entryReps, in: moc)
             } catch {
                 NSLog("Error decoding JSON data: \(error)")
                 completion(error)
@@ -148,19 +147,33 @@ class EntryController {
         return result
     }
     
-    private func updateEntries(with representations: [EntryRepresentation], in context: NSManagedObjectContext) {
+    private func updateEntries(with representations: [EntryRepresentation], in context: NSManagedObjectContext) throws {
+        
+        let entriesWithID = representations.filter { $0.identifier != "" }
+        let identifiersToFetch = entriesWithID.compactMap { $0.identifier }
+        let represntationsByID = Dictionary(uniqueKeysWithValues: zip(identifiersToFetch, entriesWithID))
+        var entriesToCreate = represntationsByID
+        let fetchRequest: NSFetchRequest<Entry> = Entry.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "identifier IN %@", identifiersToFetch)
+        
         context.performAndWait {
-            for entryRep in representations {
-                guard let identifier = entryRep.identifier else { continue }
+            do {
+                let existingEntries = try context.fetch(fetchRequest)
                 
-                let entry = self.fetchSingleEntryFromPersistentStore(with: identifier, in: context)
-                if let entry = entry, entry != entryRep {
-                    self.update(entry: entry, with: entryRep)
-                } else if entry == nil {
-                    _ = Entry(entryRepresentation: entryRep, context: context)
+                for entry in existingEntries {
+                    guard let id = entry.identifier, let representation = represntationsByID[id] else { continue }
+                    self.update(entry: entry, with: representation)
+                    entriesToCreate.removeValue(forKey: id)
                 }
+                
+                for representation in entriesToCreate.values {
+                    Entry(entryRepresentation: representation, context: context)
+                }
+            } catch let fetchError {
+                print("Error fetching entries for identifiers: \(fetchError.localizedDescription)")
             }
         }
+        try CoreDataStack.shared.save(context: context)
     }
     
     private func update(entry: Entry, with entryRep: EntryRepresentation) {
