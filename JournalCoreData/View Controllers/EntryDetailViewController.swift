@@ -9,6 +9,24 @@
 import UIKit
 
 class EntryDetailViewController: UIViewController {
+    
+    // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    // MARK: - Outlets
+    @IBOutlet weak var moodSegmentedControl: UISegmentedControl!
+    @IBOutlet weak var titleTextField: UITextField!
+    @IBOutlet weak var bodyTextView: UITextView!
+    
+    // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    // MARK: - Properties
+    var entryController: EntryController?
+    var entry: Entry? {
+        didSet {
+            updateViews()
+        }
+    }
+    
+    // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+    // MARK: - View Controller Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         updateViews()
@@ -41,7 +59,7 @@ class EntryDetailViewController: UIViewController {
     }
     
     private func updateViews() {
-        guard let entry = entry else {
+        guard let entry = entry, self.isViewLoaded else {
                 title = "Create Entry"
                 return
         }
@@ -65,17 +83,4 @@ class EntryDetailViewController: UIViewController {
         
         moodSegmentedControl.selectedSegmentIndex = segmentIndex
     }
-    
-    var entry: Entry? {
-        didSet {
-            updateViews()
-        }
-    }
-    
-    var entryController: EntryController?
-    
-    @IBOutlet weak var moodSegmentedControl: UISegmentedControl!
-    @IBOutlet weak var titleTextField: UITextField!
-    @IBOutlet weak var bodyTextView: UITextView!
-
 }
