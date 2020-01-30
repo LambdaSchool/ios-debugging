@@ -98,25 +98,29 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
     
     // MARK: - Navigation
     
+    
+    
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        
+
         switch segue.identifier {
         case "CreateEntry":
             guard let destinationVC = segue.destination as? EntryDetailViewController else { return }
-            
+
             destinationVC.entryController = entryController
-            
+
         case "ViewEntry":
             guard let destinationVC = segue.destination as? EntryDetailViewController,
                 let indexPath = tableView.indexPathForSelectedRow else { return }
-            
+
+            destinationVC.entryController = entryController
             destinationVC.entry = fetchedResultsController.object(at: indexPath)
-            
+
         default:
             break
         }
     }
+    
     
     // MARK: - Properties
     
@@ -124,7 +128,7 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
     
     lazy var fetchedResultsController: NSFetchedResultsController<Entry> = {
         let fetchRequest: NSFetchRequest<Entry> = Entry.fetchRequest()
-        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "timestamp", ascending: false)]
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "mood", ascending: false), NSSortDescriptor(key: "timestamp", ascending: false)]
         
         let moc = CoreDataStack.shared.mainContext
         let frc = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: moc, sectionNameKeyPath: "mood", cacheName: nil)
@@ -136,3 +140,23 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
         return frc
     }()
 }
+
+
+//Another way of doing it:
+/*
+ override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+     
+     if segue.identifier == "CreateEntry" {
+         guard let destinationVC = segue.destination as? EntryDetailViewController else { return }
+         
+         destinationVC.entryController = entryController
+     
+     } else if segue.identifier == "ViewEntry" {
+         guard let destinationVC = segue.destination as? EntryDetailViewController,
+             let indexPath = tableView.indexPathForSelectedRow else { return }
+         
+         destinationVC.entryController = entryController
+         destinationVC.entry = fetchedResultsController.object(at: indexPath)
+     }
+ }
+ */
