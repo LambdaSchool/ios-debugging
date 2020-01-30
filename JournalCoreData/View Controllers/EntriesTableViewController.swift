@@ -9,13 +9,37 @@
 import UIKit
 import CoreData
 
-class EntriesTableViewController: UITableViewController, NSFetchedResultsControllerDelegate {
-
+class EntriesTableViewController: UITableViewController {
+    
+    let entryController = EntryController()
+        
+        lazy var fetchedResultsController: NSFetchedResultsController<Entry> = {
+            let fetchRequest: NSFetchRequest<Entry> = Entry.fetchRequest()
+            fetchRequest.sortDescriptors = [NSSortDescriptor(key: "timestamp", ascending: false)]
+            
+            let moc = CoreDataStack.shared.mainContext
+            let frc = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: moc, sectionNameKeyPath: "mood", cacheName: nil)
+            
+            frc.delegate = self
+            
+            try! frc.performFetch()
+            
+            return frc
+        }()
+    
+    override func viewDidLoad() {
+        entryController.fetchEntriesFromServer()
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
         tableView.reloadData()
     }
+    
+    
+
+    
     
     // MARK: - Table view data source
     
@@ -48,16 +72,10 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
             entryController.delete(entry: entry)
         }
     }
-    
     // MARK: - NSFetchedResultsControllerDelegate
     
-    func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        tableView.beginUpdates()
-    }
     
-    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        tableView.endUpdates()
-    }
+
     
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>,
                     didChange sectionInfo: NSFetchedResultsSectionInfo,
@@ -95,44 +113,35 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
             tableView.deleteRows(at: [indexPath], with: .automatic)
         }
     }
+
     
     // MARK: - Navigation
     
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
-        switch segue.identifier {
-        case "CreateEntry":
+        if segue.identifier == "CreateEntry" {
             guard let destinationVC = segue.destination as? EntryDetailViewController else { return }
             
             destinationVC.entryController = entryController
-            
-        case "ViewEntry":
+        
+        } else if segue.identifier == "ViewEntry" {
             guard let destinationVC = segue.destination as? EntryDetailViewController,
                 let indexPath = tableView.indexPathForSelectedRow else { return }
             
+            destinationVC.entryController = entryController
             destinationVC.entry = fetchedResultsController.object(at: indexPath)
-            
-        default:
-            break
         }
     }
+}
+
+extension EntriesTableViewController: NSFetchedResultsControllerDelegate {
     
-    // MARK: - Properties
+    func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        tableView.beginUpdates()
+    }
     
-    let entryController = EntryController()
-    
-    lazy var fetchedResultsController: NSFetchedResultsController<Entry> = {
-        let fetchRequest: NSFetchRequest<Entry> = Entry.fetchRequest()
-        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "timestamp", ascending: false)]
-        
-        let moc = CoreDataStack.shared.mainContext
-        let frc = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: moc, sectionNameKeyPath: "mood", cacheName: nil)
-        
-        frc.delegate = self
-        
-        try! frc.performFetch()
-        
-        return frc
-    }()
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        tableView.endUpdates()
+    }
 }

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1F549E3923E279F30013FED2 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 1F549E3823E279F30013FED2 /* README.md */; };
 		462A2D592122C6DF00E7FF73 /* Mood.swift in Sources */ = {isa = PBXBuildFile; fileRef = 462A2D582122C6DF00E7FF73 /* Mood.swift */; };
 		4697668A2123E0FA00E7FF73 /* EntryRepresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 469766892123E0FA00E7FF73 /* EntryRepresentation.swift */; };
 		4697668C2123E1A400E7FF73 /* Entry+Codable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4697668B2123E1A400E7FF73 /* Entry+Codable.swift */; };
@@ -26,6 +27,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1F549E3823E279F30013FED2 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		462A2D582122C6DF00E7FF73 /* Mood.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mood.swift; sourceTree = "<group>"; };
 		469766892123E0FA00E7FF73 /* EntryRepresentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryRepresentation.swift; sourceTree = "<group>"; };
 		4697668B2123E1A400E7FF73 /* Entry+Codable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Entry+Codable.swift"; sourceTree = "<group>"; };
@@ -61,6 +63,7 @@
 		46AA32C321212A28003AC495 = {
 			isa = PBXGroup;
 			children = (
+				1F549E3823E279F30013FED2 /* README.md */,
 				46AA32CE21212A28003AC495 /* JournalCoreData */,
 				46AA32CD21212A28003AC495 /* Products */,
 			);
@@ -214,6 +217,7 @@
 			files = (
 				46AA32DA21212A2A003AC495 /* LaunchScreen.storyboard in Resources */,
 				46AA32D721212A2A003AC495 /* Assets.xcassets in Resources */,
+				1F549E3923E279F30013FED2 /* README.md in Resources */,
 				46AA32D521212A28003AC495 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
