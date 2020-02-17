@@ -9,8 +9,8 @@
 import Foundation
 import CoreData
 
-#error("Change this value to your own firebase database! (and then delete this line)")
-let baseURL = URL(string: "https://journal-syncing.firebaseio.com/")!
+/// My own Firebase
+let baseURL = URL(string: "https://journaldebug-6e573.firebaseio.com/")!
 
 class EntryController {
     
@@ -23,6 +23,7 @@ class EntryController {
         saveToPersistentStore()
     }
     
+    /// Update an entry that already exists
     func update(entry: Entry, title: String, bodyText: String, mood: String) {
         
         entry.title = title
@@ -44,8 +45,10 @@ class EntryController {
     
     private func put(entry: Entry, completion: @escaping ((Error?) -> Void) = { _ in }) {
         
+        // gives it an id if it doesn't already have one
         let identifier = entry.identifier ?? UUID().uuidString
-        let requestURL = baseURL.appendingPathComponent(identifier).appendingPathComponent("json")
+        // Bug 2 fix?
+        let requestURL = baseURL.appendingPathComponent(identifier).appendingPathExtension("json")
         var request = URLRequest(url: requestURL)
         request.httpMethod = "PUT"
         
@@ -137,7 +140,7 @@ class EntryController {
         guard let identifier = identifier else { return nil }
         
         let fetchRequest: NSFetchRequest<Entry> = Entry.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "identfier == %@", identifier)
+        fetchRequest.predicate = NSPredicate(format: "identifier == %@", identifier)
         
         var result: Entry? = nil
         do {

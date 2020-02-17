@@ -16,8 +16,9 @@ class EntryDetailViewController: UIViewController {
     
     @IBAction func saveEntry(_ sender: Any) {
         
+        // Bug 4 Fix 
         guard let title = titleTextField.text,
-            let bodyText = bodyTextView.text else { return }
+            let bodyText = bodyTextView.text, !title.isEmpty, !bodyText.isEmpty else { return }
         
         var mood: String!
         
@@ -31,10 +32,12 @@ class EntryDetailViewController: UIViewController {
         default:
             break
         }
-        
+        // Update
         if let entry = entry {
             entryController?.update(entry: entry, title: title, bodyText: bodyText, mood: mood)
-        } else {
+        }
+        // Add
+        else {
             entryController?.createEntry(with: title, bodyText: bodyText, mood: mood)
         }
         self.navigationController?.popViewController(animated: true)
@@ -46,6 +49,8 @@ class EntryDetailViewController: UIViewController {
                 return
         }
         
+        // Bug 1 fix?
+        guard isViewLoaded else {return}
         title = entry.title
         titleTextField.text = entry.title
         bodyTextView.text = entry.bodyText
