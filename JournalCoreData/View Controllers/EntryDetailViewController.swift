@@ -45,7 +45,8 @@ class EntryDetailViewController: UIViewController {
                 title = "Create Entry"
                 return
         }
-        // 1st bug fix?
+        
+        // Bug 1 fix?
         guard isViewLoaded else {return}
         title = entry.title
         titleTextField.text = entry.title

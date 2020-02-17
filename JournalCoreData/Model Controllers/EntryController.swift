@@ -44,8 +44,10 @@ class EntryController {
     
     private func put(entry: Entry, completion: @escaping ((Error?) -> Void) = { _ in }) {
         
+        // gives it an id if it doesn't already have one
         let identifier = entry.identifier ?? UUID().uuidString
-        let requestURL = baseURL.appendingPathComponent(identifier).appendingPathComponent("json")
+        // Bug 2 fix?
+        let requestURL = baseURL.appendingPathComponent(identifier).appendingPathExtension("json")
         var request = URLRequest(url: requestURL)
         request.httpMethod = "PUT"
         
@@ -163,6 +165,7 @@ class EntryController {
         }
     }
     
+    // Bug 3 ?
     private func update(entry: Entry, with entryRep: EntryRepresentation) {
         entry.title = entryRep.title
         entry.bodyText = entryRep.bodyText
