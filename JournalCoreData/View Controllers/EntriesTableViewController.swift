@@ -10,7 +10,12 @@ import UIKit
 import CoreData
 
 class EntriesTableViewController: UITableViewController, NSFetchedResultsControllerDelegate {
-
+//  // Bug 7 Fix?
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        entryController.fetchEntriesFromServer()
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
@@ -93,6 +98,9 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
         case .delete:
             guard let indexPath = indexPath else { return }
             tableView.deleteRows(at: [indexPath], with: .automatic)
+        // Bug 6 Fix ? fetchedController might add values?
+        @unknown default:
+            break
         }
     }
     
