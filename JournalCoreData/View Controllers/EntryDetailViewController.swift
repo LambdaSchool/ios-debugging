@@ -31,10 +31,12 @@ class EntryDetailViewController: UIViewController {
         default:
             break
         }
-        
+        // Update
         if let entry = entry {
             entryController?.update(entry: entry, title: title, bodyText: bodyText, mood: mood)
-        } else {
+        }
+        // Add
+        else {
             entryController?.createEntry(with: title, bodyText: bodyText, mood: mood)
         }
         self.navigationController?.popViewController(animated: true)

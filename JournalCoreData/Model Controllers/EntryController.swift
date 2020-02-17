@@ -23,6 +23,7 @@ class EntryController {
         saveToPersistentStore()
     }
     
+    /// Update an entry that already exists
     func update(entry: Entry, title: String, bodyText: String, mood: String) {
         
         entry.title = title
@@ -165,7 +166,6 @@ class EntryController {
         }
     }
     
-    // Bug 3 ?
     private func update(entry: Entry, with entryRep: EntryRepresentation) {
         entry.title = entryRep.title
         entry.bodyText = entryRep.bodyText
