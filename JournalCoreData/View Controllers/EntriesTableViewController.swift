@@ -102,19 +102,14 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
         switch segue.identifier {
-        case "CreateEntry":
-            guard let destinationVC = segue.destination as? EntryDetailViewController else { return }
-            
-            destinationVC.entryController = entryController
-            
         case "ViewEntry":
             guard let destinationVC = segue.destination as? EntryDetailViewController,
                 let indexPath = tableView.indexPathForSelectedRow else { return }
-            
             destinationVC.entry = fetchedResultsController.object(at: indexPath)
-            
+            destinationVC.entryController = entryController
         default:
-            break
+            guard let destinationVC = segue.destination as? EntryDetailViewController else { return }
+            destinationVC.entryController = entryController
         }
     }
     
