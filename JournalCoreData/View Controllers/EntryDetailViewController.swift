@@ -16,8 +16,12 @@ class EntryDetailViewController: UIViewController {
     
     @IBAction func saveEntry(_ sender: Any) {
         
-        guard let title = titleTextField.text,
-            let bodyText = bodyTextView.text else { return }
+        guard
+            let title = titleTextField.text,
+            let bodyText = bodyTextView.text,
+            !title.isEmpty,
+            !bodyText.isEmpty
+            else { return }
         
         var mood: String!
         
@@ -41,18 +45,18 @@ class EntryDetailViewController: UIViewController {
     }
     
     private func updateViews() {
-        guard let entry = entry else {
-                title = "Create Entry"
-                return
+        guard isViewLoaded else { return }
+        if let entry = entry {
+            title = entry.title
+            titleTextField.text = entry.title
+            bodyTextView.text = entry.bodyText
+        } else {
+            title = "Create Entry"
         }
-        
-        title = entry.title
-        titleTextField.text = entry.title
-        bodyTextView.text = entry.bodyText
         
         var segmentIndex = 0
         
-        switch entry.mood {
+        switch entry?.mood {
         case Mood.bad.rawValue:
             segmentIndex = 0
         case Mood.neutral.rawValue:
