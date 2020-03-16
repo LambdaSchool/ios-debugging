@@ -18,7 +18,8 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        entryController.fetchEntriesFromServer()
+        entryController.fetchEntriesFromServer() // Decode data from sever when the app first launch
+        
     }
     
     
