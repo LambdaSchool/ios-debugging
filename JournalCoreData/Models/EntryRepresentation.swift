@@ -7,8 +7,8 @@
 //
 
 import Foundation
-
-struct EntryRepresentation: Decodable {
+// Made it both codable and decodable
+struct EntryRepresentation: Codable {
     var title: String?
     var bodyText: String?
     var mood: String?

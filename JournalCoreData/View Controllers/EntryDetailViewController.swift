@@ -9,12 +9,14 @@
 import UIKit
 
 class EntryDetailViewController: UIViewController {
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    
+    // Changed View did to view will appear 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         updateViews()
     }
     
-    @IBAction func saveEntry(_ sender: Any) {
+    @IBAction func saveEntry(_ sender: UIBarButtonItem) {
         
         guard let title = titleTextField.text,
             let bodyText = bodyTextView.text else { return }
@@ -68,11 +70,9 @@ class EntryDetailViewController: UIViewController {
         moodSegmentedControl.selectedSegmentIndex = segmentIndex
     }
     
-    var entry: Entry? {
-        didSet {
-            updateViews()
-        }
-    }
+    
+    // Got rid of did/set to help stop crashing.
+    var entry: Entry?
     
     var entryController: EntryController?
     
