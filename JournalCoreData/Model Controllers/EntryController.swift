@@ -41,7 +41,7 @@ class EntryController {
         saveToPersistentStore()
     }
     
-    private func put(entry: Entry, completion: @escaping ((Error?) -> Void) = { _ in }) {
+     func put(entry: Entry, completion: @escaping ((Error?) -> Void) = { _ in }) {
         
         let identifier = entry.identifier ?? UUID().uuidString
         let requestURL = baseURL.appendingPathComponent(identifier).appendingPathComponent("json")
@@ -49,7 +49,10 @@ class EntryController {
         request.httpMethod = "PUT"
         
         do {
-            request.httpBody = try JSONEncoder().encode(entry)
+            let jsonEncoder = JSONEncoder()
+            jsonEncoder.dateEncodingStrategy = .iso8601
+            
+            request.httpBody = try jsonEncoder.encode(entry)
         } catch {
             NSLog("Error encoding Entry: \(error)")
             completion(error)

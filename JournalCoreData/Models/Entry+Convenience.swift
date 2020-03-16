@@ -35,6 +35,11 @@ extension Entry {
             let timestamp = entryRepresentation.timestamp,
             let identifier = entryRepresentation.identifier else { return nil }
         
-        self.init(title: title, bodyText: bodyText, timestamp: timestamp, mood: mood, identifier: identifier, context: context)
+        self.init(title: title,
+                  bodyText: bodyText,
+                  timestamp: timestamp,
+                  mood: mood,
+                  identifier: identifier,
+                  context: context)
     }
 }

@@ -75,7 +75,11 @@ class EntryDetailViewController: UIViewController {
     var entryController: EntryController?
     
     @IBOutlet weak var moodSegmentedControl: UISegmentedControl!
-    @IBOutlet weak var titleTextField: UITextField!
+    @IBOutlet weak var titleTextField: UITextField! {
+        didSet {
+            titleTextField.becomeFirstResponder()
+        }
+    }
     @IBOutlet weak var bodyTextView: UITextView!
 
 }
