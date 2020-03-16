@@ -32,16 +32,24 @@ class EntryDetailViewController: UIViewController {
             break
         }
         
+        guard let entryController = entryController else { return }
+        
         if let entry = entry {
-            entryController?.update(entry: entry, title: title, bodyText: bodyText, mood: mood)
+            entryController.update(entry: entry,
+                                    title: title,
+                                    bodyText: bodyText,
+                                    mood: mood)
         } else {
-            entryController?.createEntry(with: title, bodyText: bodyText, mood: mood)
+            entryController.createEntry(with: title,
+                                         bodyText: bodyText,
+                                         mood: mood)
         }
         self.navigationController?.popViewController(animated: true)
     }
     
     private func updateViews() {
-        guard let entry = entry else {
+        guard let entry = entry,
+        isViewLoaded else {
                 title = "Create Entry"
                 return
         }
