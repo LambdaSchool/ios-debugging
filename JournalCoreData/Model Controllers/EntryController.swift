@@ -9,8 +9,7 @@
 import Foundation
 import CoreData
 
-#error("Change this value to your own firebase database! (and then delete this line)")
-let baseURL = URL(string: "https://journal-syncing.firebaseio.com/")!
+let baseURL = URL(string: "https://journal-core-data-6cb21.firebaseio.com/")!
 
 class EntryController {
     
@@ -45,12 +44,18 @@ class EntryController {
     private func put(entry: Entry, completion: @escaping ((Error?) -> Void) = { _ in }) {
         
         let identifier = entry.identifier ?? UUID().uuidString
-        let requestURL = baseURL.appendingPathComponent(identifier).appendingPathComponent("json")
+        let requestURL = baseURL.appendingPathComponent(identifier).appendingPathExtension("json")
         var request = URLRequest(url: requestURL)
         request.httpMethod = "PUT"
         
+        guard let representation = entry.entryRepresentation else {
+            NSLog("Entry reprsesntation failed in put")
+            completion(NSError(domain: "com.scottharris.error", code: 1, userInfo: nil))
+            return
+        }
+        
         do {
-            request.httpBody = try JSONEncoder().encode(entry)
+            request.httpBody = try JSONEncoder().encode(representation)
         } catch {
             NSLog("Error encoding Entry: \(error)")
             completion(error)
