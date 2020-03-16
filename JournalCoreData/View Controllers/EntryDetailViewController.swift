@@ -14,7 +14,7 @@ class EntryDetailViewController: UIViewController {
         updateViews()
     }
     
-    @IBAction func saveEntry(_ sender: Any) {
+    @IBAction func saveEntry(_ sender: UIBarButtonItem) {
         
         guard let title = titleTextField.text,
             let bodyText = bodyTextView.text else { return }
