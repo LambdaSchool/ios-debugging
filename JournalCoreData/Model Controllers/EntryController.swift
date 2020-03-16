@@ -48,13 +48,13 @@ class EntryController {
         var request = URLRequest(url: requestURL)
         request.httpMethod = "PUT"
         
-        guard let representation = entry.entryRepresentation else {
+        guard let entry = entry.entryRepresentation else {
             NSLog("Entry representation failed")
             return
         }
         
         do {
-            request.httpBody = try JSONEncoder().encode(representation)
+            request.httpBody = try JSONEncoder().encode(entry)
         } catch {
             NSLog("Error encoding Entry: \(error)")
             completion(error)
