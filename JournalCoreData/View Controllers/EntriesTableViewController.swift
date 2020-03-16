@@ -110,7 +110,7 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
         case "ViewEntry":
             guard let destinationVC = segue.destination as? EntryDetailViewController,
                 let indexPath = tableView.indexPathForSelectedRow else { return }
-            
+            destinationVC.entryController = entryController // Need to pass the entryController to the next scence, otherwise data is not synced
             destinationVC.entry = fetchedResultsController.object(at: indexPath)
             
         default:

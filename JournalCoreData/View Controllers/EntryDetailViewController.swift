@@ -9,8 +9,10 @@
 import UIKit
 
 class EntryDetailViewController: UIViewController {
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         updateViews()
     }
     
@@ -34,6 +36,7 @@ class EntryDetailViewController: UIViewController {
         
         if let entry = entry {
             entryController?.update(entry: entry, title: title, bodyText: bodyText, mood: mood)
+            
         } else {
             entryController?.createEntry(with: title, bodyText: bodyText, mood: mood)
         }
