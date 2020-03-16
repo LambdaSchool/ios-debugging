@@ -44,12 +44,17 @@ class EntryController {
     private func put(entry: Entry, completion: @escaping ((Error?) -> Void) = { _ in }) {
         
         let identifier = entry.identifier ?? UUID().uuidString
-        let requestURL = baseURL.appendingPathComponent(identifier).appendingPathComponent("json")
+        let requestURL = baseURL.appendingPathComponent(identifier).appendingPathExtension("json")
         var request = URLRequest(url: requestURL)
         request.httpMethod = "PUT"
         
+        guard let representation = entry.entryRepresentation else {
+            NSLog("Entry representation failed")
+            return
+        }
+        
         do {
-            request.httpBody = try JSONEncoder().encode(entry)
+            request.httpBody = try JSONEncoder().encode(representation)
         } catch {
             NSLog("Error encoding Entry: \(error)")
             completion(error)
