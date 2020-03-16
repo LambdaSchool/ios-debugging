@@ -11,6 +11,10 @@ import CoreData
 
 extension Entry {
     
+    var entryRepresentation: EntryRepresentation? {
+        return EntryRepresentation(title: title, bodyText: bodyText, mood: mood, timestamp: timestamp, identifier: identifier)
+    }
+    
     convenience init(title: String,
                      bodyText: String,
                      timestamp: Date = Date(),

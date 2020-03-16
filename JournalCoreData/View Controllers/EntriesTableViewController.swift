@@ -94,6 +94,27 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
             guard let indexPath = indexPath else { return }
             tableView.deleteRows(at: [indexPath], with: .automatic)
         }
+        
+        
+        func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+            tableView.beginUpdates()
+        }
+        
+        func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+            tableView.endUpdates()
+        }
+        
+        func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange sectionInfo: NSFetchedResultsSectionInfo, atSectionIndex sectionIndex: Int, for type: NSFetchedResultsChangeType) {
+            switch type {
+                case .insert:
+                    tableView.insertSections(IndexSet(integer: sectionIndex), with: .automatic)
+                case .delete:
+                    tableView.deleteSections(IndexSet(integer: sectionIndex), with: .automatic)
+                default:
+                    break
+            }
+        }
+        
     }
     
     // MARK: - Navigation
@@ -112,6 +133,7 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
                 let indexPath = tableView.indexPathForSelectedRow else { return }
             
             destinationVC.entry = fetchedResultsController.object(at: indexPath)
+            destinationVC.entryController = entryController
             
         default:
             break

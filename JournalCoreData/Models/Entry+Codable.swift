@@ -8,7 +8,7 @@
 
 import Foundation
 
-extension Entry: Encodable {
+extension EntryRepresentation: Encodable {
     
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
