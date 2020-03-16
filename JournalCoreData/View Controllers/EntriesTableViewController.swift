@@ -11,10 +11,21 @@ import CoreData
 
 class EntriesTableViewController: UITableViewController, NSFetchedResultsControllerDelegate {
 
+    
+    //MARK:- View Life Cycle
+    
+    // Gotta have viewDidLoad
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        entryController.fetchEntriesFromServer()
+    }
+    
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        tableView.reloadData()
+//        tableView.reloadData()  // Why do we reload data here ?
     }
     
     // MARK: - Table view data source

@@ -10,7 +10,7 @@ import UIKit
 
 class EntryDetailViewController: UIViewController {
     
-    
+    // Change view didload to view will appear
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         updateViews()
