@@ -9,7 +9,7 @@
 import Foundation
 import CoreData
 
-let baseURL = URL(string: "https://my-journal-core-data.firebaseio.com/")!
+let baseURL = URL(string: "https://my-journal-core-data.firebaseio.com/")! // Add my own Firebase URL
 
 class EntryController {
     
@@ -139,7 +139,7 @@ class EntryController {
         guard let identifier = identifier else { return nil }
         
         let fetchRequest: NSFetchRequest<Entry> = Entry.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "identfier == %@", identifier)
+        fetchRequest.predicate = NSPredicate(format: "identifier == %@", identifier)
         
         var result: Entry? = nil
         do {

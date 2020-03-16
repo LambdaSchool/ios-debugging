@@ -15,7 +15,7 @@ class CoreDataStack {
     
     let container: NSPersistentContainer = {
         
-        let container = NSPersistentContainer(name: "JournalCoreData")
+        let container = NSPersistentContainer(name: "JournalCoreData") // replace as String , not needed
         container.loadPersistentStores() { (storeDescription, error) in
             if let error = error as NSError? {
                 fatalError("Unresolved error \(error), \(error.userInfo)")
