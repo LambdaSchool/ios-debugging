@@ -9,12 +9,15 @@
 import UIKit
 
 class EntryDetailViewController: UIViewController {
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    
+    // Change view didload to view will appear
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         updateViews()
+    
     }
     
-    @IBAction func saveEntry(_ sender: Any) {
+    @IBAction func saveEntry(_ sender: UIBarButtonItem) {
         
         guard let title = titleTextField.text,
             let bodyText = bodyTextView.text else { return }
@@ -33,9 +36,16 @@ class EntryDetailViewController: UIViewController {
         }
         
         if let entry = entry {
-            entryController?.update(entry: entry, title: title, bodyText: bodyText, mood: mood)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                self.entryController?.update(entry: entry, title: title, bodyText: bodyText, mood: mood)
+            }
+           
+            
         } else {
-            entryController?.createEntry(with: title, bodyText: bodyText, mood: mood)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1 ) {
+                self.entryController?.createEntry(with: title, bodyText: bodyText, mood: mood)
+            }
+         
         }
         self.navigationController?.popViewController(animated: true)
     }
@@ -66,16 +76,18 @@ class EntryDetailViewController: UIViewController {
         moodSegmentedControl.selectedSegmentIndex = segmentIndex
     }
     
-    var entry: Entry? {
-        didSet {
-            updateViews()
-        }
-    }
+    var entry: Entry?  // Remove didSet to avoid crash
+
+    
     
     var entryController: EntryController?
     
     @IBOutlet weak var moodSegmentedControl: UISegmentedControl!
-    @IBOutlet weak var titleTextField: UITextField!
+    @IBOutlet weak var titleTextField: UITextField! {
+        didSet {
+            titleTextField.becomeFirstResponder()
+        }
+    }
     @IBOutlet weak var bodyTextView: UITextView!
 
 }

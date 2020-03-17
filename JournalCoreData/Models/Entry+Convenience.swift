@@ -11,6 +11,14 @@ import CoreData
 
 extension Entry {
     
+    
+    var entryRepresentation : EntryRepresentation? {
+         guard let timestamp = timestamp else { return nil }
+        return EntryRepresentation(title: title, bodyText: bodyText, mood: mood, timestamp: timestamp, identifier: identifier)
+     }
+     
+    
+    
     convenience init(title: String,
                      bodyText: String,
                      timestamp: Date = Date(),
@@ -35,6 +43,11 @@ extension Entry {
             let timestamp = entryRepresentation.timestamp,
             let identifier = entryRepresentation.identifier else { return nil }
         
-        self.init(title: title, bodyText: bodyText, timestamp: timestamp, mood: mood, identifier: identifier, context: context)
+        self.init(title: title,
+                  bodyText: bodyText,
+                  timestamp: timestamp,
+                  mood: mood,
+                  identifier: identifier,
+                  context: context)
     }
 }

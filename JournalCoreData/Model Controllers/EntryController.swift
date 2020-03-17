@@ -9,8 +9,7 @@
 import Foundation
 import CoreData
 
-#error("Change this value to your own firebase database! (and then delete this line)")
-let baseURL = URL(string: "https://journal-syncing.firebaseio.com/")!
+let baseURL = URL(string: "https://my-journal-core-data.firebaseio.com/")! // Add my own Firebase URL
 
 class EntryController {
     
@@ -42,15 +41,18 @@ class EntryController {
         saveToPersistentStore()
     }
     
-    private func put(entry: Entry, completion: @escaping ((Error?) -> Void) = { _ in }) {
+     func put(entry: Entry, completion: @escaping ((Error?) -> Void) = { _ in }) {
         
         let identifier = entry.identifier ?? UUID().uuidString
-        let requestURL = baseURL.appendingPathComponent(identifier).appendingPathComponent("json")
+        let requestURL = baseURL.appendingPathComponent(identifier).appendingPathExtension("json") // path Extension not path component
         var request = URLRequest(url: requestURL)
         request.httpMethod = "PUT"
-        
+        guard let entryRepresentationToPutOnFirebase = entry.entryRepresentation else { return }
         do {
-            request.httpBody = try JSONEncoder().encode(entry)
+            let jsonEncoder = JSONEncoder()
+            jsonEncoder.dateEncodingStrategy = .iso8601
+            
+            request.httpBody = try jsonEncoder.encode(entryRepresentationToPutOnFirebase) // We put the representation entry on Firebase 
         } catch {
             NSLog("Error encoding Entry: \(error)")
             completion(error)
@@ -112,7 +114,9 @@ class EntryController {
             let moc = CoreDataStack.shared.mainContext
             
             do {
-                let entryReps = try JSONDecoder().decode([String: EntryRepresentation].self, from: data).map({$0.value})
+                let decoder = JSONDecoder()
+                decoder.dateDecodingStrategy = .iso8601
+                let entryReps = try decoder.decode([String: EntryRepresentation].self, from: data).map({$0.value})
                 self.updateEntries(with: entryReps, in: moc)
             } catch {
                 NSLog("Error decoding JSON data: \(error)")
@@ -137,7 +141,7 @@ class EntryController {
         guard let identifier = identifier else { return nil }
         
         let fetchRequest: NSFetchRequest<Entry> = Entry.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "identfier == %@", identifier)
+        fetchRequest.predicate = NSPredicate(format: "identifier == %@", identifier)
         
         var result: Entry? = nil
         do {

@@ -11,10 +11,22 @@ import CoreData
 
 class EntriesTableViewController: UITableViewController, NSFetchedResultsControllerDelegate {
 
+    
+    //MARK:- View Life Cycle
+    
+    // Gotta have viewDidLoad
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        entryController.fetchEntriesFromServer() // Decode data from sever when the app first launch
+        
+    }
+    
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        tableView.reloadData()
+//        tableView.reloadData()  // Why do we reload data here ?
     }
     
     // MARK: - Table view data source
@@ -93,6 +105,9 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
         case .delete:
             guard let indexPath = indexPath else { return }
             tableView.deleteRows(at: [indexPath], with: .automatic)
+            
+            @unknown default: // Handle unknown default case 
+            break
         }
     }
     
@@ -110,7 +125,7 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
         case "ViewEntry":
             guard let destinationVC = segue.destination as? EntryDetailViewController,
                 let indexPath = tableView.indexPathForSelectedRow else { return }
-            
+            destinationVC.entryController = entryController // Need to pass the entryController to the next scence, otherwise data is not synced
             destinationVC.entry = fetchedResultsController.object(at: indexPath)
             
         default:
