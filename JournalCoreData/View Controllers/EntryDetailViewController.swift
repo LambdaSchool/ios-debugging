@@ -14,6 +14,7 @@ class EntryDetailViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         updateViews()
+    
     }
     
     @IBAction func saveEntry(_ sender: UIBarButtonItem) {
@@ -35,7 +36,10 @@ class EntryDetailViewController: UIViewController {
         }
         
         if let entry = entry {
-            entryController?.update(entry: entry, title: title, bodyText: bodyText, mood: mood)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                self.entryController?.update(entry: entry, title: title, bodyText: bodyText, mood: mood)
+            }
+           
             
         } else {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1 ) {
