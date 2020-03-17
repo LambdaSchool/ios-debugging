@@ -106,7 +106,7 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
             guard let indexPath = indexPath else { return }
             tableView.deleteRows(at: [indexPath], with: .automatic)
             
-            @unknown default: // Handle unknow default case 
+            @unknown default: // Handle unknown default case 
             break
         }
     }
