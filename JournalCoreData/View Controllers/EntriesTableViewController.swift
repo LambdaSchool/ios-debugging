@@ -19,14 +19,15 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
     
     // MARK: Pull to Refresh
     
-//    @IBAction func pullToRefresh(_ sender: Any) {
-//        entryController.fetchEntriesFromServer { (_) in
+    @IBAction func pullToRefresh(_ sender: UIRefreshControl) {
+        entryController.fetchEntriesFromServer { (_) in
+             self.refreshControl?.endRefreshing()
 //            DispatchQueue.main.async {
-//                 self.refreshControl?.endRefreshing()
+//
 //            }
-//           
-//        }
-//    }
+           
+        }
+    }
     
     
     
