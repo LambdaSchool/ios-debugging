@@ -114,7 +114,7 @@ class EntryController {
             }
 
 //            let moc = CoreDataStack.shared.mainContext
-            let moc = CoreDataStack.shared.container.newBackgroundContext()
+            let moc = CoreDataStack.shared.container.newBackgroundContext() // MARK: Bug #6 - changed context to background
             
             do {
                 let entryReps = try JSONDecoder().decode([String: EntryRepresentation].self, from: data).map({$0.value})
