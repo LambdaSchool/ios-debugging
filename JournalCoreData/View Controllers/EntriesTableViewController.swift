@@ -13,8 +13,10 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-        tableView.reloadData()
+        entryController.fetchEntriesFromServer { error in
+            guard error == nil else { print(error!); return }
+            //DispatchQueue.main.async { self.tableView.reloadData() }
+        }
     }
     
     // MARK: - Table view data source
@@ -52,10 +54,15 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
     // MARK: - NSFetchedResultsControllerDelegate
     
     func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        guard self.tableView.window != nil else { return }
         tableView.beginUpdates()
     }
     
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        guard self.tableView.window != nil else {
+            self.tableView.reloadData()
+            return
+        }
         tableView.endUpdates()
     }
     
@@ -63,6 +70,7 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
                     didChange sectionInfo: NSFetchedResultsSectionInfo,
                     atSectionIndex sectionIndex: Int,
                     for type: NSFetchedResultsChangeType) {
+        guard self.tableView.window != nil else { return }
         switch type {
         case .insert:
             tableView.insertSections(IndexSet(integer: sectionIndex), with: .automatic)
@@ -78,6 +86,7 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
                     at indexPath: IndexPath?,
                     for type: NSFetchedResultsChangeType,
                     newIndexPath: IndexPath?) {
+        guard self.tableView.window != nil else { return }
         switch type {
         case .insert:
             guard let newIndexPath = newIndexPath else { return }
@@ -93,6 +102,8 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
         case .delete:
             guard let indexPath = indexPath else { return }
             tableView.deleteRows(at: [indexPath], with: .automatic)
+        @unknown default:
+            break
         }
     }
     
@@ -112,6 +123,7 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
                 let indexPath = tableView.indexPathForSelectedRow else { return }
             
             destinationVC.entry = fetchedResultsController.object(at: indexPath)
+            destinationVC.entryController = entryController
             
         default:
             break
@@ -124,7 +136,8 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
     
     lazy var fetchedResultsController: NSFetchedResultsController<Entry> = {
         let fetchRequest: NSFetchRequest<Entry> = Entry.fetchRequest()
-        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "timestamp", ascending: false)]
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "mood", ascending: false),
+                                        NSSortDescriptor(key: "timestamp", ascending: false)]
         
         let moc = CoreDataStack.shared.mainContext
         let frc = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: moc, sectionNameKeyPath: "mood", cacheName: nil)
