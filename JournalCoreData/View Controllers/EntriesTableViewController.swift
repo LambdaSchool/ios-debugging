@@ -93,6 +93,8 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
         case .delete:
             guard let indexPath = indexPath else { return }
             tableView.deleteRows(at: [indexPath], with: .automatic)
+        @unknown default:
+            fatalError() // MARK: Added this to remove warning
         }
     }
     
@@ -112,7 +114,7 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
                 let indexPath = tableView.indexPathForSelectedRow else { return }
             
             destinationVC.entry = fetchedResultsController.object(at: indexPath)
-            destinationVC.entryController = entryController // Bug #3 - passing the controller was missing
+            destinationVC.entryController = entryController // MARK: Bug #3 - passing the controller was missing
             
         default:
             break

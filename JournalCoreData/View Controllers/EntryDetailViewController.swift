@@ -68,7 +68,7 @@ class EntryDetailViewController: UIViewController {
         moodSegmentedControl.selectedSegmentIndex = segmentIndex
     }
     
-    // Bug #2
+    // MARK: Bug #2
     var entry: Entry? //{
 //        didSet {
 //            updateViews()
