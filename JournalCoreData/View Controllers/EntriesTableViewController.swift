@@ -15,10 +15,7 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
         super.viewWillAppear(animated)
         entryController.fetchEntriesFromServer { error in
             guard error == nil else { print(error!); return }
-            
-            DispatchQueue.main.async {
-                self.tableView.reloadData()
-            }
+            //DispatchQueue.main.async { self.tableView.reloadData() }
         }
     }
     
@@ -57,10 +54,15 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
     // MARK: - NSFetchedResultsControllerDelegate
     
     func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        guard self.tableView.window != nil else { return }
         tableView.beginUpdates()
     }
     
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        guard self.tableView.window != nil else {
+            self.tableView.reloadData()
+            return
+        }
         tableView.endUpdates()
     }
     
@@ -68,6 +70,7 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
                     didChange sectionInfo: NSFetchedResultsSectionInfo,
                     atSectionIndex sectionIndex: Int,
                     for type: NSFetchedResultsChangeType) {
+        guard self.tableView.window != nil else { return }
         switch type {
         case .insert:
             tableView.insertSections(IndexSet(integer: sectionIndex), with: .automatic)
@@ -83,6 +86,7 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
                     at indexPath: IndexPath?,
                     for type: NSFetchedResultsChangeType,
                     newIndexPath: IndexPath?) {
+        guard self.tableView.window != nil else { return }
         switch type {
         case .insert:
             guard let newIndexPath = newIndexPath else { return }
@@ -99,7 +103,7 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
             guard let indexPath = indexPath else { return }
             tableView.deleteRows(at: [indexPath], with: .automatic)
         @unknown default:
-            fatalError()
+            break
         }
     }
     
