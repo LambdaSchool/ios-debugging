@@ -112,6 +112,7 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
                 let indexPath = tableView.indexPathForSelectedRow else { return }
             
             destinationVC.entry = fetchedResultsController.object(at: indexPath)
+            destinationVC.entryController = entryController // Bug #3 - passing the controller was missing
             
         default:
             break
