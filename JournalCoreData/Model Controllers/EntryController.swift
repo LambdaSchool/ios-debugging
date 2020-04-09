@@ -55,7 +55,6 @@ class EntryController {
         
         do {
             request.httpBody = try JSONEncoder().encode(entry)
-
         } catch {
             NSLog("Error encoding Entry: \(error)")
             completion(error)
@@ -114,7 +113,8 @@ class EntryController {
                 return
             }
 
-            let moc = CoreDataStack.shared.mainContext
+//            let moc = CoreDataStack.shared.mainContext
+            let moc = CoreDataStack.shared.container.newBackgroundContext() // MARK: Bug #6 - changed context to background
             
             do {
                 let entryReps = try JSONDecoder().decode([String: EntryRepresentation].self, from: data).map({$0.value})
