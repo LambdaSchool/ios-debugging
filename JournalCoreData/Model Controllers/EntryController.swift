@@ -9,9 +9,13 @@
 import Foundation
 import CoreData
 
-let baseURL = URL(string: "https://lambdajournalforcoredata.firebaseio.com")! // MARK: Bug #1 - add firebase URL
+let baseURL = URL(string: "https://lambdajournalforcoredata.firebaseio.com/")! // MARK: Bug #1 - add firebase URL
 
 class EntryController {
+    
+    init() {
+        fetchEntriesFromServer()
+    }
     
     func createEntry(with title: String, bodyText: String, mood: String) {
         
@@ -138,7 +142,7 @@ class EntryController {
         guard let identifier = identifier else { return nil }
         
         let fetchRequest: NSFetchRequest<Entry> = Entry.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "identfier == %@", identifier)
+        fetchRequest.predicate = NSPredicate(format: "identifier == %@", identifier) // MARK: Bug #5 - identifier was spelled wrong
         
         var result: Entry? = nil
         do {
