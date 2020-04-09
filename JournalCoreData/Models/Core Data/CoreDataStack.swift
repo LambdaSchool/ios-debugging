@@ -13,6 +13,8 @@ class CoreDataStack {
     
     static let shared = CoreDataStack()
     
+    private init() {}
+    
     let container: NSPersistentContainer = {
         
         let container = NSPersistentContainer(name: "JournalCoreData" as String)

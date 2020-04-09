@@ -17,6 +17,19 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
         tableView.reloadData()
     }
     
+    // MARK: Pull to Refresh
+    
+//    @IBAction func pullToRefresh(_ sender: Any) {
+//        entryController.fetchEntriesFromServer { (_) in
+//            DispatchQueue.main.async {
+//                 self.refreshControl?.endRefreshing()
+//            }
+//           
+//        }
+//    }
+    
+    
+    
     // MARK: - Table view data source
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
