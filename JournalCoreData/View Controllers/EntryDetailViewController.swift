@@ -46,10 +46,12 @@ class EntryDetailViewController: UIViewController {
                 return
         }
         
-        title = entry.title
-        titleTextField.text = entry.title
+        guard let entryTitle = entry.title else { return }
+    
+        title = entryTitle
+        titleTextField.text = entryTitle
         bodyTextView.text = entry.bodyText
-        
+    
         var segmentIndex = 0
         
         switch entry.mood {
@@ -66,11 +68,12 @@ class EntryDetailViewController: UIViewController {
         moodSegmentedControl.selectedSegmentIndex = segmentIndex
     }
     
-    var entry: Entry? {
-        didSet {
-            updateViews()
-        }
-    }
+    // Bug #2
+    var entry: Entry? //{
+//        didSet {
+//            updateViews()
+//        }
+//    }
     
     var entryController: EntryController?
     
