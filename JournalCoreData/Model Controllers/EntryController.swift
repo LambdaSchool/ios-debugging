@@ -154,8 +154,9 @@ class EntryController {
                 guard let identifier = entryRep.identifier else { continue }
                 
                 let entry = self.fetchSingleEntryFromPersistentStore(with: identifier, in: context)
-                if let entry = entry, entry != entryRep {
-                    self.update(entry: entry, with: entryRep)
+                if let entry = entry,
+                       entry != entryRep {
+                    self.privateUpdate(entry: entry, with: entryRep)
                 } else if entry == nil {
                     _ = Entry(entryRepresentation: entryRep, context: context)
                 }
@@ -163,12 +164,14 @@ class EntryController {
         }
     }
     
-    private func update(entry: Entry, with entryRep: EntryRepresentation) {
+    private func privateUpdate(entry: Entry, with entryRep: EntryRepresentation) {
         entry.title = entryRep.title
         entry.bodyText = entryRep.bodyText
         entry.mood = entryRep.mood
         entry.timestamp = entryRep.timestamp
         entry.identifier = entryRep.identifier
+        
+//        saveToPersistentStore()
     }
     
     func saveToPersistentStore() {        

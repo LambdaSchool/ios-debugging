@@ -41,6 +41,8 @@ class EntryDetailViewController: UIViewController {
         self.navigationController?.popViewController(animated: true)
     }
     
+    
+    
     private func updateViews() {
         guard let entry = entry, isViewLoaded else {
                 title = "Create Entry"
