@@ -13,9 +13,7 @@ import CoreData
 let baseURL = URL(string: "https://ios-journal-dd938.firebaseio.com")!
 
 class EntryController {
-    
     func createEntry(with title: String, bodyText: String, mood: String) {
-        
         let entry = Entry(title: title, bodyText: bodyText, mood: mood)
         
         put(entry: entry)
@@ -24,7 +22,6 @@ class EntryController {
     }
     
     func update(entry: Entry, title: String, bodyText: String, mood: String) {
-        
         entry.title = title
         entry.bodyText = bodyText
         entry.timestamp = Date()
@@ -36,17 +33,18 @@ class EntryController {
     }
     
     func delete(entry: Entry) {
-        
         CoreDataStack.shared.mainContext.delete(entry)
+        
         deleteEntryFromServer(entry: entry)
+        
         saveToPersistentStore()
     }
     
     private func put(entry: Entry, completion: @escaping ((Error?) -> Void) = { _ in }) {
-        
         let identifier = entry.identifier ?? UUID().uuidString
         let requestURL = baseURL.appendingPathComponent(identifier).appendingPathExtension("json")
         var request = URLRequest(url: requestURL)
+        
         request.httpMethod = "PUT"
         
         do {
@@ -69,7 +67,6 @@ class EntryController {
     }
     
     func deleteEntryFromServer(entry: Entry, completion: @escaping ((Error?) -> Void) = { _ in }) {
-        
         guard let identifier = entry.identifier else {
             NSLog("Entry identifier is nil")
             completion(NSError())
@@ -140,11 +137,13 @@ class EntryController {
         fetchRequest.predicate = NSPredicate(format: "identifier == %@", identifier)
         
         var result: Entry? = nil
+        
         do {
             result = try context.fetch(fetchRequest).first
         } catch {
             NSLog("Error fetching single entry: \(error)")
         }
+        
         return result
     }
     
@@ -154,6 +153,7 @@ class EntryController {
                 guard let identifier = entryRep.identifier else { continue }
                 
                 let entry = self.fetchSingleEntryFromPersistentStore(with: identifier, in: context)
+                
                 if let entry = entry, entry != entryRep {
                     self.update(entry: entry, with: entryRep)
                 } else if entry == nil {

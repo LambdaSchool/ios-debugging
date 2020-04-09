@@ -10,7 +10,6 @@ import Foundation
 import CoreData
 
 extension Entry {
-    
     convenience init(title: String,
                      bodyText: String,
                      timestamp: Date = Date(),
