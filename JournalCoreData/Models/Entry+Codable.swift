@@ -9,7 +9,6 @@
 import Foundation
 
 extension Entry: Encodable {
-    
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         
@@ -17,7 +16,7 @@ extension Entry: Encodable {
         try container.encode(bodyText, forKey: .bodyText)
         try container.encode(mood, forKey: .mood)
         try container.encode(timestamp, forKey: .timestamp)
-        try container.encode(timestamp, forKey: .identifier)
+        try container.encode(identifier, forKey: .identifier)
     }
     
     enum CodingKeys: String, CodingKey {
@@ -27,5 +26,4 @@ extension Entry: Encodable {
         case timestamp
         case identifier
     }
-    
 }

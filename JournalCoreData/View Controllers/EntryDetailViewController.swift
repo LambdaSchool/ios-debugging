@@ -41,7 +41,7 @@ class EntryDetailViewController: UIViewController {
     }
     
     private func updateViews() {
-        guard let entry = entry else {
+        guard let entry = entry, isViewLoaded else {
                 title = "Create Entry"
                 return
         }
@@ -77,5 +77,4 @@ class EntryDetailViewController: UIViewController {
     @IBOutlet weak var moodSegmentedControl: UISegmentedControl!
     @IBOutlet weak var titleTextField: UITextField!
     @IBOutlet weak var bodyTextView: UITextView!
-
 }
