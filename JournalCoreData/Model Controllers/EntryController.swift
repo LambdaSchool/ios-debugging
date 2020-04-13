@@ -9,7 +9,8 @@
 import Foundation
 import CoreData
 
-let baseURL = URL(string: "https://journal-ios14.firebaseio.com/")!
+#error("Change this value to your own firebase database! (and then delete this line)")
+let baseURL = URL(string: "https://journal-syncing.firebaseio.com/")!
 
 class EntryController {
     
@@ -44,7 +45,7 @@ class EntryController {
     private func put(entry: Entry, completion: @escaping ((Error?) -> Void) = { _ in }) {
         
         let identifier = entry.identifier ?? UUID().uuidString
-        let requestURL = baseURL.appendingPathComponent(identifier).appendingPathExtension("json")
+        let requestURL = baseURL.appendingPathComponent(identifier).appendingPathComponent("json")
         var request = URLRequest(url: requestURL)
         request.httpMethod = "PUT"
         
@@ -136,7 +137,7 @@ class EntryController {
         guard let identifier = identifier else { return nil }
         
         let fetchRequest: NSFetchRequest<Entry> = Entry.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "identifier == %@", identifier)
+        fetchRequest.predicate = NSPredicate(format: "identfier == %@", identifier)
         
         var result: Entry? = nil
         do {
