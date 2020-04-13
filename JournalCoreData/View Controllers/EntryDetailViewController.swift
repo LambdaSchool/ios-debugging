@@ -16,8 +16,8 @@ class EntryDetailViewController: UIViewController {
     
     @IBAction func saveEntry(_ sender: Any) {
         
-        guard let title = titleTextField.text,
-            let bodyText = bodyTextView.text else { return }
+        guard let title = titleTextField?.text,
+            let bodyText = bodyTextView?.text else { return }
         
         var mood: String!
         
@@ -41,14 +41,19 @@ class EntryDetailViewController: UIViewController {
     }
     
     private func updateViews() {
+        
+        guard  let _ = titleTextField,
+            let _ = bodyTextView else {return}
+        
         guard let entry = entry else {
                 title = "Create Entry"
                 return
         }
         
         title = entry.title
-        titleTextField.text = entry.title
-        bodyTextView.text = entry.bodyText
+        
+        titleTextField?.text = entry.title
+        bodyTextView?.text = entry.bodyText
         
         var segmentIndex = 0
         
@@ -75,7 +80,7 @@ class EntryDetailViewController: UIViewController {
     var entryController: EntryController?
     
     @IBOutlet weak var moodSegmentedControl: UISegmentedControl!
-    @IBOutlet weak var titleTextField: UITextField!
-    @IBOutlet weak var bodyTextView: UITextView!
+    @IBOutlet weak var titleTextField: UITextField?
+    @IBOutlet weak var bodyTextView: UITextView?
 
 }
