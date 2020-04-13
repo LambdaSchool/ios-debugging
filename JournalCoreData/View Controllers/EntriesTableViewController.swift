@@ -10,10 +10,16 @@ import UIKit
 import CoreData
 
 class EntriesTableViewController: UITableViewController, NSFetchedResultsControllerDelegate {
+    
+    // Set up view did load and called fetch
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        entryController.fetchEntriesFromServer()
+    }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
         tableView.reloadData()
     }
     
@@ -101,20 +107,17 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
-        switch segue.identifier {
-        case "CreateEntry":
+        if segue.identifier == "CreateEntry" {
             guard let destinationVC = segue.destination as? EntryDetailViewController else { return }
             
             destinationVC.entryController = entryController
-            
-        case "ViewEntry":
+        }
+        else if segue.identifier == "ViewEntry" {
             guard let destinationVC = segue.destination as? EntryDetailViewController,
                 let indexPath = tableView.indexPathForSelectedRow else { return }
-            
+            // passed controller to next screen
             destinationVC.entry = fetchedResultsController.object(at: indexPath)
-            
-        default:
-            break
+            destinationVC.entryController = entryController
         }
     }
     

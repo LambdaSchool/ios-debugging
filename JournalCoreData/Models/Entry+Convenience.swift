@@ -10,6 +10,12 @@ import Foundation
 import CoreData
 
 extension Entry {
+    // Added Entry Representation property like in OG
+    var entryRepresentation : EntryRepresentation? {
+          guard let timestamp = timestamp else { return nil }
+         return EntryRepresentation(title: title, bodyText: bodyText, mood: mood, timestamp: timestamp, identifier: identifier)
+      }
+
     
     convenience init(title: String,
                      bodyText: String,
