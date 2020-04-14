@@ -30,7 +30,7 @@ extension Entry {
     convenience init?(entryRepresentation: EntryRepresentation, context: NSManagedObjectContext = CoreDataStack.shared.mainContext) {
         
         guard let title = entryRepresentation.title,
-            let bodyText = entryRepresentation.bodyText,
+            let bodyText = entryRepresentation.bodyText, 
             let mood = entryRepresentation.mood,
             let timestamp = entryRepresentation.timestamp,
             let identifier = entryRepresentation.identifier else { return nil }

@@ -13,7 +13,6 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
         tableView.reloadData()
     }
     
@@ -93,6 +92,8 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
         case .delete:
             guard let indexPath = indexPath else { return }
             tableView.deleteRows(at: [indexPath], with: .automatic)
+        @unknown default:
+            print("not a known action type.")
         }
     }
     
@@ -110,7 +111,7 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
         case "ViewEntry":
             guard let destinationVC = segue.destination as? EntryDetailViewController,
                 let indexPath = tableView.indexPathForSelectedRow else { return }
-            
+            destinationVC.entryController = entryController
             destinationVC.entry = fetchedResultsController.object(at: indexPath)
             
         default:
