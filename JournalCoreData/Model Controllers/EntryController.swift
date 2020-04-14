@@ -24,7 +24,6 @@ class EntryController {
     }
     
     func update(entry: Entry, title: String, bodyText: String, mood: String) {
-        
         entry.title = title
         entry.bodyText = bodyText
         entry.timestamp = Date()
@@ -164,6 +163,7 @@ class EntryController {
     }
     
     private func update(entry: Entry, with entryRep: EntryRepresentation) {
+
         entry.title = entryRep.title
         entry.bodyText = entryRep.bodyText
         entry.mood = entryRep.mood
