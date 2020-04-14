@@ -93,6 +93,8 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
         case .delete:
             guard let indexPath = indexPath else { return }
             tableView.deleteRows(at: [indexPath], with: .automatic)
+        @unknown default:
+            fatalError()
         }
     }
     
@@ -101,15 +103,16 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
+        guard let destinationVC = segue.destination as? EntryDetailViewController else { return }
+
+        destinationVC.entryController = entryController
+        
         switch segue.identifier {
         case "CreateEntry":
-            guard let destinationVC = segue.destination as? EntryDetailViewController else { return }
-            
-            destinationVC.entryController = entryController
-            
+            break
+
         case "ViewEntry":
-            guard let destinationVC = segue.destination as? EntryDetailViewController,
-                let indexPath = tableView.indexPathForSelectedRow else { return }
+            guard let indexPath = tableView.indexPathForSelectedRow else { return }
             
             destinationVC.entry = fetchedResultsController.object(at: indexPath)
             
@@ -124,8 +127,9 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
     
     lazy var fetchedResultsController: NSFetchedResultsController<Entry> = {
         let fetchRequest: NSFetchRequest<Entry> = Entry.fetchRequest()
-        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "timestamp", ascending: false)]
-        
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "mood", ascending: true),
+                                        NSSortDescriptor(key: "timestamp", ascending: false)]
+
         let moc = CoreDataStack.shared.mainContext
         let frc = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: moc, sectionNameKeyPath: "mood", cacheName: nil)
         
