@@ -112,8 +112,9 @@ class EntryController {
                 return
             }
 
-            let moc = CoreDataStack.shared.mainContext
-            
+            // Will perform operation in the background as this could take a while.
+            let moc = CoreDataStack.shared.container.newBackgroundContext()
+
             do {
                 let entryReps = try JSONDecoder().decode([String: EntryRepresentation].self, from: data).map({$0.value})
                 self.updateEntries(with: entryReps, in: moc)
