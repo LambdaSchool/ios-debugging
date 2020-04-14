@@ -93,6 +93,8 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
         case .delete:
             guard let indexPath = indexPath else { return }
             tableView.deleteRows(at: [indexPath], with: .automatic)
+        @unknown default:
+            fatalError()
         }
     }
     
@@ -130,9 +132,7 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
         let frc = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: moc, sectionNameKeyPath: "mood", cacheName: nil)
         
         frc.delegate = self
-        
         try! frc.performFetch()
-        
         return frc
     }()
 }
