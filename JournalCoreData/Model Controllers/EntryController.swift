@@ -9,8 +9,8 @@
 import Foundation
 import CoreData
 
-#error("Change this value to your own firebase database! (and then delete this line)")
-let baseURL = URL(string: "https://journal-syncing.firebaseio.com/")!
+
+let baseURL = URL(string: "https://newjournal-69bf2.firebaseio.com/")!
 
 class EntryController {
     
@@ -24,7 +24,6 @@ class EntryController {
     }
     
     func update(entry: Entry, title: String, bodyText: String, mood: String) {
-        
         entry.title = title
         entry.bodyText = bodyText
         entry.timestamp = Date()
@@ -45,11 +44,12 @@ class EntryController {
     private func put(entry: Entry, completion: @escaping ((Error?) -> Void) = { _ in }) {
         
         let identifier = entry.identifier ?? UUID().uuidString
-        let requestURL = baseURL.appendingPathComponent(identifier).appendingPathComponent("json")
+        let requestURL = baseURL.appendingPathComponent(identifier).appendingPathExtension("json")
         var request = URLRequest(url: requestURL)
         request.httpMethod = "PUT"
         
         do {
+
             request.httpBody = try JSONEncoder().encode(entry)
         } catch {
             NSLog("Error encoding Entry: \(error)")
@@ -137,7 +137,7 @@ class EntryController {
         guard let identifier = identifier else { return nil }
         
         let fetchRequest: NSFetchRequest<Entry> = Entry.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "identfier == %@", identifier)
+        fetchRequest.predicate = NSPredicate(format: "identifier == %@", identifier)
         
         var result: Entry? = nil
         do {
@@ -164,6 +164,7 @@ class EntryController {
     }
     
     private func update(entry: Entry, with entryRep: EntryRepresentation) {
+
         entry.title = entryRep.title
         entry.bodyText = entryRep.bodyText
         entry.mood = entryRep.mood

@@ -38,3 +38,4 @@ extension Entry {
         self.init(title: title, bodyText: bodyText, timestamp: timestamp, mood: mood, identifier: identifier, context: context)
     }
 }
+
