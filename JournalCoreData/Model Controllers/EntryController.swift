@@ -14,6 +14,12 @@ let baseURL = URL(string: "https://journaldebuggingserver.firebaseio.com/")!
 
 class EntryController {
     
+    
+    //you guys think you're funny huh?
+    init() {
+        fetchEntriesFromServer()
+    }
+    
     func createEntry(with title: String, bodyText: String, mood: String) {
         
         let entry = Entry(title: title, bodyText: bodyText, mood: mood)
@@ -137,7 +143,8 @@ class EntryController {
         guard let identifier = identifier else { return nil }
         
         let fetchRequest: NSFetchRequest<Entry> = Entry.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "identfier == %@", identifier)
+        //                    you guys really like to make me suffer👇 lmao
+        fetchRequest.predicate = NSPredicate(format: "identifier == %@", identifier)
         
         var result: Entry? = nil
         do {
