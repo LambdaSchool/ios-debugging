@@ -49,6 +49,7 @@ class EntryController {
         request.httpMethod = "PUT"
         
         do {
+
             request.httpBody = try JSONEncoder().encode(entry)
         } catch {
             NSLog("Error encoding Entry: \(error)")
