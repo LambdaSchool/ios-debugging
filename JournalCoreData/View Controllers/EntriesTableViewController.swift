@@ -50,7 +50,6 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
     }
     
     // MARK: - NSFetchedResultsControllerDelegate
-    
     func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         tableView.beginUpdates()
     }
@@ -93,6 +92,8 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
         case .delete:
             guard let indexPath = indexPath else { return }
             tableView.deleteRows(at: [indexPath], with: .automatic)
+        @unknown default:
+            fatalError("Unkown Value!")
         }
     }
     
