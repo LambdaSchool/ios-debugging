@@ -113,7 +113,7 @@ class EntryController {
                 return
             }
 
-            let moc = CoreDataStack.shared.mainContext
+            let moc = CoreDataStack.shared.container.newBackgroundContext()
             
             do {
                 let entryReps = try JSONDecoder().decode([String: EntryRepresentation].self, from: data).map({$0.value})
