@@ -17,6 +17,7 @@ extension Entry: Encodable {
         try container.encode(bodyText, forKey: .bodyText)
         try container.encode(mood, forKey: .mood)
         try container.encode(timestamp, forKey: .timestamp)
+        //here we changed a key value issue.
         try container.encode(identifier, forKey: .identifier)
     }
     

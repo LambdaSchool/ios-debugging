@@ -15,7 +15,7 @@ let baseURL = URL(string: "https://journaldebuggingserver.firebaseio.com/")!
 class EntryController {
     
     
-    //you guys think you're funny huh?
+    //you guys think you're funny huh? // injected the FEFS method when the view inilitizes.
     init() {
         fetchEntriesFromServer()
     }
@@ -51,7 +51,7 @@ class EntryController {
     private func put(entry: Entry, completion: @escaping ((Error?) -> Void) = { _ in }) {
         
         let identifier = entry.identifier ?? UUID().uuidString
-                                                                // you are driving me nuts 👇
+                                                                // you are driving me nuts 👇 //anywhos, we refactored "Appending"
         let requestURL = baseURL.appendingPathComponent(identifier).appendingPathExtension("json")
         var request = URLRequest(url: requestURL)
         request.httpMethod = "PUT"
@@ -144,7 +144,7 @@ class EntryController {
         guard let identifier = identifier else { return nil }
         
         let fetchRequest: NSFetchRequest<Entry> = Entry.fetchRequest()
-        //                    you guys really like to make me suffer👇 lmao
+        //                    you guys really like to make me suffer👇 lmao - spelling issue here so I fixed it. this one took hours.
         fetchRequest.predicate = NSPredicate(format: "identifier == %@", identifier)
         
         var result: Entry? = nil
