@@ -9,8 +9,7 @@
 import Foundation
 import CoreData
 
-#error("Change this value to your own firebase database! (and then delete this line)")
-let baseURL = URL(string: "https://journal-syncing.firebaseio.com/")!
+let baseURL = URL(string: "https://journal-e302d.firebaseio.com/")
 
 class EntryController {
     
@@ -42,10 +41,17 @@ class EntryController {
         saveToPersistentStore()
     }
     
+    init() {
+        fetchEntriesFromServer()
+    }
+    
     private func put(entry: Entry, completion: @escaping ((Error?) -> Void) = { _ in }) {
-        
+        guard let url = baseURL else {
+            print("Bad URLin \(#function)")
+            return
+        }
         let identifier = entry.identifier ?? UUID().uuidString
-        let requestURL = baseURL.appendingPathComponent(identifier).appendingPathComponent("json")
+        let requestURL = url.appendingPathComponent(identifier).appendingPathExtension("json")
         var request = URLRequest(url: requestURL)
         request.httpMethod = "PUT"
         
@@ -57,10 +63,15 @@ class EntryController {
             return
         }
         
-        URLSession.shared.dataTask(with: request) { (data, _, error) in
+        URLSession.shared.dataTask(with: request) { (data, response, error) in
             if let error = error {
                 NSLog("Error PUTting Entry to server: \(error)")
                 completion(error)
+                return
+            }
+            
+            guard let response = response as? HTTPURLResponse else {
+                completion(nil)
                 return
             }
             
@@ -76,7 +87,12 @@ class EntryController {
             return
         }
         
-        let requestURL = baseURL.appendingPathComponent(identifier).appendingPathExtension("json")
+        guard let url = baseURL else {
+            print("Bad URLin \(#function)")
+            return
+        }
+        
+        let requestURL = url.appendingPathComponent(identifier).appendingPathExtension("json")
         var request = URLRequest(url: requestURL)
         request.httpMethod = "DELETE"
         
@@ -92,8 +108,11 @@ class EntryController {
     }
     
     func fetchEntriesFromServer(completion: @escaping ((Error?) -> Void) = { _ in }) {
-        
-        let requestURL = baseURL.appendingPathExtension("json")
+        guard let url = baseURL else {
+            print("Bad URLin \(#function)")
+            return
+        }
+        let requestURL = url.appendingPathExtension("json")
         
         URLSession.shared.dataTask(with: requestURL) { (data, _, error) in
             
@@ -108,12 +127,15 @@ class EntryController {
                 completion(NSError())
                 return
             }
-
+            
+            print(data)
             let moc = CoreDataStack.shared.mainContext
             
             do {
                 let entryReps = try JSONDecoder().decode([String: EntryRepresentation].self, from: data).map({$0.value})
+                
                 self.updateEntries(with: entryReps, in: moc)
+
             } catch {
                 NSLog("Error decoding JSON data: \(error)")
                 completion(error)
@@ -137,7 +159,7 @@ class EntryController {
         guard let identifier = identifier else { return nil }
         
         let fetchRequest: NSFetchRequest<Entry> = Entry.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "identfier == %@", identifier)
+        fetchRequest.predicate = NSPredicate(format: "identifier == %@", identifier)
         
         var result: Entry? = nil
         do {

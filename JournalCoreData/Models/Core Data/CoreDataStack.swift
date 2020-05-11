@@ -18,7 +18,7 @@ class CoreDataStack {
         let container = NSPersistentContainer(name: "JournalCoreData" as String)
         container.loadPersistentStores() { (storeDescription, error) in
             if let error = error as NSError? {
-                fatalError("Unresolved error \(error), \(error.userInfo)")
+               fatalError("Unresolved error \(error), \(error.userInfo)")
             }
         }
         container.viewContext.automaticallyMergesChangesFromParent = true
@@ -26,4 +26,17 @@ class CoreDataStack {
     }()
     
     var mainContext: NSManagedObjectContext { return container.viewContext }
+    
+    func save(context: NSManagedObjectContext = CoreDataStack.shared.mainContext) throws {
+              var error: Error?
+              context.performAndWait {
+                  do {
+                      try context.save()
+                  } catch let saveError {
+                      error = saveError
+                  }
+              }
+              if let error = error { throw error }
+          }
+    
 }

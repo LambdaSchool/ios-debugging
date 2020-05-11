@@ -8,7 +8,8 @@
 
 import Foundation
 
-struct EntryRepresentation: Decodable {
+struct EntryRepresentation: Codable
+{
     var title: String?
     var bodyText: String?
     var mood: String?
@@ -34,3 +35,4 @@ func !=(lhs: EntryRepresentation, rhs: Entry) -> Bool {
 func !=(lhs: Entry, rhs: EntryRepresentation) -> Bool {
     return rhs != lhs
 }
+
