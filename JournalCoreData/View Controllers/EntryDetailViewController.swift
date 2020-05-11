@@ -45,6 +45,8 @@ class EntryDetailViewController: UIViewController {
                 title = "Create Entry"
                 return
         }
+
+        guard let titleTextField = titleTextField, let bodyTextView = bodyTextView else { return }
         
         title = entry.title
         titleTextField.text = entry.title
