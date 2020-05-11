@@ -9,7 +9,6 @@
 import Foundation
 import CoreData
 
-//#error("Change this value to your own firebase database! (and then delete this line)")
 let baseURL = URL(string: "https://journal-e302d.firebaseio.com/")
 
 class EntryController {
@@ -42,13 +41,17 @@ class EntryController {
         saveToPersistentStore()
     }
     
+    init() {
+        fetchEntriesFromServer()
+    }
+    
     private func put(entry: Entry, completion: @escaping ((Error?) -> Void) = { _ in }) {
         guard let url = baseURL else {
             print("Bad URLin \(#function)")
             return
         }
         let identifier = entry.identifier ?? UUID().uuidString
-        let requestURL = url.appendingPathComponent(identifier).appendingPathComponent(".json")
+        let requestURL = url.appendingPathComponent(identifier).appendingPathExtension("json")
         var request = URLRequest(url: requestURL)
         request.httpMethod = "PUT"
         
@@ -71,8 +74,6 @@ class EntryController {
                 completion(nil)
                 return
             }
-            
-            print(response.statusCode)
             
             completion(nil)
         }.resume()
@@ -126,12 +127,15 @@ class EntryController {
                 completion(NSError())
                 return
             }
-
+            
+            print(data)
             let moc = CoreDataStack.shared.mainContext
             
             do {
                 let entryReps = try JSONDecoder().decode([String: EntryRepresentation].self, from: data).map({$0.value})
+                
                 self.updateEntries(with: entryReps, in: moc)
+
             } catch {
                 NSLog("Error decoding JSON data: \(error)")
                 completion(error)
@@ -155,7 +159,7 @@ class EntryController {
         guard let identifier = identifier else { return nil }
         
         let fetchRequest: NSFetchRequest<Entry> = Entry.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "identfier == %@", identifier)
+        fetchRequest.predicate = NSPredicate(format: "identifier == %@", identifier)
         
         var result: Entry? = nil
         do {
