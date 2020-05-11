@@ -11,6 +11,17 @@ import CoreData
 
 extension Entry {
     
+    var entryRepresentation: EntryRepresentation? {
+       guard let identifier = identifier,
+           let title = title,
+           let mood = mood,
+           let timestamp = timestamp else {
+               return nil
+           
+       }
+        return EntryRepresentation(title: title, bodyText: bodyText, mood: mood, timestamp: timestamp, identifier: identifier)
+       }
+    
     convenience init(title: String,
                      bodyText: String,
                      timestamp: Date = Date(),
@@ -27,6 +38,7 @@ extension Entry {
         self.identifier = identifier
     }
     
+  
     convenience init?(entryRepresentation: EntryRepresentation, context: NSManagedObjectContext = CoreDataStack.shared.mainContext) {
         
         guard let title = entryRepresentation.title,
