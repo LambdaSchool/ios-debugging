@@ -36,6 +36,7 @@ class EntryDetailViewController: UIViewController {
             entryController?.update(entry: entry, title: title, bodyText: bodyText, mood: mood)
         } else {
             entryController?.createEntry(with: title, bodyText: bodyText, mood: mood)
+            
         }
         self.navigationController?.popViewController(animated: true)
     }
