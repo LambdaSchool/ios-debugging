@@ -36,6 +36,7 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "EntryCell", for: indexPath) as? EntryTableViewCell else { return UITableViewCell() }
         
         let entry = fetchedResultsController.object(at: indexPath)
+        
         cell.entry = entry
         
         return cell
@@ -93,6 +94,8 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
         case .delete:
             guard let indexPath = indexPath else { return }
             tableView.deleteRows(at: [indexPath], with: .automatic)
+        default:
+            return 
         }
     }
     
@@ -112,6 +115,7 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
                 let indexPath = tableView.indexPathForSelectedRow else { return }
             
             destinationVC.entry = fetchedResultsController.object(at: indexPath)
+            destinationVC.entryController = entryController
             
         default:
             break

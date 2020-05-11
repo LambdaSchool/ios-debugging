@@ -11,6 +11,8 @@ import CoreData
 
 extension Entry {
     
+   
+    
     convenience init(title: String,
                      bodyText: String,
                      timestamp: Date = Date(),
@@ -27,6 +29,7 @@ extension Entry {
         self.identifier = identifier
     }
     
+  
     convenience init?(entryRepresentation: EntryRepresentation, context: NSManagedObjectContext = CoreDataStack.shared.mainContext) {
         
         guard let title = entryRepresentation.title,
