@@ -44,21 +44,21 @@ class EntryController {
     private func put(entry: Entry, completion: @escaping ((Error?) -> Void) = { _ in }) {
         
         let identifier = entry.identifier ?? UUID().uuidString
-        let requestURL = baseURL.appendingPathComponent(identifier).appendingPathComponent("json")
+        let requestURL = baseURL.appendingPathComponent(identifier).appendingPathExtension("JSON")
         var request = URLRequest(url: requestURL)
         request.httpMethod = "PUT"
-        
-        do {
-            request.httpBody = try JSONEncoder().encode(entry)
-        } catch {
-            NSLog("Error encoding Entry: \(error)")
-            completion(error)
-            return
-        }
         
         URLSession.shared.dataTask(with: request) { (data, _, error) in
             if let error = error {
                 NSLog("Error PUTting Entry to server: \(error)")
+                completion(error)
+                return
+            }
+            
+            do {
+                request.httpBody = try JSONEncoder().encode(entry)
+            } catch {
+                NSLog("Error encoding Entry: \(error)")
                 completion(error)
                 return
             }
