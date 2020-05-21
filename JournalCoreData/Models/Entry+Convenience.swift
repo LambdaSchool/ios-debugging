@@ -1,6 +1,7 @@
 //
 //  Entry+Convenience.swift
 //  JournalCoreData
+// MJ
 //
 //  Created by Spencer Curtis on 8/12/18.
 //  Copyright © 2018 Lambda School. All rights reserved.
