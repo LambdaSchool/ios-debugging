@@ -68,6 +68,7 @@ class EntryDetailViewController: UIViewController {
     
     var entry: Entry? {
         didSet {
+            guard isViewLoaded else { return }
             updateViews()
         }
     }
