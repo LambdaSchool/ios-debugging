@@ -9,8 +9,8 @@
 import Foundation
 import CoreData
 
-#error("Change this value to your own firebase database! (and then delete this line)")
-let baseURL = URL(string: "https://journal-syncing.firebaseio.com/")!
+//#error("Change this value to your own firebase database! (and then delete this line)")
+let baseURL = URL(string: "https://lambda-journal-ec0b2.firebaseio.com/")!
 
 class EntryController {
     
