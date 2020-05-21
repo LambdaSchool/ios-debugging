@@ -16,8 +16,8 @@ class EntryDetailViewController: UIViewController {
     
     @IBAction func saveEntry(_ sender: Any) {
         
-        guard let title = titleTextField.text,
-            let bodyText = bodyTextView.text else { return }
+        guard let title = titleTextField.text, !title.isEmpty,
+            let bodyText = bodyTextView.text, !bodyText.isEmpty else { return }
         
         var mood: String!
         
@@ -41,7 +41,7 @@ class EntryDetailViewController: UIViewController {
     }
     
     private func updateViews() {
-        guard let entry = entry else {
+        guard let entry = entry, isViewLoaded else {
                 title = "Create Entry"
                 return
         }
