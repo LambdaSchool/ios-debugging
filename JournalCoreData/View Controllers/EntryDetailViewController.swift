@@ -17,7 +17,9 @@ class EntryDetailViewController: UIViewController {
     @IBAction func saveEntry(_ sender: Any) {
         
         guard let title = titleTextField.text,
-            let bodyText = bodyTextView.text else { return }
+            !title.isEmpty,
+            let bodyText = bodyTextView.text,
+            !bodyText.isEmpty else { return }
         
         var mood: String!
         
@@ -66,11 +68,7 @@ class EntryDetailViewController: UIViewController {
         moodSegmentedControl.selectedSegmentIndex = segmentIndex
     }
     
-    var entry: Entry? {
-        didSet {
-            updateViews()
-        }
-    }
+   var entry: Entry?
     
     var entryController: EntryController?
     
