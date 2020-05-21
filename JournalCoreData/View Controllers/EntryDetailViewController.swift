@@ -46,7 +46,7 @@ class EntryDetailViewController: UIViewController {
                 return
         }
         
-        title = entry.title
+        self.title = entry.title
         titleTextField.text = entry.title
         bodyTextView.text = entry.bodyText
         
