@@ -67,7 +67,6 @@ class EntryDetailViewController: UIViewController {
     }
     
     var entry: Entry?
-    
     var entryController: EntryController?
     
     @IBOutlet weak var moodSegmentedControl: UISegmentedControl!
