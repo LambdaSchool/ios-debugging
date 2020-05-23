@@ -23,6 +23,7 @@
 		46AA32ED2121315F003AC495 /* EntryDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46AA32EC2121315F003AC495 /* EntryDetailViewController.swift */; };
 		46AA32EF21213184003AC495 /* EntryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46AA32EE21213184003AC495 /* EntryTableViewCell.swift */; };
 		46AA32F121213236003AC495 /* TimestampFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46AA32F021213236003AC495 /* TimestampFormatter.swift */; };
+		C33B4F95247624C900BB0168 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = C33B4F94247624C900BB0168 /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -45,6 +46,7 @@
 		46AA32EE21213184003AC495 /* EntryTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryTableViewCell.swift; sourceTree = "<group>"; };
 		46AA32F021213236003AC495 /* TimestampFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimestampFormatter.swift; sourceTree = "<group>"; };
 		46F9C2242122456400E7FF73 /* JournalCoreData 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "JournalCoreData 2.xcdatamodel"; sourceTree = "<group>"; };
+		C33B4F94247624C900BB0168 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -141,6 +143,7 @@
 				46AA32F021213236003AC495 /* TimestampFormatter.swift */,
 				46AA32D621212A2A003AC495 /* Assets.xcassets */,
 				46AA32DB21212A2A003AC495 /* Info.plist */,
+				C33B4F94247624C900BB0168 /* GoogleService-Info.plist */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -213,6 +216,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				46AA32DA21212A2A003AC495 /* LaunchScreen.storyboard in Resources */,
+				C33B4F95247624C900BB0168 /* GoogleService-Info.plist in Resources */,
 				46AA32D721212A2A003AC495 /* Assets.xcassets in Resources */,
 				46AA32D521212A28003AC495 /* Main.storyboard in Resources */,
 			);
@@ -388,7 +392,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.LambdaSchool.JournalCoreData;
+				PRODUCT_BUNDLE_IDENTIFIER = com.LambdaSchool.JournalCoreDatajcdev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -406,7 +410,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.LambdaSchool.JournalCoreData;
+				PRODUCT_BUNDLE_IDENTIFIER = com.LambdaSchool.JournalCoreDatajcdev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
