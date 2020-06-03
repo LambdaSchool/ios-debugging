@@ -9,6 +9,7 @@
 import UIKit
 
 class EntryDetailViewController: UIViewController {
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         updateViews()
@@ -41,6 +42,9 @@ class EntryDetailViewController: UIViewController {
     }
     
     private func updateViews() {
+        
+        // updateViews was being called before the detail view controller had finished
+        guard self.isViewLoaded else { return }
         guard let entry = entry else {
                 title = "Create Entry"
                 return
