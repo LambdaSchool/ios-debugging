@@ -33,7 +33,8 @@ class EntryDetailViewController: UIViewController {
         }
         
         if let entry = entry {
-            entryController?.update(entry: entry, title: title, bodyText: bodyText, mood: mood)
+            entryController?.update(entry: entry, title: title, bodyText: bodyText, mood: mood) 
+            
         } else {
             entryController?.createEntry(with: title, bodyText: bodyText, mood: mood)
         }
@@ -66,11 +67,7 @@ class EntryDetailViewController: UIViewController {
         moodSegmentedControl.selectedSegmentIndex = segmentIndex
     }
     
-    var entry: Entry? {
-        didSet {
-            updateViews()
-        }
-    }
+    var entry: Entry?
     
     var entryController: EntryController?
     
