@@ -117,7 +117,6 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
             break
         }
     }
-    
     // MARK: - Properties
     
     let entryController = EntryController()
