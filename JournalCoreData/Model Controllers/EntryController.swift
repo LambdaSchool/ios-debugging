@@ -9,8 +9,8 @@
 import Foundation
 import CoreData
 
-#error("Change this value to your own firebase database! (and then delete this line)")
-let baseURL = URL(string: "https://journal-syncing.firebaseio.com/")!
+
+let baseURL = URL(string: "https://journal-89a2a.firebaseio.com/")!
 
 class EntryController {
     
@@ -91,7 +91,7 @@ class EntryController {
         }.resume()
     }
     
-    func fetchEntriesFromServer(completion: @escaping ((Error?) -> Void) = { _ in }) {
+    func  dxc(completion: @escaping ((Error?) -> Void) = { _ in }) {
         
         let requestURL = baseURL.appendingPathExtension("json")
         
