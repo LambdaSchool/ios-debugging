@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>572390791872-ckf3nhb8so7v08565mnh6vktnl915jpd.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.572390791872-ckf3nhb8so7v08565mnh6vktnl915jpd</string>
+	<key>API_KEY</key>
+	<string>AIzaSyBmfzbAb2kQADWNKoHvIJ5Oz4lOA7pXTus</string>
+	<key>GCM_SENDER_ID</key>
+	<string>572390791872</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.LambdaSchool.JournalCoreData</string>
+	<key>PROJECT_ID</key>
+	<string>journaldebugging-cabec</string>
+	<key>STORAGE_BUCKET</key>
+	<string>journaldebugging-cabec.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:572390791872:ios:1a8cd18dd573417be22b25</string>
+	<key>DATABASE_URL</key>
+	<string>https://journaldebugging-cabec.firebaseio.com</string>
+</dict>
+</plist>
