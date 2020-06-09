@@ -29,7 +29,11 @@ class EntryController {
         entry.timestamp = Date()
         entry.mood = mood
         
-        put(entry: entry)
+        put(entry: entry) { error in
+            if let error = error {
+                print("Error updating entry to Firebase: \(error)")
+            }
+        }
         
         saveToPersistentStore()
     }
