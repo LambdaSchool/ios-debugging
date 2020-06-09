@@ -17,7 +17,10 @@ class EntryDetailViewController: UIViewController {
     @IBAction func saveEntry(_ sender: Any) {
         
         guard let title = titleTextField.text,
-            let bodyText = bodyTextView.text else { return }
+            !title.isEmpty,
+            let bodyText = bodyTextView.text,
+            !bodyText.isEmpty
+        else { return }
         
         var mood: String!
         
@@ -49,30 +52,26 @@ class EntryDetailViewController: UIViewController {
         title = entry.title
         
         ///code below does not have a value associated with the entry object
-//        titleTextField.text = entry.title
-//        bodyTextView.text = entry.bodyText
-//
-//        var segmentIndex = 0
-//
-//        switch entry.mood {
-//        case Mood.bad.rawValue:
-//            segmentIndex = 0
-//        case Mood.neutral.rawValue:
-//            segmentIndex = 1
-//        case Mood.good.rawValue:
-//            segmentIndex = 2
-//        default:
-//            break
-//        }
-//
-//        moodSegmentedControl.selectedSegmentIndex = segmentIndex
+        titleTextField.text = entry.title
+        bodyTextView.text = entry.bodyText
+
+        var segmentIndex = 0
+
+        switch entry.mood {
+        case Mood.bad.rawValue:
+            segmentIndex = 0
+        case Mood.neutral.rawValue:
+            segmentIndex = 1
+        case Mood.good.rawValue:
+            segmentIndex = 2
+        default:
+            break
+        }
+
+        moodSegmentedControl.selectedSegmentIndex = segmentIndex
     }
     
-    var entry: Entry? {
-        didSet {
-            updateViews()
-        }
-    }
+    var entry: Entry?
     
     var entryController: EntryController?
     

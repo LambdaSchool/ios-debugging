@@ -11,7 +11,9 @@ import CoreData
 
 let baseURL = URL(string: "https://journal-testing.firebaseio.com/")!
 
+
 class EntryController {
+    
     
     func createEntry(with title: String, bodyText: String, mood: String) {
         
@@ -41,29 +43,31 @@ class EntryController {
         saveToPersistentStore()
     }
     
-    private func put(entry: Entry, completion: @escaping ((Error?) -> Void) = { _ in }) {
+    private func put(entry: Entry, completion: @escaping ((Entry?, Error?) -> Void) = { _,_  in }) {
         
         let identifier = entry.identifier ?? UUID().uuidString
-        let requestURL = baseURL.appendingPathComponent(identifier).appendingPathComponent("json")
+        let requestURL = baseURL.appendingPathComponent(identifier).appendingPathExtension("json")
         var request = URLRequest(url: requestURL)
         request.httpMethod = "PUT"
         
+        let entryRepresentation = entry.entryRepresentation
+        
         do {
-            request.httpBody = try JSONEncoder().encode(entry)
+            request.httpBody = try JSONEncoder().encode(entryRepresentation)
         } catch {
             NSLog("Error encoding Entry: \(error)")
-            completion(error)
+            completion(nil, error)
             return
         }
         
         URLSession.shared.dataTask(with: request) { (data, _, error) in
             if let error = error {
                 NSLog("Error PUTting Entry to server: \(error)")
-                completion(error)
+                completion(nil, error)
                 return
             }
             
-            completion(nil)
+            completion(entry, nil)
         }.resume()
     }
     
@@ -90,6 +94,7 @@ class EntryController {
         }.resume()
     }
     
+    
     func fetchEntriesFromServer(completion: @escaping ((Error?) -> Void) = { _ in }) {
         
         let requestURL = baseURL.appendingPathExtension("json")
@@ -108,7 +113,7 @@ class EntryController {
                 return
             }
 
-            let moc = CoreDataStack.shared.mainContext
+            let moc = CoreDataStack.shared.container.newBackgroundContext()
             
             do {
                 let entryReps = try JSONDecoder().decode([String: EntryRepresentation].self, from: data).map({$0.value})
@@ -130,13 +135,12 @@ class EntryController {
             }
         }.resume()
     }
-    
     private func fetchSingleEntryFromPersistentStore(with identifier: String?, in context: NSManagedObjectContext) -> Entry? {
         
         guard let identifier = identifier else { return nil }
         
         let fetchRequest: NSFetchRequest<Entry> = Entry.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "identfier == %@", identifier)
+        fetchRequest.predicate = NSPredicate(format: "identifier == %@", identifier)
         
         var result: Entry? = nil
         do {
