@@ -9,8 +9,8 @@
 import Foundation
 import CoreData
 
-#error("Change this value to your own firebase database! (and then delete this line)")
-let baseURL = URL(string: "https://journal-syncing.firebaseio.com/")!
+
+let baseURL = URL(string: "https://journal-debugging-96ad2.firebaseio.com/")!
 
 class EntryController {
     
@@ -30,7 +30,11 @@ class EntryController {
         entry.timestamp = Date()
         entry.mood = mood
         
-        put(entry: entry)
+        put(entry: entry) { error in
+            if let error = error {
+                print("Error adding entry to firebase \(error)")
+            }
+        }
         
         saveToPersistentStore()
     }
@@ -45,7 +49,7 @@ class EntryController {
     private func put(entry: Entry, completion: @escaping ((Error?) -> Void) = { _ in }) {
         
         let identifier = entry.identifier ?? UUID().uuidString
-        let requestURL = baseURL.appendingPathComponent(identifier).appendingPathComponent("json")
+        let requestURL = baseURL.appendingPathComponent(identifier).appendingPathExtension("json") // Fixed to appendingPathExtension
         var request = URLRequest(url: requestURL)
         request.httpMethod = "PUT"
         
@@ -57,9 +61,16 @@ class EntryController {
             return
         }
         
-        URLSession.shared.dataTask(with: request) { (data, _, error) in
+        URLSession.shared.dataTask(with: request) { (data, response, error) in
             if let error = error {
                 NSLog("Error PUTting Entry to server: \(error)")
+                completion(error)
+                return
+            }
+
+            // Added a response 
+            if let response = response as? HTTPURLResponse {
+                print("\(response)")
                 completion(error)
                 return
             }
