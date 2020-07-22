@@ -78,7 +78,6 @@
 			isa = PBXGroup;
 			children = (
 				46AA32F3212132A5003AC495 /* Models */,
-				46AA32E821212CD3003AC495 /* EntryController.swift */,
 				46AA32F22121329B003AC495 /* Model Controllers */,
 				46AA32F5212132E8003AC495 /* Views */,
 				46AA32F4212132AD003AC495 /* View Controllers */,
@@ -91,6 +90,7 @@
 		46AA32F22121329B003AC495 /* Model Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				46AA32E821212CD3003AC495 /* EntryController.swift */,
 			);
 			path = "Model Controllers";
 			sourceTree = "<group>";

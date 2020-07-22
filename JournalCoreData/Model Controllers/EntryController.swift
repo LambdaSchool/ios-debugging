@@ -9,22 +9,10 @@
 import Foundation
 import CoreData
 
-let baseURL = URL(string: "https://ios-code-quality-debugging.firebaseio.com/")!
+#error("Change this value to your own firebase database! (and then delete this line)")
+let baseURL = URL(string: "https://journal-syncing.firebaseio.com/")!
 
-enum NetworkError: Error{
-    case noIdentifier
-    case otherError
-    case noData
-    case noDecode
-    case noEncode
-    case noRep
-}
-
-final class EntryController {
-    
-    // Added a completion handler to help make more sense of the network requests
-    typealias CompletionHandler = (Result<Bool, NetworkError>) -> Void
-
+class EntryController {
     
     func createEntry(with title: String, bodyText: String, mood: String) {
         
@@ -54,38 +42,29 @@ final class EntryController {
         saveToPersistentStore()
     }
     
-    // Re wrote a lot of this function to make more sense
-    private func put(entry: Entry, completion: @escaping CompletionHandler = { _ in }) {
+    private func put(entry: Entry, completion: @escaping ((Error?) -> Void) = { _ in }) {
         
-        guard let uuid = entry.identifier else {
-            completion(.failure(.noIdentifier))
-            return
-        }
-        // Had to be changed to "appendingPathExtension" for "json"
-        let requestURL = baseURL.appendingPathComponent(uuid).appendingPathExtension("json")
+        let identifier = entry.identifier ?? UUID().uuidString
+        let requestURL = baseURL.appendingPathComponent(identifier).appendingPathComponent("json")
         var request = URLRequest(url: requestURL)
         request.httpMethod = "PUT"
         
         do {
-            // We need to turn the entry in to an entry representation
-            guard let representation = entry.entryRepresentation else {
-                completion(.failure(.noRep))
-                return
-            }
-            // Encoding the Representation
-            request.httpBody = try JSONEncoder().encode(representation)
+            request.httpBody = try JSONEncoder().encode(entry)
         } catch {
             NSLog("Error encoding Entry: \(error)")
-            completion(.failure(.noEncode))
+            completion(error)
             return
         }
         
-        URLSession.shared.dataTask(with: request) { (_, _, error) in
-            if let error = error{
-                completion(.failure(.otherError))
-                print("Error PUTting entry to server: \(error)")
+        URLSession.shared.dataTask(with: request) { (data, _, error) in
+            if let error = error {
+                NSLog("Error PUTting Entry to server: \(error)")
+                completion(error)
+                return
             }
-            completion(.success(true))
+            
+            completion(nil)
         }.resume()
     }
     

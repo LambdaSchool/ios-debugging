@@ -11,17 +11,6 @@ import CoreData
 
 extension Entry {
     
-    // Added a way to turn an Entry into an Entry Representation
-    var entryRepresentation: EntryRepresentation?{
-           guard let title = title,
-               let bodyText = bodyText,
-               let timestamp = timestamp,
-               let identifier = identifier,
-               let mood = mood else {return nil}
-           
-        return EntryRepresentation(title: title, bodyText: bodyText, mood: mood, timestamp: timestamp, identifier: identifier)
-       }
-    
     convenience init(title: String,
                      bodyText: String,
                      timestamp: Date = Date(),

@@ -8,8 +8,7 @@
 
 import Foundation
 
-// Changed the Entry Representation to Codable for simplicity
-struct EntryRepresentation: Codable {
+struct EntryRepresentation: Decodable {
     var title: String?
     var bodyText: String?
     var mood: String?
