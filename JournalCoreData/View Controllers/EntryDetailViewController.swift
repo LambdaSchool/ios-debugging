@@ -16,8 +16,9 @@ class EntryDetailViewController: UIViewController {
     
     @IBAction func saveEntry(_ sender: Any) {
         
-        guard let title = titleTextField.text,
-            let bodyText = bodyTextView.text else { return }
+        // Added functionality to not be able to save an entry if it has no title or body text
+        guard let title = titleTextField.text, !title.isEmpty,
+            let bodyText = bodyTextView.text, !bodyText.isEmpty else { return }
         
         var mood: String!
         
@@ -32,7 +33,7 @@ class EntryDetailViewController: UIViewController {
             break
         }
         
-        if let entry = entry {
+        if let entry = entry{
             entryController?.update(entry: entry, title: title, bodyText: bodyText, mood: mood)
         } else {
             entryController?.createEntry(with: title, bodyText: bodyText, mood: mood)
@@ -41,7 +42,8 @@ class EntryDetailViewController: UIViewController {
     }
     
     private func updateViews() {
-        guard let entry = entry else {
+        // Causing detail view not to load when tapping on a view cell because optionality is decided at runtime
+        guard let entry = entry, isViewLoaded else {
                 title = "Create Entry"
                 return
         }
