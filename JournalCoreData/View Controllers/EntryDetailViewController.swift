@@ -43,7 +43,8 @@ class EntryDetailViewController: UIViewController {
     }
     
     private func updateViews() {
-        guard let entry = entry else {
+        guard let entry = entry ,
+            isViewLoaded else {
                 title = "Create Entry"
                 return
         }
@@ -68,7 +69,11 @@ class EntryDetailViewController: UIViewController {
         moodSegmentedControl.selectedSegmentIndex = segmentIndex
     }
     
-   var entry: Entry?
+    var entry: Entry? {
+        didSet {
+            updateViews()
+        }
+    }
     
     var entryController: EntryController?
     

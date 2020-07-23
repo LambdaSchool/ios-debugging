@@ -53,7 +53,11 @@ class EntryController {
         request.httpMethod = "PUT"
         
         do {
-            request.httpBody = try JSONEncoder().encode(entry)
+            guard let entryRepresentation = entry.entryRepresentation else {
+                completion(NSError())
+                return
+            }
+            request.httpBody = try JSONEncoder().encode(entryRepresentation)
         } catch {
             NSLog("Error encoding Entry: \(error)")
             completion(error)
@@ -63,11 +67,15 @@ class EntryController {
         URLSession.shared.dataTask(with: request) { (data, _, error) in
             if let error = error {
                 NSLog("Error PUTting Entry to server: \(error)")
-                completion(error)
+                DispatchQueue.main.async {
+                    completion(error)
+                }
                 return
             }
             
-            completion(nil)
+            DispatchQueue.main.async {
+                completion(nil)
+            }
         }.resume()
     }
     
@@ -105,21 +113,25 @@ class EntryController {
             
             if let error = error {
                 NSLog("Error fetching entries from server: \(error)")
-                completion(error)
+                DispatchQueue.main.async {
+                    completion(error)
+                }
                 return
             }
             
             guard let data = data else {
                 NSLog("No data returned from data task")
-                completion(NSError())
+                DispatchQueue.main.async {
+                    completion(NSError())
+                }
                 return
             }
 
-            let moc = CoreDataStack.shared.mainContext
+            let moc = CoreDataStack.shared.container.newBackgroundContext()
             
             do {
                 let entryReps = try JSONDecoder().decode([String: EntryRepresentation].self, from: data).map({$0.value})
-                try self.updateEntries(with: entryReps, in: moc)
+                self.updateEntries(with: entryReps, in: moc)
             } catch {
                 NSLog("Error decoding JSON data: \(error)")
                 completion(error)
