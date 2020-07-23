@@ -6,6 +6,8 @@
 //  Copyright © 2018 Lambda School. All rights reserved.
 //
 
+//Initial Project Commit
+
 import Foundation
 
 extension Entry: Encodable {
