@@ -10,7 +10,7 @@ import Foundation
 import CoreData
 
 
-let baseURL = URL(string: "https://console.firebase.google.com/project/journaldebug-f9fc7/database/firestore/data~2F")!
+let baseURL = URL(string: "https://journaldebug-640bf.firebaseio.com/")!
 
 class EntryController {
     
@@ -179,3 +179,6 @@ class EntryController {
         }
     }
 }
+
+
+// entries arent saving to firebase. Must fix
