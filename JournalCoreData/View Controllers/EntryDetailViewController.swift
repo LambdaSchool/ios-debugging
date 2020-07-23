@@ -41,6 +41,8 @@ class EntryDetailViewController: UIViewController {
     }
     
     private func updateViews() {
+        // update was being called before the detailVC had finished
+        guard self.isViewLoaded else { return }
         guard let entry = entry else {
                 title = "Create Entry"
                 return
@@ -66,11 +68,12 @@ class EntryDetailViewController: UIViewController {
         moodSegmentedControl.selectedSegmentIndex = segmentIndex
     }
     
-    var entry: Entry? {
-        didSet {
-            updateViews()
-        }
-    }
+//    var entry: Entry? {
+//        didSet {
+//            updateViews()
+//        }
+//    }
+    var entry: Entry?
     
     var entryController: EntryController?
     
