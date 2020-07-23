@@ -9,8 +9,8 @@
 import Foundation
 import CoreData
 
-#error("Change this value to your own firebase database! (and then delete this line)")
-let baseURL = URL(string: "https://journal-syncing.firebaseio.com/")!
+
+let baseURL = URL(string: "https://journaldebug-640bf.firebaseio.com/")!
 
 class EntryController {
     
@@ -179,3 +179,6 @@ class EntryController {
         }
     }
 }
+
+
+// entries arent saving to firebase. Must fix
