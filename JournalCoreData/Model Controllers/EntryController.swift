@@ -9,10 +9,13 @@
 import Foundation
 import CoreData
 
-#error("Change this value to your own firebase database! (and then delete this line)")
-let baseURL = URL(string: "https://journal-syncing.firebaseio.com/")!
+let baseURL = URL(string: "https://journalpt-38bf9.firebaseio.com/")!
 
 class EntryController {
+    
+    init() {
+        fetchEntriesFromServer()
+    }
     
     func createEntry(with title: String, bodyText: String, mood: String) {
         
@@ -45,12 +48,16 @@ class EntryController {
     private func put(entry: Entry, completion: @escaping ((Error?) -> Void) = { _ in }) {
         
         let identifier = entry.identifier ?? UUID().uuidString
-        let requestURL = baseURL.appendingPathComponent(identifier).appendingPathComponent("json")
+        let requestURL = baseURL.appendingPathComponent(identifier).appendingPathExtension("json")
         var request = URLRequest(url: requestURL)
         request.httpMethod = "PUT"
         
         do {
-            request.httpBody = try JSONEncoder().encode(entry)
+            guard let entryRepresentation = entry.entryRepresentation else {
+                completion(NSError())
+                return
+            }
+            request.httpBody = try JSONEncoder().encode(entryRepresentation)
         } catch {
             NSLog("Error encoding Entry: \(error)")
             completion(error)
@@ -60,11 +67,15 @@ class EntryController {
         URLSession.shared.dataTask(with: request) { (data, _, error) in
             if let error = error {
                 NSLog("Error PUTting Entry to server: \(error)")
-                completion(error)
+                DispatchQueue.main.async {
+                    completion(error)
+                }
                 return
             }
             
-            completion(nil)
+            DispatchQueue.main.async {
+                completion(nil)
+            }
         }.resume()
     }
     
@@ -95,21 +106,28 @@ class EntryController {
         
         let requestURL = baseURL.appendingPathExtension("json")
         
-        URLSession.shared.dataTask(with: requestURL) { (data, _, error) in
+        var request = URLRequest(url: requestURL)
+        request.httpMethod = "GET"
+        
+        URLSession.shared.dataTask(with: request) { (data, _, error) in
             
             if let error = error {
                 NSLog("Error fetching entries from server: \(error)")
-                completion(error)
+                DispatchQueue.main.async {
+                    completion(error)
+                }
                 return
             }
             
             guard let data = data else {
                 NSLog("No data returned from data task")
-                completion(NSError())
+                DispatchQueue.main.async {
+                    completion(NSError())
+                }
                 return
             }
 
-            let moc = CoreDataStack.shared.mainContext
+            let moc = CoreDataStack.shared.container.newBackgroundContext()
             
             do {
                 let entryReps = try JSONDecoder().decode([String: EntryRepresentation].self, from: data).map({$0.value})
@@ -137,7 +155,7 @@ class EntryController {
         guard let identifier = identifier else { return nil }
         
         let fetchRequest: NSFetchRequest<Entry> = Entry.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "identfier == %@", identifier)
+        fetchRequest.predicate = NSPredicate(format: "identifier == %@", identifier)
         
         var result: Entry? = nil
         do {

@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 import CoreData
 
 extension Entry {
@@ -36,5 +37,20 @@ extension Entry {
             let identifier = entryRepresentation.identifier else { return nil }
         
         self.init(title: title, bodyText: bodyText, timestamp: timestamp, mood: mood, identifier: identifier, context: context)
+    }
+    
+    var entryRepresentation: EntryRepresentation? {
+        guard let title = title,
+            let bodyText = bodyText,
+            let mood = mood,
+            let timestamp = timestamp else { return nil }
+        
+        let id = identifier ?? UUID().uuidString
+        
+        return EntryRepresentation(title: title,
+                                   bodyText: bodyText,
+                                   mood: mood,
+                                   timestamp: timestamp,
+                                   identifier: id)
     }
 }
