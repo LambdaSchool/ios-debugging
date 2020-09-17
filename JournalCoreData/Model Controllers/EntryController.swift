@@ -21,6 +21,7 @@ class EntryController {
         put(entry: entry)
         
         saveToPersistentStore()
+        
     }
     
     func update(entry: Entry, title: String, bodyText: String, mood: String) {
