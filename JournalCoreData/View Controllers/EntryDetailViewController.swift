@@ -41,6 +41,8 @@ class EntryDetailViewController: UIViewController {
     }
     
     private func updateViews() {
+        //1. update was being called before the detailVC had finished
+        guard self.isViewLoaded else { return }
         guard let entry = entry else {
                 title = "Create Entry"
                 return
