@@ -9,8 +9,8 @@
 import Foundation
 import CoreData
 
-#error("Change this value to your own firebase database! (and then delete this line)")
-let baseURL = URL(string: "https://journal-syncing.firebaseio.com/")!
+//#error("Change this value to your own firebase database! (and then delete this line)")
+let baseURL = URL(string: "https://jornalcoredata.firebaseio.com/")!
 
 class EntryController {
     
@@ -30,7 +30,12 @@ class EntryController {
         entry.timestamp = Date()
         entry.mood = mood
         
-        put(entry: entry)
+        // might need an error incase its unable to add to firebase?
+        put(entry: entry) { error in
+            if let error = error {
+                print("Error adding to firebase: \(error)")
+            }
+        }
         
         saveToPersistentStore()
     }
@@ -45,7 +50,8 @@ class EntryController {
     private func put(entry: Entry, completion: @escaping ((Error?) -> Void) = { _ in }) {
         
         let identifier = entry.identifier ?? UUID().uuidString
-        let requestURL = baseURL.appendingPathComponent(identifier).appendingPathComponent("json")
+        // Needs to be appendingPathExtension instead of component after (identifier)
+        let requestURL = baseURL.appendingPathComponent(identifier).appendingPathExtension("json")
         var request = URLRequest(url: requestURL)
         request.httpMethod = "PUT"
         
@@ -75,7 +81,7 @@ class EntryController {
             completion(NSError())
             return
         }
-        
+        //
         let requestURL = baseURL.appendingPathComponent(identifier).appendingPathExtension("json")
         var request = URLRequest(url: requestURL)
         request.httpMethod = "DELETE"
@@ -137,7 +143,8 @@ class EntryController {
         guard let identifier = identifier else { return nil }
         
         let fetchRequest: NSFetchRequest<Entry> = Entry.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "identfier == %@", identifier)
+        //4 misspelled identifier
+        fetchRequest.predicate = NSPredicate(format: "identifier == %@", identifier)
         
         var result: Entry? = nil
         do {
