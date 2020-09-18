@@ -68,14 +68,15 @@ class EntryDetailViewController: UIViewController {
     
     var entry: Entry? {
         didSet {
+            guard self.isViewLoaded else { return }
             updateViews()
         }
     }
     
     var entryController: EntryController?
     
-    @IBOutlet weak var moodSegmentedControl: UISegmentedControl!
     @IBOutlet weak var titleTextField: UITextField!
     @IBOutlet weak var bodyTextView: UITextView!
-
+    @IBOutlet weak var moodSegmentedControl: UISegmentedControl!
+    
 }
