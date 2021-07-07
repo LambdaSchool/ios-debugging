@@ -30,9 +30,9 @@ class EntryController {
         entry.timestamp = Date()
         entry.mood = mood
         
-        put(entry: entry)
-        
         saveToPersistentStore()
+        
+        put(entry: entry)
     }
     
     func delete(entry: Entry) {
@@ -137,7 +137,7 @@ class EntryController {
         guard let identifier = identifier else { return nil }
         
         let fetchRequest: NSFetchRequest<Entry> = Entry.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "identfier == %@", identifier)
+        fetchRequest.predicate = NSPredicate(format: "identifier == %@", identifier)
         
         var result: Entry? = nil
         do {

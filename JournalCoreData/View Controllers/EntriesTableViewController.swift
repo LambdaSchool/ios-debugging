@@ -15,6 +15,8 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
         super.viewWillAppear(animated)
         
         tableView.reloadData()
+        
+        entryController.fetchEntriesFromServer()
     }
     
     // MARK: - Table view data source
@@ -48,6 +50,7 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
             entryController.delete(entry: entry)
         }
     }
+    
     
     // MARK: - NSFetchedResultsControllerDelegate
     
@@ -112,6 +115,8 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
                 let indexPath = tableView.indexPathForSelectedRow else { return }
             
             destinationVC.entry = fetchedResultsController.object(at: indexPath)
+            
+            destinationVC.entryController = entryController
             
         default:
             break
